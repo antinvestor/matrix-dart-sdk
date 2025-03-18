@@ -25,7 +25,7 @@ See the API documentation for details:
 ### Tests
 
 ```shell
-thread_count=$(getconf _NPROCESSORS_ONLN) // or your favourite number :3
+thread_count=$(getconf _NPROCESSORS_ONLN)
 dart test --concurrency=$thread_count test
 ```
 
