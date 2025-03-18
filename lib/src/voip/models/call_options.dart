@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:matrix/matrix.dart';
 
 /// Initialization parameters of the call session.

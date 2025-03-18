@@ -16,15 +16,12 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Dart imports:
 import 'dart:convert';
 import 'dart:typed_data';
 
-// Package imports:
 import 'package:collection/collection.dart';
 import 'package:html/parser.dart';
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 import 'package:matrix/src/utils/file_send_request_credentials.dart';
 import 'package:matrix/src/utils/html_to_text.dart';

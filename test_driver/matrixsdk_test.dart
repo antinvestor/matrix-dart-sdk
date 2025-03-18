@@ -16,15 +16,12 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Dart imports:
 import 'dart:io';
 
-// Package imports:
 import 'package:hive/hive.dart';
 import 'package:olm/olm.dart' as olm;
 import 'package:test/test.dart';
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 import '../test/fake_database.dart';
 import 'test_config.dart';

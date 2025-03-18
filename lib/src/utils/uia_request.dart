@@ -16,7 +16,6 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 
 enum UiaRequestState {

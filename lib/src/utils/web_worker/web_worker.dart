@@ -1,17 +1,14 @@
 // ignore_for_file: avoid_print
 
-// Dart imports:
 import 'dart:async';
 import 'dart:html';
 import 'dart:indexed_db';
 import 'dart:js';
 import 'dart:typed_data';
 
-// Package imports:
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 
-// Project imports:
 import 'package:matrix/matrix.dart' hide Event;
 import 'package:matrix/src/utils/web_worker/native_implementations_web_worker.dart';
 

@@ -16,14 +16,11 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Dart imports:
 import 'dart:async';
 import 'dart:convert';
 
-// Package imports:
 import 'package:olm/olm.dart' as olm;
 
-// Project imports:
 import 'package:matrix/encryption/cross_signing.dart';
 import 'package:matrix/encryption/key_manager.dart';
 import 'package:matrix/encryption/key_verification_manager.dart';

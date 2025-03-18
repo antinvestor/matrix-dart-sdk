@@ -16,13 +16,10 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Dart imports:
 import 'dart:async';
 
-// Package imports:
 import 'package:test/test.dart';
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 
 void main() {

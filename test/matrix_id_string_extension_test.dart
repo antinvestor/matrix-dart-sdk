@@ -16,10 +16,8 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Package imports:
 import 'package:test/test.dart';
 
-// Project imports:
 import 'package:matrix/src/utils/matrix_id_string_extension.dart';
 
 void main() {

@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:matrix/matrix.dart';
 
 extension AudioEventRoomExtension on Room {

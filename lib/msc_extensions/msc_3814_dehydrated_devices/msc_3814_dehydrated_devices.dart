@@ -2,11 +2,9 @@
 /// receiving encrypted messages while you have no devices signed in.
 library;
 
-// Dart imports:
 import 'dart:convert';
 import 'dart:math';
 
-// Project imports:
 import 'package:matrix/encryption.dart';
 import 'package:matrix/matrix.dart';
 import 'package:matrix/msc_extensions/msc_3814_dehydrated_devices/api.dart';

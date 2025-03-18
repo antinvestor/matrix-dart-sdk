@@ -16,20 +16,17 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Dart imports:
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-// Package imports:
 import 'package:canonical_json/canonical_json.dart';
 import 'package:collection/collection.dart';
 import 'package:olm/olm.dart' as olm;
 import 'package:path/path.dart' show join;
 import 'package:test/test.dart';
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 import 'package:matrix/src/utils/client_init_exception.dart';
 import 'fake_client.dart';

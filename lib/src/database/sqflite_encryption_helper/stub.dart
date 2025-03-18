@@ -1,4 +1,3 @@
-// Package imports:
 import 'package:sqflite_common/sqlite_api.dart';
 
 /// A helper utility for SQfLite related encryption operations

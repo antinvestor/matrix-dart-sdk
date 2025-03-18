@@ -1,9 +1,7 @@
-// Package imports:
 import 'package:collection/collection.dart';
 import 'package:random_string/random_string.dart';
 import 'package:webrtc_interface/webrtc_interface.dart';
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 
 Future<void> stopMediaStream(MediaStream? stream) async {

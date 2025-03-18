@@ -16,10 +16,8 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Dart imports:
 import 'dart:core';
 
-// Project imports:
 import 'package:matrix/src/client.dart';
 
 extension MxcUriExtension on Uri {

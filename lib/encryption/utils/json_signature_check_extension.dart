@@ -16,11 +16,9 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Package imports:
 import 'package:canonical_json/canonical_json.dart';
 import 'package:olm/olm.dart' as olm;
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 
 extension JsonSignatureCheckExtension on Map<String, dynamic> {

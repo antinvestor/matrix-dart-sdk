@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:matrix/matrix.dart';
 
 /// https://github.com/matrix-org/matrix-doc/pull/2746

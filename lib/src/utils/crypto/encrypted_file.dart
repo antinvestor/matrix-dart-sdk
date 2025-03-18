@@ -16,11 +16,9 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Dart imports:
 import 'dart:convert';
 import 'dart:typed_data';
 
-// Project imports:
 import 'package:matrix/encryption/utils/base64_unpadded.dart';
 import 'package:matrix/src/utils/crypto/crypto.dart';
 

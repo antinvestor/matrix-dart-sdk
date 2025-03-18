@@ -16,11 +16,9 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Package imports:
 import 'package:olm/olm.dart' as olm;
 import 'package:test/test.dart';
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 import '../fake_client.dart';
 import '../fake_database.dart';

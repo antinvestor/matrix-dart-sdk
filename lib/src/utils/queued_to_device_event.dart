@@ -16,7 +16,6 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Dart imports:
 import 'dart:convert';
 
 class QueuedToDeviceEvent {

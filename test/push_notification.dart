@@ -1,10 +1,7 @@
-// Dart imports:
 import 'dart:convert';
 
-// Package imports:
 import 'package:test/test.dart';
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 
 void main() {

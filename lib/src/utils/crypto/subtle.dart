@@ -1,12 +1,10 @@
 // Copyright (c) 2020 Famedly GmbH
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-// Dart imports:
 import 'dart:async';
 import 'dart:js_util';
 import 'dart:typed_data';
 
-// Package imports:
 import 'package:js/js.dart';
 
 @JS()

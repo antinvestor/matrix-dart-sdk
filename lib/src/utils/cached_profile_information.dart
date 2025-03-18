@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:matrix/matrix_api_lite.dart';
 
 class CachedProfileInformation extends ProfileInformation {

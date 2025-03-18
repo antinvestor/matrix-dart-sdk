@@ -16,7 +16,6 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Package imports:
 import 'package:async/async.dart';
 
 extension AsyncCacheTryFetch<T> on AsyncCache<T> {

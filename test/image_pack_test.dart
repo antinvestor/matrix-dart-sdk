@@ -16,10 +16,8 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Package imports:
 import 'package:test/test.dart';
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 import 'fake_client.dart';
 

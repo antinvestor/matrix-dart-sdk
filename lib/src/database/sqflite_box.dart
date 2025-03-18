@@ -1,11 +1,8 @@
-// Dart imports:
 import 'dart:async';
 import 'dart:convert';
 
-// Package imports:
 import 'package:sqflite_common/sqflite.dart';
 
-// Project imports:
 import 'package:matrix/src/database/zone_transaction_mixin.dart';
 
 /// Key-Value store abstraction over Sqflite so that the sdk database can use

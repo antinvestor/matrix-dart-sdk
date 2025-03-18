@@ -1,7 +1,5 @@
-// Package imports:
 import 'package:collection/collection.dart';
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 import 'package:matrix/src/voip/models/call_membership.dart';
 

@@ -1,4 +1,3 @@
-// Dart imports:
 import 'dart:async';
 
 typedef ComputeCallback = Future<R> Function<Q, R>(

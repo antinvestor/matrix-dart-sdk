@@ -1,4 +1,3 @@
-// Dart imports:
 import 'dart:convert';
 
 /// Push Notification object from https://spec.matrix.org/v1.2/push-gateway-api/

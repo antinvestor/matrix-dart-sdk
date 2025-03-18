@@ -16,12 +16,10 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Package imports:
 import 'package:file/local.dart';
 import 'package:hive/hive.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 
 Future<DatabaseApi> getDatabase(Client? c, {String? databasePath}) =>

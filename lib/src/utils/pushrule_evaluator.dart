@@ -18,10 +18,8 @@
 
 // Helper for fast evaluation of push conditions on a bunch of events
 
-// Package imports:
 import 'package:collection/collection.dart';
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 
 enum PushRuleConditions {

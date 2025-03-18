@@ -16,14 +16,11 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Dart imports:
 import 'dart:async';
 import 'dart:math';
 
-// Package imports:
 import 'package:test/test.dart';
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 import 'package:matrix/src/models/timeline_chunk.dart';
 import 'fake_client.dart';

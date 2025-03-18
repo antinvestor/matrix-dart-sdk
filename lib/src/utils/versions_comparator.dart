@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:matrix/matrix_api_lite/utils/logs.dart';
 
 bool isVersionGreaterThanOrEqualTo(String version, String target) {

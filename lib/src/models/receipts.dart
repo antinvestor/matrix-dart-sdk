@@ -16,7 +16,6 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 
 // Receipts are pretty complicated nowadays. We basicaly have 3 different aspects, that we need to multiplex together:

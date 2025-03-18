@@ -21,7 +21,6 @@
 * SOFTWARE.
 */
 
-// Project imports:
 import 'package:matrix/matrix_api_lite/model/auth/authentication_data.dart';
 import 'package:matrix/matrix_api_lite/model/auth/authentication_types.dart';
 

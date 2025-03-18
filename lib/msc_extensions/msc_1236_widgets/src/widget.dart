@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:matrix/src/room.dart';
 
 class MatrixWidget {

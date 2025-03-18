@@ -1,10 +1,7 @@
-// Dart imports:
 import 'dart:async';
 
-// Package imports:
 import 'package:webrtc_interface/webrtc_interface.dart';
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 
 class ConnectionTester {

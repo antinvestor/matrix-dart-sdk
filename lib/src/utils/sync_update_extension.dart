@@ -16,7 +16,6 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Project imports:
 import 'package:matrix/matrix.dart';
 
 /// This extension adds easy-to-use filters for the sync update, meant to be used on the `client.onSync` stream, e.g.

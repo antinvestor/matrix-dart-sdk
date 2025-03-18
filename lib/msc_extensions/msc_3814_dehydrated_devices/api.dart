@@ -21,7 +21,6 @@
 * SOFTWARE.
 */
 
-// Project imports:
 import 'package:matrix/matrix_api_lite.dart';
 import 'package:matrix/msc_extensions/msc_3814_dehydrated_devices/model/dehydrated_device.dart';
 import 'package:matrix/msc_extensions/msc_3814_dehydrated_devices/model/dehydrated_device_events.dart';

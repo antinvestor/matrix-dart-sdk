@@ -16,10 +16,8 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Dart imports:
 import 'dart:convert';
 
-// Package imports:
 import 'package:markdown/markdown.dart';
 
 const htmlAttrEscape = HtmlEscape(HtmlEscapeMode.attribute);

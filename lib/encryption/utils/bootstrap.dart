@@ -16,15 +16,12 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Dart imports:
 import 'dart:convert';
 import 'dart:typed_data';
 
-// Package imports:
 import 'package:canonical_json/canonical_json.dart';
 import 'package:olm/olm.dart' as olm;
 
-// Project imports:
 import 'package:matrix/encryption/encryption.dart';
 import 'package:matrix/encryption/key_manager.dart';
 import 'package:matrix/encryption/ssss.dart';

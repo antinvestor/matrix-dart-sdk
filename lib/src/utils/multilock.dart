@@ -16,7 +16,6 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Dart imports:
 import 'dart:async';
 
 /// Lock management class. It allows to lock and unlock multiple keys at once. The keys have
