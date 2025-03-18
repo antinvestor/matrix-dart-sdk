@@ -102,7 +102,7 @@ class MatrixWidget {
     final replaceMap = {
       r'$matrix_user_id': room.client.userID!,
       r'$matrix_room_id': room.id,
-      r'$matrix_display_name': userProfile.displayname ?? '',
+      r'$matrix_display_name': userProfile.displayName ?? '',
       r'$matrix_avatar_url': userProfile.avatarUrl?.toString() ?? '',
       // removing potentially dangerous keys containing anything but
       // `[a-zA-Z0-9_-]` as well as non string values

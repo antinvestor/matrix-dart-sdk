@@ -1109,7 +1109,7 @@ class Client extends MatrixApi {
 
     return Profile(
       userId: userId,
-      displayName: cachedProfileInformation?.displayname,
+      displayName: cachedProfileInformation?.displayName,
       avatarUrl: cachedProfileInformation?.avatarUrl,
     );
   }

@@ -10,7 +10,7 @@ class CachedProfileInformation extends ProfileInformation {
     required this.updated,
   }) : super(
           avatarUrl: profile.avatarUrl,
-          displayname: profile.displayname,
+          displayName: profile.displayName,
         );
 
   factory CachedProfileInformation.fromJson(Map<String, Object?> json) =>

@@ -790,7 +790,7 @@ void main() {
       final cachedProfile = await matrix.getUserProfile('@getme:example.com');
       expect(cachedProfile.outdated, false);
       expect(cachedProfile.avatarUrl.toString(), 'mxc://test');
-      expect(cachedProfile.displayname, 'You got me');
+      expect(cachedProfile.displayName, 'You got me');
 
       final profile = await matrix.getProfileFromUserId('@getme:example.com');
       expect(profile.avatarUrl.toString(), 'mxc://test');
@@ -799,7 +799,7 @@ void main() {
       final aliceProfile = await matrix.getUserProfile('@alice:example.com');
       expect(aliceProfile.outdated, false);
       expect(aliceProfile.avatarUrl.toString(), 'mxc://test');
-      expect(aliceProfile.displayname, 'Alice M');
+      expect(aliceProfile.displayName, 'Alice M');
       await matrix.handleSync(
         SyncUpdate(
           nextBatch: '',
@@ -944,7 +944,7 @@ void main() {
         ),
       );
       final profile = await client.getUserProfile(client.userID!);
-      expect(profile.displayname, 'Some First Name Some Last Name');
+      expect(profile.displayName, 'Some First Name Some Last Name');
       expect(profile.outdated, false);
       await client.dispose(closeDatabase: true);
     });

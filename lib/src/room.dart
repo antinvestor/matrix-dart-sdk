@@ -1823,7 +1823,7 @@ class Room {
           final profile = await client.getUserProfile(mxID);
           foundUser = User(
             mxID,
-            displayName: profile.displayname,
+            displayName: profile.displayName,
             avatarUrl: profile.avatarUrl?.toString(),
             membership: foundUser?.membership.name ?? Membership.leave.name,
             room: this,

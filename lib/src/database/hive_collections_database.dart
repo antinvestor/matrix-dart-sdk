@@ -23,7 +23,6 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:hive/hive.dart';
-
 import 'package:matrix/encryption/utils/olm_session.dart';
 import 'package:matrix/encryption/utils/outbound_group_session.dart';
 import 'package:matrix/encryption/utils/ssss_cache.dart';
@@ -1771,6 +1770,26 @@ class HiveCollectionsDatabase extends DatabaseApi {
   Future<void> storeUserProfile(
     String userId,
     CachedProfileInformation profile,
+  ) async {
+    return;
+  }
+
+  @override
+  Future<List<ProfileContact>> filterProfileContactsByProfileId(
+      String profileId) async {
+    return List.empty();
+  }
+
+  @override
+  Future<List<ProfileContact>> filterProfileContactsByDetails(
+      String query) async {
+    return List.empty();
+  }
+
+  @override
+  Future<void> storeProfileContact(
+    String localContactId,
+    ProfileContact profileContact,
   ) async {
     return;
   }
