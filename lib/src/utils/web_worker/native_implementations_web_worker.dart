@@ -1,9 +1,11 @@
+// Dart imports:
 import 'dart:async';
 import 'dart:collection';
 import 'dart:html';
 import 'dart:math';
 import 'dart:typed_data';
 
+// Project imports:
 import 'package:matrix/matrix.dart';
 
 class NativeImplementationsWebWorker extends NativeImplementations {

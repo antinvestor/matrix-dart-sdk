@@ -21,6 +21,7 @@
 * SOFTWARE.
 */
 
+// Project imports:
 import 'package:matrix/matrix_api_lite/model/basic_event.dart';
 import 'package:matrix/matrix_api_lite/model/events/room_key_content.dart';
 import 'package:matrix/matrix_api_lite/utils/try_get_map_extension.dart';

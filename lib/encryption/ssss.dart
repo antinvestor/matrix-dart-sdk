@@ -16,15 +16,18 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Dart imports:
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:typed_data';
 
+// Package imports:
 import 'package:base58check/base58.dart';
 import 'package:collection/collection.dart';
 import 'package:crypto/crypto.dart';
 
+// Project imports:
 import 'package:matrix/encryption/encryption.dart';
 import 'package:matrix/encryption/utils/base64_unpadded.dart';
 import 'package:matrix/encryption/utils/ssss_cache.dart';

@@ -1,10 +1,13 @@
 /// Experimental login method using User Interactive Authentication
 library;
 
+// Dart imports:
 import 'dart:convert';
 
+// Package imports:
 import 'package:http/http.dart' hide Client;
 
+// Project imports:
 import 'package:matrix/matrix.dart';
 
 extension UiaLogin on Client {

@@ -16,8 +16,10 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Package imports:
 import 'package:collection/collection.dart';
 
+// Project imports:
 import 'package:matrix/encryption.dart';
 import 'package:matrix/matrix.dart';
 

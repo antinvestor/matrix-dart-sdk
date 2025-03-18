@@ -23,10 +23,13 @@
 * SOFTWARE.
 */
 
+// Dart imports:
 import 'dart:convert';
 
+// Package imports:
 import 'package:http/http.dart' as http;
 
+// Project imports:
 import 'package:matrix/matrix_api_lite.dart';
 
 enum MatrixError {

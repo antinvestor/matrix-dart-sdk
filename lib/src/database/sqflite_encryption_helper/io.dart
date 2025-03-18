@@ -1,10 +1,13 @@
+// Dart imports:
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:math' show max;
 
+// Package imports:
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqlite3/open.dart';
 
+// Project imports:
 import 'package:matrix/matrix.dart';
 
 /// A helper utility for SQfLite related encryption operations

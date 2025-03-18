@@ -1,5 +1,7 @@
+// Dart imports:
 import 'dart:async';
 
+// Project imports:
 import 'package:matrix/matrix.dart';
 
 class NativeImplementationsWebWorker extends NativeImplementations {

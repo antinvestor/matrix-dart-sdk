@@ -1,5 +1,7 @@
+// Dart imports:
 import 'dart:typed_data';
 
+// Project imports:
 import 'package:matrix/matrix.dart';
 
 enum E2EEKeyMode {

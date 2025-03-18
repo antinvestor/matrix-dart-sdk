@@ -16,8 +16,10 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Dart imports:
 import 'dart:async';
 
+// Project imports:
 import 'package:matrix/matrix.dart';
 
 void runInRoot<T>(FutureOr<T> Function() fn) {

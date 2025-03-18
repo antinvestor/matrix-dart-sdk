@@ -16,6 +16,7 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Project imports:
 import 'package:matrix/matrix.dart';
 
 /// Represents a Matrix User which may be a participant in a Matrix Room.

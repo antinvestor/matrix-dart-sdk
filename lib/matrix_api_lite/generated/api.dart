@@ -1,8 +1,11 @@
+// Dart imports:
 import 'dart:convert';
 import 'dart:typed_data';
 
+// Package imports:
 import 'package:http/http.dart';
 
+// Project imports:
 import 'package:matrix/matrix_api_lite/generated/fixed_model.dart';
 import 'package:matrix/matrix_api_lite/generated/internal.dart';
 import 'package:matrix/matrix_api_lite/generated/model.dart';

@@ -16,11 +16,14 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Dart imports:
 import 'dart:async';
 import 'dart:convert';
 
+// Package imports:
 import 'package:collection/collection.dart';
 
+// Project imports:
 import 'package:matrix/matrix.dart';
 import 'package:matrix/src/models/timeline_chunk.dart';
 

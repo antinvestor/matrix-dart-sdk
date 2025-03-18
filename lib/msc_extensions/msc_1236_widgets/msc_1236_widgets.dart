@@ -1,6 +1,7 @@
 /// Extensions related to widgets in a room. Widgets are not part of the Matrix specification yet.
 library;
 
+// Project imports:
 import 'package:matrix/matrix.dart';
 
 export 'src/widget.dart';

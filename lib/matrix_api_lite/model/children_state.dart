@@ -21,6 +21,7 @@
 * SOFTWARE.
 */
 
+// Project imports:
 import 'package:matrix/matrix_api_lite/model/stripped_state_event.dart';
 
 class ChildrenState extends StrippedStateEvent {

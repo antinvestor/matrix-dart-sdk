@@ -16,8 +16,10 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Package imports:
 import 'package:test/test.dart';
 
+// Project imports:
 import 'package:matrix/src/utils/html_to_text.dart';
 
 void main() {

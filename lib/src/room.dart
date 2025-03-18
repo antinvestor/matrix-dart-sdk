@@ -16,14 +16,17 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Dart imports:
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+// Package imports:
 import 'package:async/async.dart';
 import 'package:collection/collection.dart';
 import 'package:html_unescape/html_unescape.dart';
 
+// Project imports:
 import 'package:matrix/matrix.dart';
 import 'package:matrix/src/models/timeline_chunk.dart';
 import 'package:matrix/src/utils/cached_stream_controller.dart';

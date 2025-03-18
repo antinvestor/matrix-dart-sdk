@@ -16,13 +16,16 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Dart imports:
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:math';
 
+// Package imports:
 import 'package:http/http.dart';
 
+// Project imports:
 import 'package:matrix/matrix.dart' as sdk;
 import 'package:matrix/matrix.dart';
 

@@ -16,9 +16,11 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Package imports:
 import 'package:canonical_json/canonical_json.dart';
 import 'package:test/test.dart';
 
+// Project imports:
 import 'package:matrix/matrix.dart';
 
 void main() {

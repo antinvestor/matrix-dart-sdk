@@ -21,12 +21,15 @@
 * SOFTWARE.
 */
 
+// Dart imports:
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+// Package imports:
 import 'package:http/http.dart' as http;
 
+// Project imports:
 import 'package:matrix/matrix_api_lite.dart';
 import 'package:matrix/matrix_api_lite/generated/api.dart';
 

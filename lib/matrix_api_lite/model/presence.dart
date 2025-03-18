@@ -21,6 +21,7 @@
 * SOFTWARE.
 */
 
+// Project imports:
 import 'package:matrix/matrix_api_lite/model/basic_event_with_sender.dart';
 import 'package:matrix/matrix_api_lite/model/presence_content.dart';
 

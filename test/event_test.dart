@@ -16,11 +16,14 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Dart imports:
 import 'dart:convert';
 import 'dart:typed_data';
 
+// Package imports:
 import 'package:test/test.dart';
 
+// Project imports:
 import 'package:matrix/encryption.dart';
 import 'package:matrix/matrix.dart';
 import 'package:matrix/src/models/timeline_chunk.dart';

@@ -21,6 +21,7 @@
 * SOFTWARE.
 */
 
+// Project imports:
 import 'package:matrix/matrix_api_lite/model/basic_event.dart';
 
 class BasicEventWithSender extends BasicEvent {

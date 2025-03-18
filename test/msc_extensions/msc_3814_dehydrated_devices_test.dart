@@ -21,8 +21,10 @@
 * SOFTWARE.
 */
 
+// Package imports:
 import 'package:test/test.dart';
 
+// Project imports:
 import 'package:matrix/fake_matrix_api.dart';
 import 'package:matrix/msc_extensions/msc_3814_dehydrated_devices/api.dart';
 import '../fake_client.dart';

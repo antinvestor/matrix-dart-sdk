@@ -19,13 +19,16 @@
 /// Workaround until [File] in dart:io and dart:html is unified
 library;
 
+// Dart imports:
 import 'dart:async';
 import 'dart:typed_data';
 
+// Package imports:
 import 'package:blurhash_dart/blurhash_dart.dart';
 import 'package:image/image.dart';
 import 'package:mime/mime.dart';
 
+// Project imports:
 import 'package:matrix/matrix.dart';
 import 'package:matrix/src/utils/compute_callback.dart';
 

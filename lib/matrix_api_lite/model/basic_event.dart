@@ -21,6 +21,7 @@
 * SOFTWARE.
 */
 
+// Project imports:
 import 'package:matrix/matrix_api_lite/utils/map_copy_extension.dart';
 
 class BasicEvent {
