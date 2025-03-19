@@ -2596,6 +2596,23 @@ class ProfileInformation {
     };
   }
 
+  Profile toProfile() {
+    var userId = profileId ?? '';
+    if (userId.startsWith(localProfileIdSuffix)) {
+      userId = '';
+    }
+
+    return Profile(
+      userId: userId,
+      avatarUrl: avatarUrl,
+      displayName: displayName,
+      contacts: contacts,
+      extra: extra,
+    );
+  }
+
+  final String localProfileIdSuffix = 'local_id_';
+
   String? profileId;
 
   /// The user's avatar URL if they have set one, otherwise not present.
