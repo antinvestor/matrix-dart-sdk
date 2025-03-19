@@ -2616,7 +2616,8 @@ class ProfileInformation {
           other.profileId == profileId &&
           other.avatarUrl == avatarUrl &&
           other.displayName == displayName &&
-          other.contacts == contacts);
+          other.contacts == contacts &&
+          other.extra == extra);
 
   @dart.override
   int get hashCode => Object.hash(profileId, avatarUrl, displayName, contacts);
