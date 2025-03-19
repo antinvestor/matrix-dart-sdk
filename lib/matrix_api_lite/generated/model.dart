@@ -2588,7 +2588,8 @@ class ProfileInformation {
     final contacts = this.contacts;
     return {
       if (profileId != null) 'profile_id': profileId,
-      if (contacts != null) 'contacts': contacts,
+      if (contacts != null)
+        'contacts': contacts.map((c) => c.toJson()).toList(),
       if (avatarUrl != null) 'avatar_url': avatarUrl.toString(),
       if (displayName != null) 'displayname': displayName,
       if (extra != null) 'extra': extra,
