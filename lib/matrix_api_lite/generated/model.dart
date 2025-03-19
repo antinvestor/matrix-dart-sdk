@@ -2563,7 +2563,6 @@ class ProfileInformation {
     this.avatarUrl,
     this.displayName,
     this.extra,
-
   });
 
   ProfileInformation.fromJson(Map<String, Object?> json)
@@ -2572,21 +2571,27 @@ class ProfileInformation {
             v != null ? Uri.parse(v as String) : null)(json['avatar_url']),
         displayName =
             ((v) => v != null ? v as String : null)(json['displayname']),
+        contacts = ((v) =>
+            v != null ? v as List<ProfileContact> : null)(json['contacts']),
         extra = ((v) =>
             v != null ? v as Map<String, String>? : null)(json['extra']);
 
   Map<String, Object?> toJson() {
+    final profileId = this.profileId;
     final avatarUrl = this.avatarUrl;
     final displayName = this.displayName;
     final extra = this.extra;
+    final contacts = this.contacts;
     return {
+      if (profileId != null) 'profile_id': profileId,
+      if (contacts != null) 'contacts': contacts,
       if (avatarUrl != null) 'avatar_url': avatarUrl.toString(),
       if (displayName != null) 'displayname': displayName,
       if (extra != null) 'extra': extra,
     };
   }
 
-  String profileId;
+  String? profileId;
 
   /// The user's avatar URL if they have set one, otherwise not present.
   Uri? avatarUrl;
@@ -2596,7 +2601,7 @@ class ProfileInformation {
 
   Map<String, String>? extra;
 
-  List<ProfileContact> contacts = List.empty();
+  List<ProfileContact>? contacts;
 
   @dart.override
   bool operator ==(Object other) =>
@@ -2617,11 +2622,11 @@ class ProfileInformation {
 class ProfileContact {
   ProfileContact({
     this.id,
-    required this.detail,
+    this.detail,
   });
 
   ProfileContact.fromJson(Map<dynamic, dynamic> json)
-      : detail = ((v) =>  v as String )(json['detail']),
+      : detail = ((v) => v != null ? v as String : null)(json['detail']),
         id = ((v) => v != null ? v as String : null)(json['id']);
 
   Map<String, Object?> toJson() {
@@ -2629,12 +2634,12 @@ class ProfileContact {
     final id = this.id;
     return {
       if (id != null) 'id': id,
-       'detail': detail,
+      if (detail != null) 'detail': detail,
     };
   }
 
   String? id;
-  String detail;
+  String? detail;
 
   @dart.override
   bool operator ==(Object other) =>
