@@ -1820,9 +1820,10 @@ class MatrixSdkDatabase extends DatabaseApi with DatabaseFileStorage {
       final displayName = contact.displayName?.toLowerCase() ?? '';
       final matchesDisplayName = displayName.contains(trimmedQuery);
 
-      final matchesContacts = contact.contacts.any(
-        (val) => val.detail.toLowerCase().contains(trimmedQuery),
-      );
+      final matchesContacts = contact.contacts?.any(
+            (val) => val.detail?.toLowerCase().contains(trimmedQuery) ?? false,
+          ) ??
+          false;
 
       final matchesExtra = contact.extra?.values.any(
             (val) => val.toLowerCase().contains(trimmedQuery),
