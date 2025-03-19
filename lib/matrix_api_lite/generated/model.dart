@@ -2558,8 +2558,8 @@ class GetPresenceResponse {
 @_NameSource('rule override generated')
 class ProfileInformation {
   ProfileInformation({
-    required this.profileId,
-    required this.contacts,
+    this.profileId,
+    this.contacts,
     this.avatarUrl,
     this.displayName,
     this.extra,
