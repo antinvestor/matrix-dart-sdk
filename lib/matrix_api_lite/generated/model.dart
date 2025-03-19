@@ -4,6 +4,7 @@ import 'dart:core';
 import 'package:matrix/matrix_api_lite/model/children_state.dart';
 import 'package:matrix/matrix_api_lite/model/matrix_event.dart';
 import 'package:matrix/matrix_api_lite/model/matrix_keys.dart';
+import 'package:matrix/src/utils/copy_map.dart';
 
 part 'model.g.dart';
 
@@ -2571,8 +2572,11 @@ class ProfileInformation {
             v != null ? Uri.parse(v as String) : null)(json['avatar_url']),
         displayName =
             ((v) => v != null ? v as String : null)(json['displayname']),
-        contacts = ((v) =>
-            v != null ? v as List<ProfileContact> : null)(json['contacts']),
+        contacts = ((v) => v != null
+            ? (v as List<dynamic>)
+                .map((c) => ProfileContact.fromJson(copyMap(c)))
+                .toList()
+            : null)(json['contacts']),
         extra = ((v) =>
             v != null ? v as Map<String, String>? : null)(json['extra']);
 
@@ -2625,7 +2629,7 @@ class ProfileContact {
     this.detail,
   });
 
-  ProfileContact.fromJson(Map<dynamic, dynamic> json)
+  ProfileContact.fromJson(Map<String, Object?> json)
       : detail = ((v) => v != null ? v as String : null)(json['detail']),
         id = ((v) => v != null ? v as String : null)(json['id']);
 
