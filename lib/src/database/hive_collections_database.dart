@@ -1776,7 +1776,8 @@ class HiveCollectionsDatabase extends DatabaseApi {
 
   @override
   Future<List<CachedProfileInformation>> filterUserProfiles(
-      String query) async {
+    String query,
+  ) async {
     return List.empty();
   }
 }

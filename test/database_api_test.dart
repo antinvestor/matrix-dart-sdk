@@ -20,9 +20,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:matrix/matrix.dart';
 import 'package:test/test.dart';
 
-import 'package:matrix/matrix.dart';
 import 'fake_database.dart';
 
 String createLargeString(String character, int desiredSize) {
@@ -667,7 +667,9 @@ void main() {
             CachedProfileInformation.fromProfile(
               ProfileInformation(
                 profileId: '@alice:example.com',
-                contacts: {ProfileContact(id: 'ct', detail: 'alice@example.com')}.toList(),
+                contacts: {
+                  ProfileContact(id: 'ct', detail: 'alice@example.com'),
+                }.toList(),
                 avatarUrl: Uri.parse('mxc://test'),
                 displayName: 'Alice M',
               ),

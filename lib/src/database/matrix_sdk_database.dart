@@ -1807,7 +1807,8 @@ class MatrixSdkDatabase extends DatabaseApi with DatabaseFileStorage {
 
   @override
   Future<List<CachedProfileInformation>> filterUserProfiles(
-      String query) async {
+    String query,
+  ) async {
     final allContacts = await _userProfilesBox.getAllValues();
     final profiles = allContacts.values
         .map((json) => CachedProfileInformation.fromJson(copyMap(json)))
