@@ -2558,6 +2558,8 @@ class GetPresenceResponse {
 ///
 @_NameSource('rule override generated')
 class ProfileInformation {
+  static const localProfileIdPrefix = 'local_id_';
+
   ProfileInformation({
     this.profileId,
     this.contacts,
@@ -2598,7 +2600,7 @@ class ProfileInformation {
 
   Profile toProfile() {
     var userId = profileId ?? '';
-    if (userId.startsWith(localProfileIdSuffix)) {
+    if (userId.startsWith(localProfileIdPrefix)) {
       userId = '';
     }
 
@@ -2610,8 +2612,6 @@ class ProfileInformation {
       extra: extra,
     );
   }
-
-  final String localProfileIdSuffix = 'local_id_';
 
   String? profileId;
 
@@ -2637,7 +2637,8 @@ class ProfileInformation {
           other.extra == extra);
 
   @dart.override
-  int get hashCode => Object.hash(profileId, avatarUrl, displayName, contacts);
+  int get hashCode =>
+      Object.hash(profileId, avatarUrl, displayName, contacts, extra);
 }
 
 ///
