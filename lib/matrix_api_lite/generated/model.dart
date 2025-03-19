@@ -2571,7 +2571,7 @@ class ProfileInformation {
         avatarUrl = ((v) =>
             v != null ? Uri.parse(v as String) : null)(json['avatar_url']),
         displayName =
-            ((v) => v != null ? v as String : null)(json['displayname']),
+            ((v) => v != null ? v as String : null)(json['display_name']),
         contacts = ((v) => v != null
             ? (v as List<dynamic>)
                 .map((c) => ProfileContact.fromJson(copyMap(c)))
@@ -2591,7 +2591,7 @@ class ProfileInformation {
       if (contacts != null)
         'contacts': contacts.map((c) => c.toJson()).toList(),
       if (avatarUrl != null) 'avatar_url': avatarUrl.toString(),
-      if (displayName != null) 'displayname': displayName,
+      if (displayName != null) 'display_name': displayName,
       if (extra != null) 'extra': extra,
     };
   }
@@ -5788,6 +5788,8 @@ class Profile {
     this.avatarUrl,
     this.displayName,
     required this.userId,
+    this.contacts,
+    this.extra,
   });
 
   Profile.fromJson(Map<String, Object?> json)
@@ -5795,15 +5797,28 @@ class Profile {
             v != null ? Uri.parse(v as String) : null)(json['avatar_url']),
         displayName =
             ((v) => v != null ? v as String : null)(json['display_name']),
-        userId = json['user_id'] as String;
+        userId = json['user_id'] as String,
+        contacts = ((v) => v != null
+            ? (v as List<dynamic>)
+                .map((c) => ProfileContact.fromJson(copyMap(c)))
+                .toList()
+            : null)(json['contacts']),
+        extra = ((v) =>
+            v != null ? v as Map<String, String>? : null)(json['extra']);
 
   Map<String, Object?> toJson() {
     final avatarUrl = this.avatarUrl;
     final displayName = this.displayName;
+
+    final extra = this.extra;
+    final contacts = this.contacts;
     return {
+      'user_id': userId,
+      if (contacts != null)
+        'contacts': contacts.map((c) => c.toJson()).toList(),
       if (avatarUrl != null) 'avatar_url': avatarUrl.toString(),
       if (displayName != null) 'display_name': displayName,
-      'user_id': userId,
+      if (extra != null) 'extra': extra,
     };
   }
 
@@ -5816,6 +5831,10 @@ class Profile {
   /// The user's matrix user ID.
   String userId;
 
+  Map<String, String>? extra;
+
+  List<ProfileContact>? contacts;
+
   @dart.override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -5823,10 +5842,13 @@ class Profile {
           other.runtimeType == runtimeType &&
           other.avatarUrl == avatarUrl &&
           other.displayName == displayName &&
-          other.userId == userId);
+          other.userId == userId &&
+          other.contacts == contacts &&
+          other.extra == extra);
 
   @dart.override
-  int get hashCode => Object.hash(avatarUrl, displayName, userId);
+  int get hashCode =>
+      Object.hash(avatarUrl, displayName, userId, contacts, extra);
 }
 
 ///
