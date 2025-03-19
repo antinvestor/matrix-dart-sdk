@@ -93,19 +93,11 @@ abstract class DatabaseApi {
 
   Future<CachedProfileInformation?> getUserProfile(String userId);
 
+  Future<List<CachedProfileInformation>> filterUserProfiles(String query);
+
   Future<void> storeUserProfile(
     String userId,
     CachedProfileInformation profile,
-  );
-
-  Future<List<ProfileContact>> filterProfileContactsByProfileId(
-      String profileId);
-
-  Future<List<ProfileContact>> filterProfileContactsByDetails(String query);
-
-  Future<void> storeProfileContact(
-    String localContactId,
-    ProfileContact profileContact,
   );
 
   Future<void> markUserProfileAsOutdated(String userId);

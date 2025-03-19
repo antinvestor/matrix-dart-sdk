@@ -9,6 +9,9 @@ class CachedProfileInformation extends ProfileInformation {
     required this.outdated,
     required this.updated,
   }) : super(
+          profileId: profile.profileId,
+          contacts: profile.contacts,
+          extra: profile.extra,
           avatarUrl: profile.avatarUrl,
           displayName: profile.displayName,
         );

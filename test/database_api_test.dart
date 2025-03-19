@@ -666,6 +666,8 @@ void main() {
             '@alice:example.com',
             CachedProfileInformation.fromProfile(
               ProfileInformation(
+                profileId: '@alice:example.com',
+                contacts: {ProfileContact(id: 'ct', detail: 'alice@example.com')}.toList(),
                 avatarUrl: Uri.parse('mxc://test'),
                 displayName: 'Alice M',
               ),

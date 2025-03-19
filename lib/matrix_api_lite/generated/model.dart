@@ -2558,14 +2558,16 @@ class GetPresenceResponse {
 @_NameSource('rule override generated')
 class ProfileInformation {
   ProfileInformation({
-    this.profileId,
+    required this.profileId,
+    required this.contacts,
     this.avatarUrl,
     this.displayName,
     this.extra,
+
   });
 
   ProfileInformation.fromJson(Map<String, Object?> json)
-      : profileId = ((v) => v != null ? v as String : null)(json['profile_id']),
+      : profileId = ((v) => v != null ? v as String : '')(json['profile_id']),
         avatarUrl = ((v) =>
             v != null ? Uri.parse(v as String) : null)(json['avatar_url']),
         displayName =
@@ -2584,7 +2586,7 @@ class ProfileInformation {
     };
   }
 
-  String? profileId;
+  String profileId;
 
   /// The user's avatar URL if they have set one, otherwise not present.
   Uri? avatarUrl;
@@ -2594,16 +2596,20 @@ class ProfileInformation {
 
   Map<String, String>? extra;
 
+  List<ProfileContact> contacts = List.empty();
+
   @dart.override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ProfileInformation &&
           other.runtimeType == runtimeType &&
+          other.profileId == profileId &&
           other.avatarUrl == avatarUrl &&
-          other.displayName == displayName);
+          other.displayName == displayName &&
+          other.contacts == contacts);
 
   @dart.override
-  int get hashCode => Object.hash(avatarUrl, displayName);
+  int get hashCode => Object.hash(profileId, avatarUrl, displayName, contacts);
 }
 
 ///
@@ -2611,37 +2617,24 @@ class ProfileInformation {
 class ProfileContact {
   ProfileContact({
     this.id,
-    this.profileId,
-    this.detail,
-    this.extra,
-    this.hash,
+    required this.detail,
   });
 
   ProfileContact.fromJson(Map<dynamic, dynamic> json)
-      : detail = ((v) => v != null ? v as String : null)(json['detail']),
-        id = ((v) => v != null ? v as String : null)(json['id']),
-        profileId = ((v) => v != null ? v as String : null)(json['profile_id']),
-        extra = ((v) =>
-            v != null ? v as Map<String, String>? : null)(json['extra']);
+      : detail = ((v) =>  v as String )(json['detail']),
+        id = ((v) => v != null ? v as String : null)(json['id']);
 
   Map<String, Object?> toJson() {
     final detail = this.detail;
     final id = this.id;
-    final profileId = this.profileId;
-    final extra = this.extra;
     return {
       if (id != null) 'id': id,
-      if (profileId != null) 'profile_id': profileId,
-      if (detail != null) 'detail': detail,
-      if (extra != null) 'extra': extra,
+       'detail': detail,
     };
   }
 
   String? id;
-  String? profileId;
-  String? detail;
-  String? hash;
-  Map<String, String>? extra;
+  String detail;
 
   @dart.override
   bool operator ==(Object other) =>
@@ -2649,11 +2642,10 @@ class ProfileContact {
       (other is ProfileContact &&
           other.runtimeType == runtimeType &&
           other.id == id &&
-          other.profileId == profileId &&
           other.detail == detail);
 
   @dart.override
-  int get hashCode => Object.hash(id, profileId, detail, hash);
+  int get hashCode => Object.hash(id, detail);
 }
 
 /// A list of the rooms on the server.
