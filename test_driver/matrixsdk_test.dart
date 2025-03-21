@@ -18,10 +18,10 @@
 
 import 'dart:io';
 
-import 'package:matrix/matrix.dart';
 import 'package:olm/olm.dart' as olm;
 import 'package:test/test.dart';
 
+import 'package:matrix/matrix.dart';
 import '../test/fake_database.dart';
 import 'test_config.dart';
 

@@ -93,8 +93,10 @@ abstract class DatabaseApi {
 
   Future<CachedProfileInformation?> getUserProfile(String userId);
 
-  Future<List<CachedProfileInformation>> filterUserProfiles(
-      {String? query, List<String>? extraKeys});
+  Future<List<CachedProfileInformation>> filterUserProfiles({
+    String? query,
+    List<String>? extraKeys,
+  });
 
   Future<void> storeUserProfile(
     String userId,
