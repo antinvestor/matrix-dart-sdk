@@ -2578,7 +2578,7 @@ class ProfileInformation {
         contacts = (json['contacts'] as List<dynamic>?)
             ?.map((c) => ProfileContact.fromJson(copyMap(c)))
             .toList(),
-        extra = json['extra'] as Map<String, String>?;
+        extra = json['extra'] as Map<String, dynamic>?;
 
   Map<String, Object?> toJson() {
     final profileId = this.profileId;
@@ -5818,7 +5818,7 @@ class Profile {
         contacts = (json['contacts'] as List<dynamic>?)
             ?.map((c) => ProfileContact.fromJson(copyMap(c)))
             .toList(),
-        extra = json['extra'] as Map<String, String>?;
+        extra = json['extra'] as Map<String, dynamic>?;
 
   Map<String, Object?> toJson() {
     final avatarUrl = this.avatarUrl;
