@@ -590,6 +590,23 @@ class Client extends MatrixApi {
     return wellKnown;
   }
 
+  @override
+  Future<SearchUserDirectoryResponse> searchUserDirectory(
+    String searchTerm, {
+    int? limit,
+  }) async {
+    final result = await database?.filterUserProfiles(query: searchTerm);
+
+    final profileList =
+        result?.map((pi) => pi.toProfile()).toList() ?? List.empty();
+
+    if (profileList.isNotEmpty) {
+      return SearchUserDirectoryResponse(limited: false, results: profileList);
+    }
+
+    return await super.searchUserDirectory(searchTerm, limit: limit);
+  }
+
   /// Checks to see if a username is available, and valid, for the server.
   /// Returns the fully-qualified Matrix user ID (MXID) that has been registered.
   /// You have to call [checkHomeserver] first to set a homeserver.
