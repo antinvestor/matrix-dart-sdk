@@ -2569,18 +2569,16 @@ class ProfileInformation {
   });
 
   ProfileInformation.fromJson(Map<String, Object?> json)
-      : profileId = ((v) => v != null ? v as String : '')(json['profile_id']),
-        avatarUrl = ((v) =>
-            v != null ? Uri.parse(v as String) : null)(json['avatar_url']),
+      : avatarUrl = json['avatar_url'] != null
+            ? Uri.parse(json['avatar_url'] as String)
+            : null,
         displayName =
-            ((v) => v != null ? v as String : null)(json['display_name']),
-        contacts = ((v) => v != null
-            ? (v as List<dynamic>)
-                .map((c) => ProfileContact.fromJson(copyMap(c)))
-                .toList()
-            : null)(json['contacts']),
-        extra = ((v) =>
-            v != null ? v as Map<String, String>? : null)(json['extra']);
+            json['display_name'] as String? ?? json['displayname'] as String?,
+        profileId = json['profile_id'] as String?,
+        contacts = (json['contacts'] as List<dynamic>?)
+            ?.map((c) => ProfileContact.fromJson(copyMap(c)))
+            .toList(),
+        extra = json['extra'] as Map<String, String>?;
 
   Map<String, Object?> toJson() {
     final profileId = this.profileId;
@@ -2621,7 +2619,7 @@ class ProfileInformation {
   /// The user's display name if they have set one, otherwise not present.
   String? displayName;
 
-  Map<String, String>? extra;
+  Map<String, Object?>? extra;
 
   List<ProfileContact>? contacts;
 
@@ -5811,18 +5809,16 @@ class Profile {
   });
 
   Profile.fromJson(Map<String, Object?> json)
-      : avatarUrl = ((v) =>
-            v != null ? Uri.parse(v as String) : null)(json['avatar_url']),
+      : avatarUrl = json['avatar_url'] != null
+            ? Uri.parse(json['avatar_url'] as String)
+            : null,
         displayName =
-            ((v) => v != null ? v as String : null)(json['display_name']),
+            json['display_name'] as String? ?? json['displayname'] as String?,
         userId = json['user_id'] as String,
-        contacts = ((v) => v != null
-            ? (v as List<dynamic>)
-                .map((c) => ProfileContact.fromJson(copyMap(c)))
-                .toList()
-            : null)(json['contacts']),
-        extra = ((v) =>
-            v != null ? v as Map<String, String>? : null)(json['extra']);
+        contacts = (json['contacts'] as List<dynamic>?)
+            ?.map((c) => ProfileContact.fromJson(copyMap(c)))
+            .toList(),
+        extra = json['extra'] as Map<String, String>?;
 
   Map<String, Object?> toJson() {
     final avatarUrl = this.avatarUrl;
@@ -5849,7 +5845,7 @@ class Profile {
   /// The user's matrix user ID.
   String userId;
 
-  Map<String, String>? extra;
+  Map<String, Object?>? extra;
 
   List<ProfileContact>? contacts;
 

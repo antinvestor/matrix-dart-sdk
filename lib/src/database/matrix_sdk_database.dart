@@ -1837,8 +1837,8 @@ class MatrixSdkDatabase extends DatabaseApi with DatabaseFileStorage {
       var matchesExtra = false;
 
       for (final k in extraKeysToCheck) {
-        final val = p.extra?[k];
-        matchesExtra = val?.toLowerCase().contains(trimmedQuery) ?? false;
+        final val = p.extra?[k].toString() ?? '';
+        matchesExtra = val.toLowerCase().equals(trimmedQuery);
         if (matchesExtra) {
           break;
         }
