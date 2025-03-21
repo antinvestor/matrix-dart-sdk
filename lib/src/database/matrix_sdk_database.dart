@@ -185,17 +185,10 @@ class MatrixSdkDatabase extends DatabaseApi with DatabaseFileStorage {
     this.idbFactory,
     this.sqfliteFactory,
     this.maxFileSize = 0,
-    // TODO : remove deprecated member migration on next major release
-    @Deprecated(
-      'Breaks support for web standalone. Use [fileStorageLocation] instead.',
-    )
-    dynamic fileStoragePath,
     Uri? fileStorageLocation,
     Duration? deleteFilesAfterDuration,
   }) {
-    final legacyPath = fileStoragePath?.path;
-    this.fileStorageLocation = fileStorageLocation ??
-        (legacyPath is String ? Uri.tryParse(legacyPath) : null);
+    this.fileStorageLocation = fileStorageLocation;
     this.deleteFilesAfterDuration = deleteFilesAfterDuration;
   }
 
@@ -1808,34 +1801,48 @@ class MatrixSdkDatabase extends DatabaseApi with DatabaseFileStorage {
   }
 
   @override
-  Future<List<CachedProfileInformation>> filterUserProfiles(
-    String query,
-  ) async {
+  Future<List<CachedProfileInformation>> filterUserProfiles({
+    String? query,
+    List<String>? extraKeys,
+  }) async {
     final allContacts = await _userProfilesBox.getAllValues();
     final profiles = allContacts.values
         .map((json) => CachedProfileInformation.fromJson(copyMap(json)))
         .toList();
 
-    final trimmedQuery = query.trim().toLowerCase();
-    if (trimmedQuery.isEmpty) return profiles;
+    if (query == null || query.isEmpty) return profiles;
 
-    return profiles.where((contact) {
-      final profileId = contact.profileId?.toLowerCase() ?? '';
+    final extraKeysToCheck = extraKeys ?? List.empty();
+    final trimmedQuery = query.trim().toLowerCase();
+    return profiles.where((p) {
+      final profileId = p.profileId?.toLowerCase() ?? '';
       final matchesProfileId = profileId.contains(trimmedQuery);
 
-      final displayName = contact.displayName?.toLowerCase() ?? '';
-      final matchesDisplayName = displayName.contains(trimmedQuery);
+      final displayName = p.displayName?.toLowerCase() ?? '';
+      final splitQuery = trimmedQuery.split(' ');
 
-      final matchesContacts = contact.contacts?.any(
+      var matchesDisplayName = false;
+
+      for (final q in splitQuery) {
+        matchesDisplayName = displayName.contains(q);
+        if (!matchesDisplayName) {
+          break;
+        }
+      }
+      final matchesContacts = p.contacts?.any(
             (val) => val.detail?.toLowerCase().contains(trimmedQuery) ?? false,
           ) ??
           false;
 
-      final matchesExtra = contact.extra?.values.any(
-            (val) => val.toLowerCase().contains(trimmedQuery),
-          ) ??
-          false;
+      var matchesExtra = false;
 
+      for (final k in extraKeysToCheck) {
+        final val = p.extra?[k];
+        matchesExtra = val?.toLowerCase().contains(trimmedQuery) ?? false;
+        if (matchesExtra) {
+          break;
+        }
+      }
       return matchesProfileId ||
           matchesDisplayName ||
           matchesContacts ||
@@ -1860,4 +1867,29 @@ class MatrixSdkDatabase extends DatabaseApi with DatabaseFileStorage {
         userId,
         profile.toJson(),
       );
+}
+
+class TupleKey {
+  final List<String> parts;
+
+  TupleKey(String key1, [String? key2, String? key3])
+      : parts = [
+          key1,
+          if (key2 != null) key2,
+          if (key3 != null) key3,
+        ];
+
+  const TupleKey.byParts(this.parts);
+
+  TupleKey.fromString(String multiKeyString)
+      : parts = multiKeyString.split('|').toList();
+
+  @override
+  String toString() => parts.join('|');
+
+  @override
+  bool operator ==(other) => parts.toString() == other.toString();
+
+  @override
+  int get hashCode => Object.hashAll(parts);
 }

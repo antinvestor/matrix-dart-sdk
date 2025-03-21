@@ -18,11 +18,10 @@
 
 import 'dart:io';
 
-import 'package:hive/hive.dart';
+import 'package:matrix/matrix.dart';
 import 'package:olm/olm.dart' as olm;
 import 'package:test/test.dart';
 
-import 'package:matrix/matrix.dart';
 import '../test/fake_database.dart';
 import 'test_config.dart';
 
@@ -40,8 +39,6 @@ void main() => group(
           Client? testClientA, testClientB;
 
           try {
-            Hive.init(null);
-
             await olm.init();
             olm.Account();
             Logs().i('[LibOlm] Enabled');
@@ -488,8 +485,6 @@ void main() => group(
           Client? testClientA, testClientB;
 
           try {
-            Hive.init(null);
-
             await olm.init();
             olm.Account();
             Logs().i('[LibOlm] Enabled');
