@@ -2600,7 +2600,7 @@ class ProfileInformation {
     };
   }
 
-  Profile toProfile(String serverName) {
+  Profile toProfile() {
     return Profile(
       userId: userId,
       profileId: profileId,
