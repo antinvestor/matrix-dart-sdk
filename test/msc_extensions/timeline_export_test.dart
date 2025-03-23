@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 
 import 'package:matrix/matrix.dart';
+import 'package:matrix/msc_extensions/extension_timeline_export/timeline_export.dart';
 import 'package:matrix/src/models/timeline_chunk.dart';
 
 // Mock implementations
