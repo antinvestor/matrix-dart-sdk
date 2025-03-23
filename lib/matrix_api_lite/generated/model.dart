@@ -1,9 +1,9 @@
 import 'dart:core' as dart;
 import 'dart:core';
 
+import 'package:matrix/matrix.dart';
 import 'package:matrix/matrix_api_lite/model/children_state.dart';
-import 'package:matrix/matrix_api_lite/model/matrix_event.dart';
-import 'package:matrix/matrix_api_lite/model/matrix_keys.dart';
+import 'package:matrix/src/utils/contact_validator.dart';
 import 'package:matrix/src/utils/copy_map.dart';
 
 part 'model.g.dart';
@@ -2562,6 +2562,7 @@ class ProfileInformation {
 
   ProfileInformation({
     this.profileId,
+    this.userId,
     this.contacts,
     this.avatarUrl,
     this.displayName,
@@ -2574,6 +2575,7 @@ class ProfileInformation {
             : null,
         displayName =
             json['display_name'] as String? ?? json['displayname'] as String?,
+        userId = json['user_id'] as String?,
         profileId = json['profile_id'] as String?,
         contacts = (json['contacts'] as List<dynamic>?)
             ?.map((c) => ProfileContact.fromJson(copyMap(c)))
@@ -2581,12 +2583,14 @@ class ProfileInformation {
         extra = json['extra'] as Map<String, dynamic>?;
 
   Map<String, Object?> toJson() {
+    final userId = this.userId;
     final profileId = this.profileId;
     final avatarUrl = this.avatarUrl;
     final displayName = this.displayName;
     final extra = this.extra;
     final contacts = this.contacts;
     return {
+      if (userId != null) 'user_id': userId,
       if (profileId != null) 'profile_id': profileId,
       if (contacts != null)
         'contacts': contacts.map((c) => c.toJson()).toList(),
@@ -2596,14 +2600,10 @@ class ProfileInformation {
     };
   }
 
-  Profile toProfile() {
-    var userId = profileId ?? '';
-    if (userId.startsWith(localProfileIdPrefix)) {
-      userId = '';
-    }
-
+  Profile toProfile(String serverName) {
     return Profile(
       userId: userId,
+      profileId: profileId,
       avatarUrl: avatarUrl,
       displayName: displayName,
       contacts: contacts,
@@ -2611,6 +2611,7 @@ class ProfileInformation {
     );
   }
 
+  String? userId;
   String? profileId;
 
   /// The user's avatar URL if they have set one, otherwise not present.
@@ -2645,23 +2646,28 @@ class ProfileContact {
   ProfileContact({
     this.id,
     this.detail,
+    this.contactType,
   });
 
   ProfileContact.fromJson(Map<String, Object?> json)
       : detail = ((v) => v != null ? v as String : null)(json['detail']),
+        contactType = ((v) => v != null ? v as String : null)(json['type']),
         id = ((v) => v != null ? v as String : null)(json['id']);
 
   Map<String, Object?> toJson() {
     final detail = this.detail;
     final id = this.id;
+    final contactType = this.contactType;
     return {
       if (id != null) 'id': id,
       if (detail != null) 'detail': detail,
+      if (contactType != null) 'type': contactType,
     };
   }
 
   String? id;
   String? detail;
+  String? contactType;
 
   @dart.override
   bool operator ==(Object other) =>
@@ -2669,10 +2675,21 @@ class ProfileContact {
       (other is ProfileContact &&
           other.runtimeType == runtimeType &&
           other.id == id &&
-          other.detail == detail);
+          other.detail == detail &&
+          other.contactType == contactType);
 
   @dart.override
-  int get hashCode => Object.hash(id, detail);
+  int get hashCode => Object.hash(id, detail, contactType);
+
+  bool isValid() {
+    if (contactType == null || 'email' == contactType) {
+      final isEmail = isValidEmail(detail);
+      if (isEmail || contactType != null) {
+        return isEmail;
+      }
+    }
+    return isValidMsisdn(detail);
+  }
 }
 
 /// A list of the rooms on the server.
@@ -5803,7 +5820,8 @@ class Profile {
   Profile({
     this.avatarUrl,
     this.displayName,
-    required this.userId,
+    this.profileId,
+    this.userId,
     this.contacts,
     this.extra,
   });
@@ -5814,7 +5832,8 @@ class Profile {
             : null,
         displayName =
             json['display_name'] as String? ?? json['displayname'] as String?,
-        userId = json['user_id'] as String,
+        profileId = json['profile_id'] as String?,
+        userId = json['user_id'] as String?,
         contacts = (json['contacts'] as List<dynamic>?)
             ?.map((c) => ProfileContact.fromJson(copyMap(c)))
             .toList(),
@@ -5823,17 +5842,39 @@ class Profile {
   Map<String, Object?> toJson() {
     final avatarUrl = this.avatarUrl;
     final displayName = this.displayName;
-
+    final userId = this.userId;
+    final profileId = this.profileId;
     final extra = this.extra;
     final contacts = this.contacts;
     return {
-      'user_id': userId,
+      if (userId != null) 'user_id': userId,
+      if (profileId != null) 'profile_id': profileId,
       if (contacts != null)
         'contacts': contacts.map((c) => c.toJson()).toList(),
       if (avatarUrl != null) 'avatar_url': avatarUrl.toString(),
       if (displayName != null) 'display_name': displayName,
       if (extra != null) 'extra': extra,
     };
+  }
+
+  String getUserId() {
+    return userId ?? '';
+  }
+
+  bool isValidProfile() {
+    if (getUserId().isValidMatrixId) {
+      return true;
+    }
+
+    return contacts?.any((c) => c.isValid()) ?? false;
+  }
+
+  bool isOnboardedProfile() {
+    if (!isValidProfile()) {
+      return false;
+    }
+
+    return getUserId().isValidMatrixId;
   }
 
   /// The avatar url, as an [`mxc://` URI](https://spec.matrix.org/unstable/client-server-api/#matrix-content-mxc-uris), if one exists.
@@ -5843,7 +5884,9 @@ class Profile {
   String? displayName;
 
   /// The user's matrix user ID.
-  String userId;
+  String? userId;
+
+  String? profileId;
 
   Map<String, Object?>? extra;
 
@@ -5856,13 +5899,14 @@ class Profile {
           other.runtimeType == runtimeType &&
           other.avatarUrl == avatarUrl &&
           other.displayName == displayName &&
+          other.profileId == profileId &&
           other.userId == userId &&
           other.contacts == contacts &&
           other.extra == extra);
 
   @dart.override
   int get hashCode =>
-      Object.hash(avatarUrl, displayName, userId, contacts, extra);
+      Object.hash(avatarUrl, displayName, userId, profileId, contacts, extra);
 }
 
 ///
