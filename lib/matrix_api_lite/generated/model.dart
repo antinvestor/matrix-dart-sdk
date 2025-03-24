@@ -2575,7 +2575,7 @@ class ProfileInformation {
             : null,
         displayName =
             json['display_name'] as String? ?? json['displayname'] as String?,
-        userId = json['user_id'] as String,
+        userId = json['user_id'] as String?,
         profileId = json['profile_id'] as String?,
         contacts = (json['contacts'] as List<dynamic>?)
             ?.map((c) => ProfileContact.fromJson(copyMap(c)))
