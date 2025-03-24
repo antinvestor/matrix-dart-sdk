@@ -679,6 +679,11 @@ class MockRTCDataChannel implements RTCDataChannel {
   late Stream<RTCDataChannelMessage> messageStream;
 
   @override
+  Future<int> getBufferedAmount() async {
+    return bufferedAmount ?? 0;
+  }
+
+  @override
   Future<void> send(RTCDataChannelMessage message) async {
     // Mock implementation for sending a message
     Logs().i('Mock: Sending RTCDataChannelMessage: $message');
