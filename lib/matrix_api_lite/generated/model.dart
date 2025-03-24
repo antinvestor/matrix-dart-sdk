@@ -5912,7 +5912,7 @@ class SearchUserDirectoryResponse {
   SearchUserDirectoryResponse.fromJson(Map<String, Object?> json)
       : limited = json['limited'] as bool,
         results = (json['results'] as List)
-            .map((v) => Profile.fromJson(v as Map<String, Object?>))
+            .map((v) => ProfileInformation.fromJson(v as Map<String, Object?>))
             .toList();
 
   Map<String, Object?> toJson() => {
@@ -5924,7 +5924,7 @@ class SearchUserDirectoryResponse {
   bool limited;
 
   /// Ordered by rank and then whether or not profile info is available.
-  List<Profile> results;
+  List<ProfileInformation> results;
 
   @dart.override
   bool operator ==(Object other) =>
