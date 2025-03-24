@@ -2575,7 +2575,7 @@ class ProfileInformation {
             : null,
         displayName =
             json['display_name'] as String? ?? json['displayname'] as String?,
-        userId = json['user_id'] as String?,
+        userId = json['user_id'] as String,
         profileId = json['profile_id'] as String?,
         contacts = (json['contacts'] as List<dynamic>?)
             ?.map((c) => ProfileContact.fromJson(copyMap(c)))
@@ -2600,9 +2600,13 @@ class ProfileInformation {
     };
   }
 
-  Profile toProfile() {
+  Profile? toProfile() {
+    if (userId == null) {
+      return null;
+    }
+
     return Profile(
-      userId: userId,
+      userId: userId!,
       profileId: profileId,
       avatarUrl: avatarUrl,
       displayName: displayName,
@@ -5821,7 +5825,7 @@ class Profile {
     this.avatarUrl,
     this.displayName,
     this.profileId,
-    this.userId,
+    required this.userId,
     this.contacts,
     this.extra,
   });
@@ -5833,7 +5837,7 @@ class Profile {
         displayName =
             json['display_name'] as String? ?? json['displayname'] as String?,
         profileId = json['profile_id'] as String?,
-        userId = json['user_id'] as String?,
+        userId = json['user_id'] as String,
         contacts = (json['contacts'] as List<dynamic>?)
             ?.map((c) => ProfileContact.fromJson(copyMap(c)))
             .toList(),
@@ -5847,7 +5851,7 @@ class Profile {
     final extra = this.extra;
     final contacts = this.contacts;
     return {
-      if (userId != null) 'user_id': userId,
+      'user_id': userId,
       if (profileId != null) 'profile_id': profileId,
       if (contacts != null)
         'contacts': contacts.map((c) => c.toJson()).toList(),
@@ -5857,24 +5861,12 @@ class Profile {
     };
   }
 
-  String getUserId() {
-    return userId ?? '';
-  }
-
-  bool isValidProfile() {
-    if (getUserId().isValidMatrixId) {
-      return true;
-    }
-
+  bool hasContacts() {
     return contacts?.any((c) => c.isValid()) ?? false;
   }
 
   bool isOnboardedProfile() {
-    if (!isValidProfile()) {
-      return false;
-    }
-
-    return getUserId().isValidMatrixId;
+    return userId.isValidMatrixId;
   }
 
   /// The avatar url, as an [`mxc://` URI](https://spec.matrix.org/unstable/client-server-api/#matrix-content-mxc-uris), if one exists.
@@ -5884,7 +5876,7 @@ class Profile {
   String? displayName;
 
   /// The user's matrix user ID.
-  String? userId;
+  String userId;
 
   String? profileId;
 
