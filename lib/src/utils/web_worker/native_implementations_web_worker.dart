@@ -3,8 +3,9 @@ import 'dart:js_interop';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:matrix/matrix.dart';
 import 'package:web/web.dart';
+
+import 'package:matrix/matrix.dart';
 
 class NativeImplementationsWebWorker extends NativeImplementations {
   final Worker worker;

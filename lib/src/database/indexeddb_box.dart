@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:idb_shim/idb_browser.dart';
+
 import 'package:matrix/src/database/zone_transaction_mixin.dart';
 
 /// Key-Value store abstraction over IndexedDB so that the sdk database can use
