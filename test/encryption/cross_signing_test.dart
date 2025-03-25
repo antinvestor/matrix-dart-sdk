@@ -48,8 +48,9 @@ void main() {
       await client.encryption!.crossSigning.selfSign(recoveryKey: ssssKey);
       expect(key.directVerified, true);
       expect(
-        FakeMatrixApi.calledEndpoints
-            .containsKey('/client/v3/keys/signatures/upload'),
+        FakeMatrixApi.calledEndpoints.containsKey(
+          '/client/v3/keys/signatures/upload',
+        ),
         true,
       );
       expect(await client.encryption!.crossSigning.isCached(), true);
@@ -57,8 +58,9 @@ void main() {
 
     test('signable', () async {
       expect(
-        client.encryption!.crossSigning
-            .signable([client.userDeviceKeys[client.userID!]!.masterKey!]),
+        client.encryption!.crossSigning.signable([
+          client.userDeviceKeys[client.userID!]!.masterKey!,
+        ]),
         true,
       );
       expect(
@@ -76,7 +78,8 @@ void main() {
       expect(
         client.encryption!.crossSigning.signable([
           client
-              .userDeviceKeys['@alice:example.com']!.deviceKeys['JLAFKJWSCS']!,
+              .userDeviceKeys['@alice:example.com']!
+              .deviceKeys['JLAFKJWSCS']!,
         ]),
         false,
       );
@@ -91,7 +94,8 @@ void main() {
       ]);
       final body = json.decode(
         FakeMatrixApi
-            .calledEndpoints['/client/v3/keys/signatures/upload']!.first,
+            .calledEndpoints['/client/v3/keys/signatures/upload']!
+            .first,
       );
       expect(
         body['@test:fakeServer.notExisting']?.containsKey('OTHERDEVICE'),
@@ -105,7 +109,9 @@ void main() {
       );
       expect(
         body['@othertest:fakeServer.notExisting'].containsKey(
-          client.userDeviceKeys['@othertest:fakeServer.notExisting']?.masterKey
+          client
+              .userDeviceKeys['@othertest:fakeServer.notExisting']
+              ?.masterKey
               ?.publicKey,
         ),
         true,

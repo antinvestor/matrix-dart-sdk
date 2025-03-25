@@ -11,9 +11,7 @@ import 'package:matrix/src/voip/utils/stream_helper.dart';
 import 'package:matrix/src/voip/utils/user_media_constraints.dart';
 
 class MeshBackend extends CallBackend {
-  MeshBackend({
-    super.type = 'mesh',
-  });
+  MeshBackend({super.type = 'mesh'});
 
   final List<CallSession> _callSessions = [];
 
@@ -39,9 +37,7 @@ class MeshBackend extends CallBackend {
 
   @override
   Map<String, Object?> toJson() {
-    return {
-      'type': type,
-    };
+    return {'type': type};
   }
 
   CallParticipant? _activeSpeaker;
@@ -70,14 +66,16 @@ class MeshBackend extends CallBackend {
   ) async {
     final mediaConstraints = {
       'audio': UserMediaConstraints.micMediaConstraints,
-      'video': type == CallType.kVideo
-          ? UserMediaConstraints.camMediaConstraints
-          : false,
+      'video':
+          type == CallType.kVideo
+              ? UserMediaConstraints.camMediaConstraints
+              : false,
     };
 
     try {
-      return await groupCall.voip.delegate.mediaDevices
-          .getUserMedia(mediaConstraints);
+      return await groupCall.voip.delegate.mediaDevices.getUserMedia(
+        mediaConstraints,
+      );
     } catch (e) {
       groupCall.setState(GroupCallState.localCallFeedUninitialized);
       rethrow;
@@ -85,13 +83,11 @@ class MeshBackend extends CallBackend {
   }
 
   Future<MediaStream> _getDisplayMedia(GroupCallSession groupCall) async {
-    final mediaConstraints = {
-      'audio': false,
-      'video': true,
-    };
+    final mediaConstraints = {'audio': false, 'video': true};
     try {
-      return await groupCall.voip.delegate.mediaDevices
-          .getDisplayMedia(mediaConstraints);
+      return await groupCall.voip.delegate.mediaDevices.getDisplayMedia(
+        mediaConstraints,
+      );
     } catch (e, s) {
       throw MatrixSDKVoipException('_getDisplayMedia failed', stackTrace: s);
     }
@@ -145,11 +141,9 @@ class MeshBackend extends CallBackend {
       );
     }
 
-    call.onCallStateChanged.stream.listen(
-      ((event) async {
-        await _onCallStateChanged(call, event);
-      }),
-    );
+    call.onCallStateChanged.stream.listen(((event) async {
+      await _onCallStateChanged(call, event);
+    }),);
 
     call.onCallReplaced.stream.listen((CallSession newCall) async {
       await _replaceCall(groupCall, call, newCall);
@@ -170,8 +164,9 @@ class MeshBackend extends CallBackend {
     CallSession existingCall,
     CallSession replacementCall,
   ) async {
-    final existingCallIndex = _callSessions
-        .indexWhere((element) => element.callId == existingCall.callId);
+    final existingCallIndex = _callSessions.indexWhere(
+      (element) => element.callId == existingCall.callId,
+    );
 
     if (existingCallIndex == -1) {
       throw MatrixSDKVoipException('Couldn\'t find call to replace');
@@ -315,8 +310,9 @@ class MeshBackend extends CallBackend {
   }
 
   WrappedMediaStream? _getUserMediaStreamByParticipantId(String participantId) {
-    final stream = _userMediaStreams
-        .where((stream) => stream.participant.id == participantId);
+    final stream = _userMediaStreams.where(
+      (stream) => stream.participant.id == participantId,
+    );
     if (stream.isNotEmpty) {
       return stream.first;
     }
@@ -326,38 +322,42 @@ class MeshBackend extends CallBackend {
   void _onActiveSpeakerLoop(GroupCallSession groupCall) async {
     CallParticipant? nextActiveSpeaker;
     // idc about screen sharing atm.
-    final userMediaStreamsCopyList =
-        List<WrappedMediaStream>.from(_userMediaStreams);
+    final userMediaStreamsCopyList = List<WrappedMediaStream>.from(
+      _userMediaStreams,
+    );
     for (final stream in userMediaStreamsCopyList) {
       if (stream.participant.isLocal && stream.pc == null) {
         continue;
       }
 
       final List<StatsReport> statsReport = await stream.pc!.getStats();
-      statsReport
-          .removeWhere((element) => !element.values.containsKey('audioLevel'));
+      statsReport.removeWhere(
+        (element) => !element.values.containsKey('audioLevel'),
+      );
 
       // https://www.w3.org/TR/webrtc-stats/#summary
-      final otherPartyAudioLevel = statsReport
-          .singleWhereOrNull(
-            (element) =>
-                element.type == 'inbound-rtp' &&
-                element.values['kind'] == 'audio',
-          )
-          ?.values['audioLevel'];
+      final otherPartyAudioLevel =
+          statsReport
+              .singleWhereOrNull(
+                (element) =>
+                    element.type == 'inbound-rtp' &&
+                    element.values['kind'] == 'audio',
+              )
+              ?.values['audioLevel'];
       if (otherPartyAudioLevel != null) {
         _audioLevelsMap[stream.participant] = otherPartyAudioLevel;
       }
 
       // https://www.w3.org/TR/webrtc-stats/#dom-rtcstatstype-media-source
       // firefox does not seem to have this though. Works on chrome and android
-      final ownAudioLevel = statsReport
-          .singleWhereOrNull(
-            (element) =>
-                element.type == 'media-source' &&
-                element.values['kind'] == 'audio',
-          )
-          ?.values['audioLevel'];
+      final ownAudioLevel =
+          statsReport
+              .singleWhereOrNull(
+                (element) =>
+                    element.type == 'media-source' &&
+                    element.values['kind'] == 'audio',
+              )
+              ?.values['audioLevel'];
       if (groupCall.localParticipant != null &&
           ownAudioLevel != null &&
           _audioLevelsMap[groupCall.localParticipant] != ownAudioLevel) {
@@ -388,8 +388,9 @@ class MeshBackend extends CallBackend {
   WrappedMediaStream? _getScreenshareStreamByParticipantId(
     String participantId,
   ) {
-    final stream = _screenshareStreams
-        .where((stream) => stream.participant.id == participantId);
+    final stream = _screenshareStreams.where(
+      (stream) => stream.participant.id == participantId,
+    );
     if (stream.isNotEmpty) {
       return stream.first;
     }
@@ -402,8 +403,9 @@ class MeshBackend extends CallBackend {
   ) {
     _screenshareStreams.add(stream);
     onStreamAdd.add(stream);
-    groupCall.onGroupCallEvent
-        .add(GroupCallStateChange.screenshareStreamsChanged);
+    groupCall.onGroupCallEvent.add(
+      GroupCallStateChange.screenshareStreamsChanged,
+    );
   }
 
   Future<void> _replaceScreenshareStream(
@@ -424,16 +426,18 @@ class MeshBackend extends CallBackend {
     _screenshareStreams.replaceRange(streamIndex, 1, [replacementStream]);
 
     await existingStream.dispose();
-    groupCall.onGroupCallEvent
-        .add(GroupCallStateChange.screenshareStreamsChanged);
+    groupCall.onGroupCallEvent.add(
+      GroupCallStateChange.screenshareStreamsChanged,
+    );
   }
 
   Future<void> _removeScreenshareStream(
     GroupCallSession groupCall,
     WrappedMediaStream stream,
   ) async {
-    final streamIndex = _screenshareStreams
-        .indexWhere((stream) => stream.participant.id == stream.participant.id);
+    final streamIndex = _screenshareStreams.indexWhere(
+      (stream) => stream.participant.id == stream.participant.id,
+    );
 
     if (streamIndex == -1) {
       throw MatrixSDKVoipException(
@@ -451,8 +455,9 @@ class MeshBackend extends CallBackend {
       await stopMediaStream(stream.stream);
     }
 
-    groupCall.onGroupCallEvent
-        .add(GroupCallStateChange.screenshareStreamsChanged);
+    groupCall.onGroupCallEvent.add(
+      GroupCallStateChange.screenshareStreamsChanged,
+    );
   }
 
   Future<void> _onCallStateChanged(CallSession call, CallState state) async {
@@ -487,8 +492,9 @@ class MeshBackend extends CallBackend {
   ) async {
     _userMediaStreams.add(stream);
     onStreamAdd.add(stream);
-    groupCall.onGroupCallEvent
-        .add(GroupCallStateChange.userMediaStreamsChanged);
+    groupCall.onGroupCallEvent.add(
+      GroupCallStateChange.userMediaStreamsChanged,
+    );
   }
 
   Future<void> _replaceUserMediaStream(
@@ -509,8 +515,9 @@ class MeshBackend extends CallBackend {
     _userMediaStreams.replaceRange(streamIndex, 1, [replacementStream]);
 
     await existingStream.dispose();
-    groupCall.onGroupCallEvent
-        .add(GroupCallStateChange.userMediaStreamsChanged);
+    groupCall.onGroupCallEvent.add(
+      GroupCallStateChange.userMediaStreamsChanged,
+    );
   }
 
   Future<void> _removeUserMediaStream(
@@ -537,8 +544,9 @@ class MeshBackend extends CallBackend {
       await stopMediaStream(stream.stream);
     }
 
-    groupCall.onGroupCallEvent
-        .add(GroupCallStateChange.userMediaStreamsChanged);
+    groupCall.onGroupCallEvent.add(
+      GroupCallStateChange.userMediaStreamsChanged,
+    );
 
     if (_activeSpeaker == stream.participant && _userMediaStreams.isNotEmpty) {
       _activeSpeaker = _userMediaStreams[0].participant;
@@ -800,8 +808,9 @@ class MeshBackend extends CallBackend {
 
         _addScreenshareStream(groupCall, localScreenshareStream!);
 
-        groupCall.onGroupCallEvent
-            .add(GroupCallStateChange.localScreenshareStateChanged);
+        groupCall.onGroupCallEvent.add(
+          GroupCallStateChange.localScreenshareStateChanged,
+        );
         for (final call in _callSessions) {
           await call.addLocalStream(
             await localScreenshareStream!.stream!.clone(),
@@ -827,8 +836,9 @@ class MeshBackend extends CallBackend {
 
       await groupCall.sendMemberStateEvent();
 
-      groupCall.onGroupCallEvent
-          .add(GroupCallStateChange.localMuteStateChanged);
+      groupCall.onGroupCallEvent.add(
+        GroupCallStateChange.localMuteStateChanged,
+      );
       return;
     }
   }
@@ -948,7 +958,8 @@ class MeshBackend extends CallBackend {
 
     await newCall.placeCallWithStreams(
       _getLocalStreams(),
-      requestScreenSharing: mem.feeds?.any(
+      requestScreenSharing:
+          mem.feeds?.any(
             (element) =>
                 element['purpose'] == SDPStreamMetadataPurpose.Screenshare,
           ) ??
@@ -961,11 +972,7 @@ class MeshBackend extends CallBackend {
   @override
   List<Map<String, String>>? getCurrentFeeds() {
     return _getLocalStreams()
-        .map(
-          (feed) => ({
-            'purpose': feed.purpose,
-          }),
-        )
+        .map((feed) => ({'purpose': feed.purpose}))
         .toList();
   }
 

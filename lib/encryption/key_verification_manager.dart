@@ -31,7 +31,8 @@ class KeyVerificationManager {
   Future<void> cleanup() async {
     final Set entriesToDispose = <String>{};
     for (final entry in _requests.entries) {
-      var dispose = entry.value.canceled ||
+      var dispose =
+          entry.value.canceled ||
           entry.value.state == KeyVerificationState.done ||
           entry.value.state == KeyVerificationState.error;
       if (!dispose) {
@@ -71,12 +72,16 @@ class KeyVerificationManager {
         await request.handlePayload(event.type, event.content);
       }
     } else {
-      if (!{EventTypes.KeyVerificationRequest, EventTypes.KeyVerificationStart}
-          .contains(event.type)) {
+      if (!{
+        EventTypes.KeyVerificationRequest,
+        EventTypes.KeyVerificationStart,
+      }.contains(event.type)) {
         return; // we can only start on these
       }
-      final newKeyRequest =
-          KeyVerification(encryption: encryption, userId: event.sender);
+      final newKeyRequest = KeyVerification(
+        encryption: encryption,
+        userId: event.sender,
+      );
       await newKeyRequest.handlePayload(event.type, event.content);
       if (newKeyRequest.state != KeyVerificationState.askAccept) {
         // okay, something went wrong (unknown transaction id?), just dispose it
@@ -89,9 +94,10 @@ class KeyVerificationManager {
   }
 
   Future<void> handleEventUpdate(Event update) async {
-    final type = update.type.startsWith('m.key.verification.')
-        ? update.type
-        : update.content.tryGet<String>('msgtype');
+    final type =
+        update.type.startsWith('m.key.verification.')
+            ? update.type
+            : update.content.tryGet<String>('msgtype');
     if (type == null ||
         !type.startsWith('m.key.verification.') ||
         client.verificationMethods.isEmpty) {
@@ -119,22 +125,21 @@ class KeyVerificationManager {
         _requests.remove(transactionId);
       }
     } else if (update.senderId != client.userID) {
-      if (!{EventTypes.KeyVerificationRequest, EventTypes.KeyVerificationStart}
-          .contains(type)) {
+      if (!{
+        EventTypes.KeyVerificationRequest,
+        EventTypes.KeyVerificationStart,
+      }.contains(type)) {
         return; // we can only start on these
       }
-      final room = client.getRoomById(update.roomId!) ??
+      final room =
+          client.getRoomById(update.roomId!) ??
           Room(id: update.roomId!, client: client);
       final newKeyRequest = KeyVerification(
         encryption: encryption,
         userId: update.senderId,
         room: room,
       );
-      await newKeyRequest.handlePayload(
-        type,
-        update.content,
-        update.eventId,
-      );
+      await newKeyRequest.handlePayload(type, update.content, update.eventId);
       if (newKeyRequest.state != KeyVerificationState.askAccept) {
         // something went wrong, let's just dispose the request
         newKeyRequest.dispose();

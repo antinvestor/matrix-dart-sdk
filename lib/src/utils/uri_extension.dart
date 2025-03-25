@@ -96,14 +96,15 @@ extension MxcUriExtension on Uri {
   }
 
   @Deprecated('Use `getDownloadUri()` instead')
-  Uri getDownloadLink(Client matrix) => isScheme('mxc')
-      ? matrix.homeserver != null
-          ? matrix.homeserver?.resolve(
-                '_matrix/media/v3/download/$host${hasPort ? ':$port' : ''}$path',
-              ) ??
-              Uri()
-          : Uri()
-      : Uri();
+  Uri getDownloadLink(Client matrix) =>
+      isScheme('mxc')
+          ? matrix.homeserver != null
+              ? matrix.homeserver?.resolve(
+                    '_matrix/media/v3/download/$host${hasPort ? ':$port' : ''}$path',
+                  ) ??
+                  Uri()
+              : Uri()
+          : Uri();
 
   /// Returns a scaled thumbnail link to this content with the given `width` and
   /// `height`. `method` can be `ThumbnailMethod.crop` or

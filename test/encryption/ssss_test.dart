@@ -99,13 +99,17 @@ void main() {
 
       // OpenSSSS store waits for accountdata to be updated before returning
       // but we can't update that before the below endpoint is not hit.
-      await handle.ssss
-          .store('best animal', 'foxies', handle.keyId, handle.privateKey!);
+      await handle.ssss.store(
+        'best animal',
+        'foxies',
+        handle.keyId,
+        handle.privateKey!,
+      );
 
-      final content = FakeMatrixApi
-          .calledEndpoints[
-              '/client/v3/user/%40test%3AfakeServer.notExisting/account_data/best%20animal']!
-          .first;
+      final content =
+          FakeMatrixApi
+              .calledEndpoints['/client/v3/user/%40test%3AfakeServer.notExisting/account_data/best%20animal']!
+              .first;
       client.accountData['best animal'] = BasicEvent.fromJson({
         'type': 'best animal',
         'content': json.decode(content),
@@ -129,32 +133,37 @@ void main() {
 
     test('cache', () async {
       await client.encryption!.ssss.clearCache();
-      final handle =
-          client.encryption!.ssss.open(EventTypes.CrossSigningSelfSigning);
+      final handle = client.encryption!.ssss.open(
+        EventTypes.CrossSigningSelfSigning,
+      );
       await handle.unlock(recoveryKey: ssssKey, postUnlock: false);
       expect(
-        (await client.encryption!.ssss
-                .getCached(EventTypes.CrossSigningSelfSigning)) !=
+        (await client.encryption!.ssss.getCached(
+              EventTypes.CrossSigningSelfSigning,
+            )) !=
             null,
         false,
       );
       expect(
-        (await client.encryption!.ssss
-                .getCached(EventTypes.CrossSigningUserSigning)) !=
+        (await client.encryption!.ssss.getCached(
+              EventTypes.CrossSigningUserSigning,
+            )) !=
             null,
         false,
       );
       await handle.getStored(EventTypes.CrossSigningSelfSigning);
       expect(
-        (await client.encryption!.ssss
-                .getCached(EventTypes.CrossSigningSelfSigning)) !=
+        (await client.encryption!.ssss.getCached(
+              EventTypes.CrossSigningSelfSigning,
+            )) !=
             null,
         true,
       );
       await handle.maybeCacheAll();
       expect(
-        (await client.encryption!.ssss
-                .getCached(EventTypes.CrossSigningUserSigning)) !=
+        (await client.encryption!.ssss.getCached(
+              EventTypes.CrossSigningUserSigning,
+            )) !=
             null,
         true,
       );
@@ -167,20 +176,24 @@ void main() {
 
     test('postUnlock', () async {
       await client.encryption!.ssss.clearCache();
-      client.userDeviceKeys[client.userID!]!.masterKey!
-          .setDirectVerified(false);
-      final handle =
-          client.encryption!.ssss.open(EventTypes.CrossSigningSelfSigning);
+      client.userDeviceKeys[client.userID!]!.masterKey!.setDirectVerified(
+        false,
+      );
+      final handle = client.encryption!.ssss.open(
+        EventTypes.CrossSigningSelfSigning,
+      );
       await handle.unlock(recoveryKey: ssssKey);
       expect(
-        (await client.encryption!.ssss
-                .getCached(EventTypes.CrossSigningSelfSigning)) !=
+        (await client.encryption!.ssss.getCached(
+              EventTypes.CrossSigningSelfSigning,
+            )) !=
             null,
         true,
       );
       expect(
-        (await client.encryption!.ssss
-                .getCached(EventTypes.CrossSigningUserSigning)) !=
+        (await client.encryption!.ssss.getCached(
+              EventTypes.CrossSigningUserSigning,
+            )) !=
             null,
         true,
       );
@@ -295,8 +308,9 @@ void main() {
       final key =
           client.userDeviceKeys[client.userID!]!.deviceKeys['OTHERDEVICE']!;
       key.setDirectVerified(false);
-      client.userDeviceKeys[client.userID!]!.masterKey!
-          .setDirectVerified(false);
+      client.userDeviceKeys[client.userID!]!.masterKey!.setDirectVerified(
+        false,
+      );
       event = ToDeviceEvent(
         sender: client.userID!,
         type: 'm.secret.request',
@@ -322,8 +336,9 @@ void main() {
       final key =
           client.userDeviceKeys[client.userID!]!.deviceKeys['OTHERDEVICE']!;
       key.setDirectVerified(true);
-      final handle =
-          client.encryption!.ssss.open(EventTypes.CrossSigningSelfSigning);
+      final handle = client.encryption!.ssss.open(
+        EventTypes.CrossSigningSelfSigning,
+      );
       await handle.unlock(recoveryKey: ssssKey);
 
       await client.encryption!.ssss.clearCache();
@@ -336,9 +351,7 @@ void main() {
           'request_id': client.encryption!.ssss.pendingShareRequests.keys.first,
           'secret': 'foxies!',
         },
-        encryptedContent: {
-          'sender_key': key.curve25519Key,
-        },
+        encryptedContent: {'sender_key': key.curve25519Key},
       );
       await client.encryption!.ssss.handleToDeviceEvent(event);
       expect(await client.encryption!.ssss.getCached('best animal'), 'foxies!');
@@ -361,9 +374,7 @@ void main() {
                 client.encryption!.ssss.pendingShareRequests.keys.first,
             'secret': secret,
           },
-          encryptedContent: {
-            'sender_key': key.curve25519Key,
-          },
+          encryptedContent: {'sender_key': key.curve25519Key},
         );
         await client.encryption!.ssss.handleToDeviceEvent(event);
         expect(await client.encryption!.ssss.getCached(type), secret);
@@ -393,13 +404,8 @@ void main() {
       event = ToDeviceEvent(
         sender: client.userID!,
         type: 'm.secret.send',
-        content: {
-          'request_id': 'invalid',
-          'secret': 'foxies!',
-        },
-        encryptedContent: {
-          'sender_key': key.curve25519Key,
-        },
+        content: {'request_id': 'invalid', 'secret': 'foxies!'},
+        encryptedContent: {'sender_key': key.curve25519Key},
       );
       await client.encryption!.ssss.handleToDeviceEvent(event);
       expect(await client.encryption!.ssss.getCached('best animal'), null);
@@ -415,9 +421,7 @@ void main() {
           'request_id': client.encryption!.ssss.pendingShareRequests.keys.first,
           'secret': 'foxies!',
         },
-        encryptedContent: {
-          'sender_key': 'invalid',
-        },
+        encryptedContent: {'sender_key': 'invalid'},
       );
       await client.encryption!.ssss.handleToDeviceEvent(event);
       expect(await client.encryption!.ssss.getCached('best animal'), null);
@@ -433,9 +437,7 @@ void main() {
           'request_id': client.encryption!.ssss.pendingShareRequests.keys.first,
           'secret': 42,
         },
-        encryptedContent: {
-          'sender_key': key.curve25519Key,
-        },
+        encryptedContent: {'sender_key': key.curve25519Key},
       );
       await client.encryption!.ssss.handleToDeviceEvent(event);
       expect(await client.encryption!.ssss.getCached('best animal'), null);
@@ -451,9 +453,7 @@ void main() {
           'request_id': client.encryption!.ssss.pendingShareRequests.keys.first,
           'secret': 'foxies!',
         },
-        encryptedContent: {
-          'sender_key': key.curve25519Key,
-        },
+        encryptedContent: {'sender_key': key.curve25519Key},
       );
       await client.encryption!.ssss.handleToDeviceEvent(event);
       expect(

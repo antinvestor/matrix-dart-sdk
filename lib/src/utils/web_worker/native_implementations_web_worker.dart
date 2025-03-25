@@ -90,9 +90,9 @@ class NativeImplementationsWebWorker extends NativeImplementations {
     try {
       final result =
           await operation<Map<dynamic, dynamic>, Map<String, dynamic>>(
-        WebWorkerOperations.shrinkImage,
-        args.toJson(),
-      );
+            WebWorkerOperations.shrinkImage,
+            args.toJson(),
+          );
       return MatrixImageFileResizedResponse.fromJson(Map.from(result));
     } catch (e, s) {
       if (!retryInDummy) {
@@ -117,24 +117,19 @@ class WebWorkerData {
   const WebWorkerData(this.label, this.name, this.data);
 
   factory WebWorkerData.fromJson(Map<dynamic, dynamic> data) => WebWorkerData(
-        data['label'],
-        data.containsKey('name')
-            ? WebWorkerOperations.values[data['name']]
-            : null,
-        data['data'],
-      );
+    data['label'],
+    data.containsKey('name') ? WebWorkerOperations.values[data['name']] : null,
+    data['data'],
+  );
 
   Map<String, Object?> toJson() => {
-        'label': label,
-        if (name != null) 'name': name!.index,
-        'data': data,
-      };
+    'label': label,
+    if (name != null) 'name': name!.index,
+    'data': data,
+  };
 }
 
-enum WebWorkerOperations {
-  shrinkImage,
-  calcImageMetadata,
-}
+enum WebWorkerOperations { shrinkImage, calcImageMetadata }
 
 class WebWorkerError extends Error {
   /// the error thrown in the web worker. Usually a [String]
@@ -153,6 +148,5 @@ class WebWorkerError extends Error {
 }
 
 /// converts a stringifyed, obfuscated [StackTrace] into a [StackTrace]
-typedef WebWorkerStackTraceCallback = FutureOr<StackTrace> Function(
-  String obfuscatedStackTrace,
-);
+typedef WebWorkerStackTraceCallback =
+    FutureOr<StackTrace> Function(String obfuscatedStackTrace);

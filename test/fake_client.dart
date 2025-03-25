@@ -35,8 +35,8 @@ Future<Client> getClient({
     logLevel: Level.verbose,
     'testclient',
     httpClient: FakeMatrixApi(),
-    databaseBuilder: (client) =>
-        getDatabase(client, databasePath: databasePath),
+    databaseBuilder:
+        (client) => getDatabase(client, databasePath: databasePath),
     onSoftLogout: (client) => client.refreshAccessToken(),
     sendTimelineEventTimeout: sendTimelineEventTimeout,
   );

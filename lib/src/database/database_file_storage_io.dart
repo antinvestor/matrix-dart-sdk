@@ -10,8 +10,8 @@ mixin DatabaseFileStorage {
   late final Duration? deleteFilesAfterDuration;
 
   File _getFileFromMxc(Uri mxcUri) => File(
-        '${Directory.fromUri(fileStorageLocation!).path}/${mxcUri.toString().split('/').last}',
-      );
+    '${Directory.fromUri(fileStorageLocation!).path}/${mxcUri.toString().split('/').last}',
+  );
 
   Future<void> storeFile(Uri mxcUri, Uint8List bytes, int time) async {
     final fileStorageLocation = this.fileStorageLocation;

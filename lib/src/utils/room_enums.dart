@@ -1,8 +1,4 @@
-enum PushRuleState {
-  notify,
-  mentionsOnly,
-  dontNotify,
-}
+enum PushRuleState { notify, mentionsOnly, dontNotify }
 
 enum JoinRules {
   public('public'),

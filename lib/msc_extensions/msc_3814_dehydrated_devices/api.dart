@@ -48,9 +48,7 @@ extension DehydratedDeviceMatrixApi on MatrixApi {
         if (deviceData != null) 'device_data': deviceData,
         if (deviceKeys != null) 'device_keys': deviceKeys.toJson(),
         if (oneTimeKeys != null) 'one_time_keys': oneTimeKeys,
-        if (fallbackKeys != null) ...{
-          'fallback_keys': fallbackKeys,
-        },
+        if (fallbackKeys != null) ...{'fallback_keys': fallbackKeys},
       },
     );
     return response['device_id'] as String;
@@ -76,12 +74,8 @@ extension DehydratedDeviceMatrixApi on MatrixApi {
     final response = await request(
       RequestType.POST,
       '/client/unstable/org.matrix.msc3814.v1/dehydrated_device/$deviceId/events',
-      query: {
-        'limit': limit.toString(),
-      },
-      data: {
-        if (nextBatch != null) 'next_batch': nextBatch,
-      },
+      query: {'limit': limit.toString()},
+      data: {if (nextBatch != null) 'next_batch': nextBatch},
     );
     return DehydratedDeviceEvents.fromJson(response);
   }

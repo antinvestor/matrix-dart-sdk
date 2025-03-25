@@ -92,9 +92,10 @@ class CallSession {
   /// The ID of the user being called. If omitted, any user in the room can answer.
   String? remoteUserId;
 
-  User? get remoteUser => remoteUserId != null
-      ? room.unsafeGetUserFromMemoryOrFallback(remoteUserId!)
-      : null;
+  User? get remoteUser =>
+      remoteUserId != null
+          ? room.unsafeGetUserFromMemoryOrFallback(remoteUserId!)
+          : null;
 
   /// The ID of the device being called. If omitted, any device for the remoteUserId in the room can answer.
   String? remoteDeviceId;
@@ -237,8 +238,10 @@ class CallSession {
                 '[glare] new call $callId needs to be canceled because the older one ${prevCall.callId} has a smaller lex',
               );
               await hangup(reason: CallErrorCode.unknownError);
-              voip.currentCID =
-                  VoipId(roomId: room.id, callId: prevCall.callId);
+              voip.currentCID = VoipId(
+                roomId: room.id,
+                callId: prevCall.callId,
+              );
             } else {
               Logs().d(
                 '[glare] nice, lex of newer call $callId is smaller auto accept this here',
@@ -316,9 +319,10 @@ class CallSession {
   }
 
   Future<void> sendAnswer(RTCSessionDescription answer) async {
-    final callCapabilities = CallCapabilities()
-      ..dtmf = false
-      ..transferee = false;
+    final callCapabilities =
+        CallCapabilities()
+          ..dtmf = false
+          ..transferee = false;
 
     final metadata = SDPStreamMetadata({
       localUserMediaStream!.stream!.id: SDPStreamPurpose(
@@ -427,9 +431,11 @@ class CallSession {
 
     // Here we follow the perfect negotiation logic from
     // https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Perfect_negotiation
-    final offerCollision = ((description.type == 'offer') &&
-        (_makingOffer ||
-            pc!.signalingState != RTCSignalingState.RTCSignalingStateStable));
+    final offerCollision =
+        ((description.type == 'offer') &&
+            (_makingOffer ||
+                pc!.signalingState !=
+                    RTCSignalingState.RTCSignalingStateStable));
 
     _ignoreOffer = !polite && offerCollision;
     if (_ignoreOffer) {
@@ -478,22 +484,16 @@ class CallSession {
   }
 
   Future<void> updateMediaDeviceForCall() async {
-    await updateMediaDevice(
-      voip.delegate,
-      MediaKind.audio,
-      _usermediaSenders,
-    );
-    await updateMediaDevice(
-      voip.delegate,
-      MediaKind.video,
-      _usermediaSenders,
-    );
+    await updateMediaDevice(voip.delegate, MediaKind.audio, _usermediaSenders);
+    await updateMediaDevice(voip.delegate, MediaKind.video, _usermediaSenders);
   }
 
   void _updateRemoteSDPStreamMetadata(SDPStreamMetadata metadata) {
     _remoteSDPStreamMetadata = metadata;
-    _remoteSDPStreamMetadata?.sdpStreamMetadatas
-        .forEach((streamId, sdpStreamMetadata) {
+    _remoteSDPStreamMetadata?.sdpStreamMetadatas.forEach((
+      streamId,
+      sdpStreamMetadata,
+    ) {
       Logs().i(
         'Stream purpose update: \nid = "$streamId", \npurpose = "${sdpStreamMetadata.purpose}",  \naudio_muted = ${sdpStreamMetadata.audio_muted}, \nvideo_muted = ${sdpStreamMetadata.video_muted}',
       );
@@ -502,10 +502,12 @@ class CallSession {
       final streamId = wpstream.stream!.id;
       final purpose = metadata.sdpStreamMetadatas[streamId];
       if (purpose != null) {
-        wpstream
-            .setAudioMuted(metadata.sdpStreamMetadatas[streamId]!.audio_muted);
-        wpstream
-            .setVideoMuted(metadata.sdpStreamMetadatas[streamId]!.video_muted);
+        wpstream.setAudioMuted(
+          metadata.sdpStreamMetadatas[streamId]!.audio_muted,
+        );
+        wpstream.setVideoMuted(
+          metadata.sdpStreamMetadatas[streamId]!.video_muted,
+        );
         wpstream.purpose = metadata.sdpStreamMetadatas[streamId]!.purpose;
       } else {
         Logs().i('Not found purpose for remote stream $streamId, remove it?');
@@ -619,8 +621,9 @@ class CallSession {
     String purpose, {
     bool addToPeerConnection = true,
   }) async {
-    final existingStream =
-        getLocalStreams.where((element) => element.purpose == purpose);
+    final existingStream = getLocalStreams.where(
+      (element) => element.purpose == purpose,
+    );
     if (existingStream.isNotEmpty) {
       existingStream.first.setNewStream(stream);
     } else {
@@ -681,8 +684,9 @@ class CallSession {
 
     // Try to find a feed with the same purpose as the new stream,
     // if we find it replace the old stream with the new one
-    final existingStream =
-        getRemoteStreams.where((element) => element.purpose == purpose);
+    final existingStream = getRemoteStreams.where(
+      (element) => element.purpose == purpose,
+    );
     if (existingStream.isNotEmpty) {
       existingStream.first.setNewStream(stream);
     } else {
@@ -720,8 +724,9 @@ class CallSession {
   }
 
   Future<void> deleteFeedByStream(MediaStream stream) async {
-    final index =
-        _streams.indexWhere((element) => element.stream!.id == stream.id);
+    final index = _streams.indexWhere(
+      (element) => element.stream!.id == stream.id,
+    );
     if (index == -1) {
       Logs().w('Didn\'t find the feed with stream id ${stream.id} to delete');
       return;
@@ -738,9 +743,10 @@ class CallSession {
   }
 
   Future<void> removeLocalStream(WrappedMediaStream callFeed) async {
-    final senderArray = callFeed.purpose == SDPStreamMetadataPurpose.Usermedia
-        ? _usermediaSenders
-        : _screensharingSenders;
+    final senderArray =
+        callFeed.purpose == SDPStreamMetadataPurpose.Usermedia
+            ? _usermediaSenders
+            : _screensharingSenders;
 
     for (final element in senderArray) {
       await pc!.removeTrack(element);
@@ -824,7 +830,8 @@ class CallSession {
             await oldSender.replaceTrack(newTrack);
             await transceiver.setDirection(
               await transceiver.getDirection() ==
-                      TransceiverDirection.Inactive // upgrade, send now
+                      TransceiverDirection
+                          .Inactive // upgrade, send now
                   ? TransceiverDirection.SendOnly
                   : TransceiverDirection.SendRecv,
             );
@@ -835,8 +842,9 @@ class CallSession {
           }
         }
         // for renderer to be able to show new video track
-        localUserMediaStream?.onStreamChanged
-            .add(localUserMediaStream!.stream!);
+        localUserMediaStream?.onStreamChanged.add(
+          localUserMediaStream!.stream!,
+        );
       }
     }
   }
@@ -867,8 +875,9 @@ class CallSession {
     final transceivers = await pc!.getTransceivers();
     for (final transceiver in transceivers) {
       final currentDirection = await transceiver.getCurrentDirection();
-      final trackOnHold = (currentDirection == TransceiverDirection.Inactive ||
-          currentDirection == TransceiverDirection.RecvOnly);
+      final trackOnHold =
+          (currentDirection == TransceiverDirection.Inactive ||
+              currentDirection == TransceiverDirection.RecvOnly);
       if (!trackOnHold) {
         callOnHold = false;
       }
@@ -891,9 +900,10 @@ class CallSession {
         await pc!.addCandidate(candidate);
       }
 
-      final callCapabilities = CallCapabilities()
-        ..dtmf = false
-        ..transferee = false;
+      final callCapabilities =
+          CallCapabilities()
+            ..dtmf = false
+            ..transferee = false;
 
       final metadata = SDPStreamMetadata({
         if (localUserMediaStream != null)
@@ -959,8 +969,12 @@ class CallSession {
     setCallState(CallState.kEnding);
     await terminate(CallParty.kLocal, reason, shouldEmit);
     try {
-      final res =
-          await sendHangupCall(room, callId, localPartyId, 'userHangup');
+      final res = await sendHangupCall(
+        room,
+        callId,
+        localPartyId,
+        'userHangup',
+      );
       Logs().v('[VOIP] hangup res => $res');
     } catch (e) {
       Logs().v('[VOIP] hangup error => ${e.toString()}');
@@ -985,10 +999,7 @@ class CallSession {
     bool shouldEmit,
   ) async {
     if (state == CallState.kConnected) {
-      await hangup(
-        reason: CallErrorCode.userHangup,
-        shouldEmit: true,
-      );
+      await hangup(reason: CallErrorCode.userHangup, shouldEmit: true);
       return;
     }
 
@@ -1042,7 +1053,8 @@ class CallSession {
     Logs().v('[VOIP] Reject received for call ID $callId');
     // No need to check party_id for reject because if we'd received either
     // an answer or reject, we wouldn't be in state InviteSent
-    final shouldTerminate = (state == CallState.kFledgling &&
+    final shouldTerminate =
+        (state == CallState.kFledgling &&
             direction == CallDirection.kIncoming) ||
         CallState.kInviteSent == state ||
         CallState.kRinging == state;
@@ -1086,9 +1098,10 @@ class CallSession {
 
     if (callHasEnded) return;
 
-    final callCapabilities = CallCapabilities()
-      ..dtmf = false
-      ..transferee = false;
+    final callCapabilities =
+        CallCapabilities()
+          ..dtmf = false
+          ..transferee = false;
     final metadata = _getLocalSDPStreamMetadata();
     if (state == CallState.kCreateOffer) {
       await sendInviteToCall(
@@ -1248,10 +1261,12 @@ class CallSession {
   }
 
   Future<void> updateMuteStatus() async {
-    final micShouldBeMuted = (localUserMediaStream != null &&
+    final micShouldBeMuted =
+        (localUserMediaStream != null &&
             localUserMediaStream!.isAudioMuted()) ||
         _remoteOnHold;
-    final vidShouldBeMuted = (localUserMediaStream != null &&
+    final vidShouldBeMuted =
+        (localUserMediaStream != null &&
             localUserMediaStream!.isVideoMuted()) ||
         _remoteOnHold;
 
@@ -1305,9 +1320,10 @@ class CallSession {
   Future<MediaStream?> _getUserMedia(CallType type) async {
     final mediaConstraints = {
       'audio': UserMediaConstraints.micMediaConstraints,
-      'video': type == CallType.kVideo
-          ? UserMediaConstraints.camMediaConstraints
-          : false,
+      'video':
+          type == CallType.kVideo
+              ? UserMediaConstraints.camMediaConstraints
+              : false,
     };
     try {
       return await voip.delegate.mediaDevices.getUserMedia(mediaConstraints);
@@ -1319,8 +1335,9 @@ class CallSession {
 
   Future<MediaStream?> _getDisplayMedia() async {
     try {
-      return await voip.delegate.mediaDevices
-          .getDisplayMedia(UserMediaConstraints.screenMediaConstraints);
+      return await voip.delegate.mediaDevices.getDisplayMedia(
+        UserMediaConstraints.screenMediaConstraints,
+      );
     } catch (e) {
       await _getUserMediaFailed(e);
     }
@@ -1363,8 +1380,9 @@ class CallSession {
         removedStreams[stream.stream!.id] = stream;
       }
     }
-    _streams
-        .removeWhere((stream) => removedStreams.containsKey(stream.stream!.id));
+    _streams.removeWhere(
+      (stream) => removedStreams.containsKey(stream.stream!.id),
+    );
     for (final element in removedStreams.entries) {
       await _removeStream(element.value.stream!);
     }
@@ -1522,8 +1540,9 @@ class CallSession {
             remoteUserId!, // TODO: rename this to invitee_user_id? breaks spec though
       if (remoteDeviceId != null) 'invitee_device_id': remoteDeviceId!,
       if (remoteDeviceId != null)
-        'device_id': client
-            .deviceID!, // Having a remoteDeviceId means you are doing to-device events, so you want to send your deviceId too
+        'device_id':
+            client
+                .deviceID!, // Having a remoteDeviceId means you are doing to-device events, so you want to send your deviceId too
       if (capabilities != null) 'capabilities': capabilities.toJson(),
       if (metadata != null) sdpStreamMetadataKey: metadata.toJson(),
     };
@@ -1867,9 +1886,7 @@ class CallSession {
         if (client.userDeviceKeys[remoteUserId]?.deviceKeys[remoteDeviceId] !=
             null) {
           await client.sendToDeviceEncrypted(
-            [
-              client.userDeviceKeys[remoteUserId]!.deviceKeys[remoteDeviceId]!,
-            ],
+            [client.userDeviceKeys[remoteUserId]!.deviceKeys[remoteDeviceId]!],
             type,
             data,
           );
@@ -1879,20 +1896,20 @@ class CallSession {
           );
         }
       } else {
-        await client.sendToDevice(
-          type,
-          txid,
-          {
-            remoteUserId!: {remoteDeviceId!: data},
-          },
-        );
+        await client.sendToDevice(type, txid, {
+          remoteUserId!: {remoteDeviceId!: data},
+        });
       }
       return '';
     } else {
-      final sendMessageContent = mustEncrypt
-          ? await client.encryption!
-              .encryptGroupMessagePayload(room.id, content, type: type)
-          : content;
+      final sendMessageContent =
+          mustEncrypt
+              ? await client.encryption!.encryptGroupMessagePayload(
+                room.id,
+                content,
+                type: type,
+              )
+              : content;
       return await client.sendMessage(
         room.id,
         sendMessageContent.containsKey('ciphertext')

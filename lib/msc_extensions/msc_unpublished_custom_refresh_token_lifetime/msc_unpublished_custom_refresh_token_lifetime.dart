@@ -28,6 +28,7 @@ extension MscUnpublishedCustomRefreshTokenLifetime on MatrixApi {
   /// [refreshToken] The refresh token
   Future<RefreshResponse> refreshWithCustomRefreshTokenLifetime(
     String refreshToken, {
+
     /// This allows clients to pass an extra parameter when refreshing a token,
     /// which overrides the configured refresh token timeout in the Synapse
     /// config. This allows a client to opt into a shorter (or longer) lifetime

@@ -33,16 +33,18 @@ class MockClient extends Client {
       throw MatrixException.fromJson({'errcode': 'M_FORBIDDEN'});
     }
 
-    final chunk = serverEvents
-        .skip(int.parse(from ?? '0'))
-        .take(limit ?? serverEvents.length)
-        .toList();
+    final chunk =
+        serverEvents
+            .skip(int.parse(from ?? '0'))
+            .take(limit ?? serverEvents.length)
+            .toList();
     return GetRoomEventsResponse(
       chunk: chunk,
       start: from ?? '0',
-      end: chunk.isEmpty
-          ? '0'
-          : (serverEvents.indexOf(chunk.last) + 1).toString(),
+      end:
+          chunk.isEmpty
+              ? '0'
+              : (serverEvents.indexOf(chunk.last) + 1).toString(),
       state: [],
     );
   }
@@ -84,10 +86,7 @@ Event createTestEvent({
   return Event(
     eventId: eventId,
     type: type,
-    content: {
-      'msgtype': msgtype,
-      'body': 'Test message $eventId',
-    },
+    content: {'msgtype': msgtype, 'body': 'Test message $eventId'},
     senderId: '@user:example.com',
     originServerTs: timestamp,
     room: room,
@@ -159,10 +158,12 @@ void main() {
         // Verify events are in chronological order
         for (int i = 1; i < complete.events.length; i++) {
           expect(
-            complete.events[i].originServerTs
-                    .isBefore(complete.events[i - 1].originServerTs) ||
-                complete.events[i].originServerTs
-                    .isAtSameMomentAs(complete.events[i - 1].originServerTs),
+            complete.events[i].originServerTs.isBefore(
+                  complete.events[i - 1].originServerTs,
+                ) ||
+                complete.events[i].originServerTs.isAtSameMomentAs(
+                  complete.events[i - 1].originServerTs,
+                ),
             isTrue,
             reason: 'Events should be in reverse chronological order',
           );
@@ -235,8 +236,11 @@ void main() {
       test('continues export when server returns error', () async {
         client = MockClient('testclient', throwError: true);
         room = Room(id: '!testroom:example.com', client: client);
-        final initialEvents =
-            createMockEvents(count: 5, startTime: now, room: room);
+        final initialEvents = createMockEvents(
+          count: 5,
+          startTime: now,
+          room: room,
+        );
         client.dbEvents = initialEvents;
         client.serverEvents = initialEvents;
         timeline = Timeline(

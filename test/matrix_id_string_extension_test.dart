@@ -82,14 +82,16 @@ void main() {
       expect(res.primaryIdentifier, '#alias:beep');
       expect(res.secondaryIdentifier, null);
       expect(res.queryString, null);
-      res = 'https://matrix.to/#/%23alias%3abeep?boop%F0%9F%A7%A1%F0%9F%A6%8A'
-          .parseIdentifierIntoParts()!;
+      res =
+          'https://matrix.to/#/%23alias%3abeep?boop%F0%9F%A7%A1%F0%9F%A6%8A'
+              .parseIdentifierIntoParts()!;
       expect(res.primaryIdentifier, '#alias:beep');
       expect(res.secondaryIdentifier, null);
       expect(res.queryString, 'boop%F0%9F%A7%A1%F0%9F%A6%8A');
 
-      res = 'https://matrix.to/#/#alias:beep?via=fox.com&via=fox.org'
-          .parseIdentifierIntoParts()!;
+      res =
+          'https://matrix.to/#/#alias:beep?via=fox.com&via=fox.org'
+              .parseIdentifierIntoParts()!;
       expect(res.via, <String>{'fox.com', 'fox.org'});
 
       res = 'matrix:u/her:example.org'.parseIdentifierIntoParts()!;
@@ -104,12 +106,14 @@ void main() {
       expect(res.primaryIdentifier, '#us:example.org');
       expect(res.secondaryIdentifier, null);
       expect(res.action, 'chat');
-      res = 'matrix:r/us:example.org/e/lol823y4bcp3qo4'
-          .parseIdentifierIntoParts()!;
+      res =
+          'matrix:r/us:example.org/e/lol823y4bcp3qo4'
+              .parseIdentifierIntoParts()!;
       expect(res.primaryIdentifier, '#us:example.org');
       expect(res.secondaryIdentifier, '\$lol823y4bcp3qo4');
-      res = 'matrix:roomid/rid:example.org?via=fox.com&via=fox.org'
-          .parseIdentifierIntoParts()!;
+      res =
+          'matrix:roomid/rid:example.org?via=fox.com&via=fox.org'
+              .parseIdentifierIntoParts()!;
       expect(res.primaryIdentifier, '!rid:example.org');
       expect(res.secondaryIdentifier, null);
       expect(res.via, <String>{'fox.com', 'fox.org'});

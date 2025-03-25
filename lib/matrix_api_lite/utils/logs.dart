@@ -24,14 +24,7 @@
 import 'package:matrix/matrix_api_lite/utils/print_logs_native.dart'
     if (dart.library.html) 'print_logs_web.dart';
 
-enum Level {
-  wtf,
-  error,
-  warning,
-  info,
-  debug,
-  verbose,
-}
+enum Level { wtf, error, warning, info, debug, verbose }
 
 class Logs {
   static final Logs _singleton = Logs._internal();

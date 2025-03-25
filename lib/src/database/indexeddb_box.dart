@@ -50,28 +50,28 @@ class BoxCollection with ZoneTransactionMixin {
     Future<void> Function() action, {
     List<String>? boxNames,
     bool readOnly = false,
-  }) =>
-      zoneTransaction(() async {
-        boxNames ??= _db.objectStoreNames.toList();
-        final txnCache = _txnCache = [];
-        await action();
-        final cache =
-            List<Future<void> Function(Transaction txn)>.from(txnCache);
-        _txnCache = null;
-        if (cache.isEmpty) return;
-        final txn =
-            _db.transactionList(boxNames!, readOnly ? 'readonly' : 'readwrite');
-        for (final fun in cache) {
-          // The IDB methods return a Future in Dart but must not be awaited in
-          // order to have an actual transaction. They must only be performed and
-          // then the transaction object must call `txn.completed;` which then
-          // returns the actual future.
-          // https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction
-          unawaited(fun(txn));
-        }
-        await txn.completed;
-        return;
-      });
+  }) => zoneTransaction(() async {
+    boxNames ??= _db.objectStoreNames.toList();
+    final txnCache = _txnCache = [];
+    await action();
+    final cache = List<Future<void> Function(Transaction txn)>.from(txnCache);
+    _txnCache = null;
+    if (cache.isEmpty) return;
+    final txn = _db.transactionList(
+      boxNames!,
+      readOnly ? 'readonly' : 'readwrite',
+    );
+    for (final fun in cache) {
+      // The IDB methods return a Future in Dart but must not be awaited in
+      // order to have an actual transaction. They must only be performed and
+      // then the transaction object must call `txn.completed;` which then
+      // returns the actual future.
+      // https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction
+      unawaited(fun(txn));
+    }
+    await txn.completed;
+    return;
+  });
 
   Future<void> clear() async {
     final txn = _db.transaction(boxNames.toList(), 'readwrite');
@@ -112,11 +112,13 @@ class Box<V> {
     txn ??= boxCollection._db.transaction(name, 'readonly');
     final store = txn.objectStore(name);
     final request = store.getAllKeys(null);
-    final keys = await request.then((result) {
-      return result.cast<String>();
-    }).catchError((e) {
-      throw StateError('Failed to get all keys: $e');
-    });
+    final keys = await request
+        .then((result) {
+          return result.cast<String>();
+        })
+        .catchError((e) {
+          throw StateError('Failed to get all keys: $e');
+        });
 
     _quickAccessCachedKeys = keys.toSet();
     return keys;

@@ -57,8 +57,9 @@ class OutboundGroupSession {
     outboundGroupSession = olm.OutboundGroupSession();
     try {
       outboundGroupSession!.unpickle(key, dbEntry['pickle']);
-      creationTime =
-          DateTime.fromMillisecondsSinceEpoch(dbEntry['creation_time']);
+      creationTime = DateTime.fromMillisecondsSinceEpoch(
+        dbEntry['creation_time'],
+      );
     } catch (e, s) {
       dispose();
       Logs().e('[LibOlm] Unable to unpickle outboundGroupSession', e, s);

@@ -79,8 +79,10 @@ class SSSS {
     b[0] = 1;
     final aesKey = Hmac(sha256, prk.bytes).convert(utf8.encode(name) + b);
     b[0] = 2;
-    final hmacKey =
-        Hmac(sha256, prk.bytes).convert(aesKey.bytes + utf8.encode(name) + b);
+    final hmacKey = Hmac(
+      sha256,
+      prk.bytes,
+    ).convert(aesKey.bytes + utf8.encode(name) + b);
     return DerivedKeys(
       aesKey: Uint8List.fromList(aesKey.bytes),
       hmacKey: Uint8List.fromList(hmacKey.bytes),
@@ -129,8 +131,11 @@ class SSSS {
     if (hmac != data.mac.replaceAll(RegExp(r'=+$'), '')) {
       throw Exception('Bad MAC');
     }
-    final decipher = await uc.aesCtr
-        .encrypt(cipher, keys.aesKey, base64decodeUnpadded(data.iv));
+    final decipher = await uc.aesCtr.encrypt(
+      cipher,
+      keys.aesKey,
+      base64decodeUnpadded(data.iv),
+    );
     return String.fromCharCodes(decipher);
   }
 
@@ -201,10 +206,11 @@ class SSSS {
     _cacheCallbacks[type] = callback;
   }
 
-  String? get defaultKeyId => client
-      .accountData[EventTypes.SecretStorageDefaultKey]
-      ?.parsedSecretStorageDefaultKeyContent
-      .key;
+  String? get defaultKeyId =>
+      client
+          .accountData[EventTypes.SecretStorageDefaultKey]
+          ?.parsedSecretStorageDefaultKeyContent
+          .key;
 
   Future<void> setDefaultKeyId(String keyId) async {
     await client.setAccountData(
@@ -215,7 +221,8 @@ class SSSS {
   }
 
   SecretStorageKeyContent? getKey(String keyId) {
-    return client.accountData[EventTypes.secretStorageKey(keyId)]
+    return client
+        .accountData[EventTypes.secretStorageKey(keyId)]
         ?.parsedSecretStorageKeyContent;
   }
 
@@ -260,8 +267,7 @@ class SSSS {
       for (;;) {
         yield base64.encode(uc.secureRandomBytes(keyidByteLength));
       }
-    }()
-        .firstWhere((keyId) => getKey(keyId) == null);
+    }().firstWhere((keyId) => getKey(keyId) == null);
 
     final accountDataTypeKeyId = EventTypes.secretStorageKey(keyId);
     // noooow we set the account data
@@ -339,8 +345,9 @@ class SSSS {
     if (secretInfo == null) {
       throw Exception('Not found');
     }
-    final encryptedContent =
-        secretInfo.content.tryGetMap<String, Object?>('encrypted');
+    final encryptedContent = secretInfo.content.tryGetMap<String, Object?>(
+      'encrypted',
+    );
     if (encryptedContent == null) {
       throw Exception('Content is not encrypted');
     }
@@ -387,9 +394,7 @@ class SSSS {
         content['encrypted'] = <String, dynamic>{};
       }
     }
-    content ??= <String, dynamic>{
-      'encrypted': <String, dynamic>{},
-    };
+    content ??= <String, dynamic>{'encrypted': <String, dynamic>{}};
     content['encrypted'][keyId] = <String, dynamic>{
       'iv': encrypted.iv,
       'ciphertext': encrypted.ciphertext,
@@ -427,8 +432,9 @@ class SSSS {
       throw Exception('Wrong type for encrypted content!');
     }
 
-    final otherKeys =
-        Set<String>.from(encryptedContent.keys.where((k) => k != keyId));
+    final otherKeys = Set<String>.from(
+      encryptedContent.keys.where((k) => k != keyId),
+    );
     encryptedContent.removeWhere((k, v) => otherKeys.contains(k));
     // yes, we are paranoid...
     if (await getStored(type, keyId, key) != secret) {
@@ -545,8 +551,9 @@ class SSSS {
         Logs().i('[SSSS] it is actually a cancelation');
         return; // not actually requesting, so ignore
       }
-      final device = client.userDeviceKeys[client.userID]!
-          .deviceKeys[event.content['requesting_device_id']];
+      final device =
+          client.userDeviceKeys[client.userID]!.deviceKeys[event
+              .content['requesting_device_id']];
       if (device == null || !device.verified || device.blocked) {
         Logs().i('[SSSS] Unknown / unverified devices, ignoring');
         return; // nope....unknown or untrusted device
@@ -559,19 +566,18 @@ class SSSS {
       }
       final secret = await getCached(type);
       if (secret == null) {
-        Logs()
-            .i('[SSSS] We don\'t have the secret for $type ourself, ignoring');
+        Logs().i(
+          '[SSSS] We don\'t have the secret for $type ourself, ignoring',
+        );
         return; // seems like we don't have this, either
       }
       // okay, all checks out...time to share this secret!
       Logs().i('[SSSS] Replying with secret for $type');
       await client.sendToDeviceEncrypted(
-          [device],
-          EventTypes.SecretSend,
-          {
-            'request_id': event.content['request_id'],
-            'secret': secret,
-          });
+        [device],
+        EventTypes.SecretSend,
+        {'request_id': event.content['request_id'], 'secret': secret},
+      );
     } else if (event.type == EventTypes.SecretSend) {
       // receiving a secret we asked for
       Logs().i('[SSSS] Received shared secret...');
@@ -637,8 +643,9 @@ class SSSS {
     if (data == null) {
       return null;
     }
-    final contentEncrypted =
-        data.content.tryGetMap<String, Object?>('encrypted');
+    final contentEncrypted = data.content.tryGetMap<String, Object?>(
+      'encrypted',
+    );
     if (contentEncrypted != null) {
       return contentEncrypted.keys.toSet();
     }
@@ -826,7 +833,10 @@ class OpenSSSS {
                 ?.contains(keyId) ??
             false) &&
         (ssss.client.isUnknownSession ||
-            ssss.client.userDeviceKeys[ssss.client.userID]!.masterKey
+            ssss
+                    .client
+                    .userDeviceKeys[ssss.client.userID]!
+                    .masterKey
                     ?.directVerified !=
                 true)) {
       try {

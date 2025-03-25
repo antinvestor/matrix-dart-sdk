@@ -63,8 +63,7 @@ class MatrixDefaultLocalizations extends MatrixLocalizations {
   String changedTheGuestAccessRulesTo(
     String senderName,
     String localizedString,
-  ) =>
-      '$senderName changed the guest access rules to $localizedString';
+  ) => '$senderName changed the guest access rules to $localizedString';
 
   @override
   String changedTheHistoryVisibility(String senderName) =>
@@ -74,8 +73,7 @@ class MatrixDefaultLocalizations extends MatrixLocalizations {
   String changedTheHistoryVisibilityTo(
     String senderName,
     String localizedString,
-  ) =>
-      '$senderName changed the history visibility to $localizedString';
+  ) => '$senderName changed the history visibility to $localizedString';
 
   @override
   String changedTheJoinRules(String senderName) =>

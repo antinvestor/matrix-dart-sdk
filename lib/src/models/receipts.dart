@@ -44,9 +44,10 @@ class Receipt {
   const Receipt(this.user, this.time);
 
   @override
-  bool operator ==(Object other) => (other is Receipt &&
-      other.user == user &&
-      other.time.millisecondsSinceEpoch == time.millisecondsSinceEpoch);
+  bool operator ==(Object other) =>
+      (other is Receipt &&
+          other.user == user &&
+          other.time.millisecondsSinceEpoch == time.millisecondsSinceEpoch);
 
   @override
   int get hashCode => Object.hash(user, time);
@@ -123,8 +124,8 @@ class ReceiptEventContent {
           final threadId = receiptContent['thread_id'];
 
           if (ts is int && (threadId == null || threadId is String)) {
-            ((receipts[eventId] ??= {})[receiptType] ??= {})[userId] =
-                ReceiptData(ts, threadId: threadId);
+            ((receipts[eventId] ??= {})[receiptType] ??=
+                {})[userId] = ReceiptData(ts, threadId: threadId);
           }
         }
       }
@@ -147,10 +148,10 @@ class LatestReceiptStateData {
   }
 
   Map<String, dynamic> toJson() => {
-        // abbreviated names, because we will store a lot of these.
-        'e': eventId,
-        'ts': ts,
-      };
+    // abbreviated names, because we will store a lot of these.
+    'e': eventId,
+    'ts': ts,
+  };
 }
 
 class LatestReceiptStateForTimeline {
@@ -181,8 +182,10 @@ class LatestReceiptStateForTimeline {
     final latest = json['latest'];
     final Map<String, dynamic>? others = json['others'];
 
-    final Map<String, LatestReceiptStateData> byUser = others
-            ?.map((k, v) => MapEntry(k, LatestReceiptStateData.fromJson(v))) ??
+    final Map<String, LatestReceiptStateData> byUser =
+        others?.map(
+          (k, v) => MapEntry(k, LatestReceiptStateData.fromJson(v)),
+        ) ??
         {};
 
     return LatestReceiptStateForTimeline(
@@ -197,11 +200,11 @@ class LatestReceiptStateForTimeline {
   }
 
   Map<String, dynamic> toJson() => {
-        if (ownPrivate != null) 'private': ownPrivate!.toJson(),
-        if (ownPublic != null) 'public': ownPublic!.toJson(),
-        if (latestOwnReceipt != null) 'latest': latestOwnReceipt!.toJson(),
-        'others': otherUsers.map((k, v) => MapEntry(k, v.toJson())),
-      };
+    if (ownPrivate != null) 'private': ownPrivate!.toJson(),
+    if (ownPublic != null) 'public': ownPublic!.toJson(),
+    if (latestOwnReceipt != null) 'latest': latestOwnReceipt!.toJson(),
+    'others': otherUsers.map((k, v) => MapEntry(k, v.toJson())),
+  };
 }
 
 class LatestReceiptState {
@@ -238,16 +241,13 @@ class LatestReceiptState {
   }
 
   Map<String, dynamic> toJson() => {
-        'global': global.toJson(),
-        if (mainThread != null) 'main': mainThread!.toJson(),
-        if (byThread.isNotEmpty)
-          'thread': byThread.map((k, v) => MapEntry(k, v.toJson())),
-      };
+    'global': global.toJson(),
+    if (mainThread != null) 'main': mainThread!.toJson(),
+    if (byThread.isNotEmpty)
+      'thread': byThread.map((k, v) => MapEntry(k, v.toJson())),
+  };
 
-  Future<void> update(
-    ReceiptEventContent content,
-    Room room,
-  ) async {
+  Future<void> update(ReceiptEventContent content, Room room) async {
     final List<LatestReceiptStateForTimeline> updatedTimelines = [];
     final ownUserid = room.client.userID!;
 
@@ -265,8 +265,10 @@ class LatestReceiptState {
             timeline = global;
           }
 
-          final receiptData =
-              LatestReceiptStateData(eventId, receipt.originServerTs);
+          final receiptData = LatestReceiptStateData(
+            eventId,
+            receipt.originServerTs,
+          );
           if (user == ownUserid) {
             if (receiptType == ReceiptType.mReadPrivate) {
               timeline.ownPrivate = receiptData;

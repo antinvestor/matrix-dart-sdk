@@ -49,8 +49,9 @@ abstract class Cipher {
   Pointer<NativeType> getAlg(int keysize);
   FutureOr<Uint8List> encrypt(Uint8List input, Uint8List key, Uint8List iv) {
     final alg = getAlg(key.length * 8);
-    final mem = malloc
-        .call<Uint8>(sizeOf<IntPtr>() + key.length + iv.length + input.length);
+    final mem = malloc.call<Uint8>(
+      sizeOf<IntPtr>() + key.length + iv.length + input.length,
+    );
     final lenMem = mem.cast<IntPtr>();
     final keyMem = mem.elementAt(sizeOf<IntPtr>());
     final ivMem = keyMem.elementAt(key.length);

@@ -39,8 +39,11 @@ void main() {
         '${client.homeserver.toString()}/_matrix/client/v1/media/download/exampleserver.abc/abcdefghijklmn',
       );
       expect(
-        (await content.getThumbnailUri(client, width: 50, height: 50))
-            .toString(),
+        (await content.getThumbnailUri(
+          client,
+          width: 50,
+          height: 50,
+        )).toString(),
         '${client.homeserver.toString()}/_matrix/client/v1/media/thumbnail/exampleserver.abc/abcdefghijklmn?width=50&height=50&method=crop&animated=false',
       );
       expect(
@@ -50,8 +53,7 @@ void main() {
           height: 50,
           method: ThumbnailMethod.scale,
           animated: true,
-        ))
-            .toString(),
+        )).toString(),
         '${client.homeserver.toString()}/_matrix/client/v1/media/thumbnail/exampleserver.abc/abcdefghijklmn?width=50&height=50&method=scale&animated=true',
       );
     });
@@ -71,8 +73,11 @@ void main() {
         '${client.homeserver.toString()}/_matrix/client/v1/media/download/exampleserver.abc/abcdefghijklmn',
       );
       expect(
-        (await content.getThumbnailUri(client, width: 50, height: 50))
-            .toString(),
+        (await content.getThumbnailUri(
+          client,
+          width: 50,
+          height: 50,
+        )).toString(),
         '${client.homeserver.toString()}/_matrix/client/v1/media/thumbnail/exampleserver.abc/abcdefghijklmn?width=50&height=50&method=crop&animated=false',
       );
       expect(
@@ -82,8 +87,7 @@ void main() {
           height: 50,
           method: ThumbnailMethod.scale,
           animated: true,
-        ))
-            .toString(),
+        )).toString(),
         'https://fakeserver.notexisting:1337/_matrix/client/v1/media/thumbnail/exampleserver.abc/abcdefghijklmn?width=50&height=50&method=scale&animated=true',
       );
     });
@@ -102,8 +106,11 @@ void main() {
         '${client.homeserver.toString()}/_matrix/client/v1/media/download/exampleserver.abc:1234/abcdefghijklmn',
       );
       expect(
-        (await content.getThumbnailUri(client, width: 50, height: 50))
-            .toString(),
+        (await content.getThumbnailUri(
+          client,
+          width: 50,
+          height: 50,
+        )).toString(),
         '${client.homeserver.toString()}/_matrix/client/v1/media/thumbnail/exampleserver.abc:1234/abcdefghijklmn?width=50&height=50&method=crop&animated=false',
       );
     });
@@ -135,8 +142,11 @@ void main() {
         '${client.homeserver.toString()}/_matrix/media/v3/download/exampleserver.abc:1234/abcdefghijklmn',
       );
       expect(
-        (await content.getThumbnailUri(client, width: 50, height: 50))
-            .toString(),
+        (await content.getThumbnailUri(
+          client,
+          width: 50,
+          height: 50,
+        )).toString(),
         '${client.homeserver.toString()}/_matrix/media/v3/thumbnail/exampleserver.abc:1234/abcdefghijklmn?width=50&height=50&method=crop&animated=false',
       );
     });

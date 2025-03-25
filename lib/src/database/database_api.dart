@@ -133,9 +133,7 @@ abstract class DatabaseApi {
 
   Future<bool> deleteFile(Uri mxcUri);
 
-  Future storeSyncFilterId(
-    String syncFilterId,
-  );
+  Future storeSyncFilterId(String syncFilterId);
 
   Future storeAccountData(String type, Map<String, Object?> content);
 
@@ -174,10 +172,7 @@ abstract class DatabaseApi {
     String senderClaimedKey,
   );
 
-  Future markInboundGroupSessionAsUploaded(
-    String roomId,
-    String sessionId,
-  );
+  Future markInboundGroupSessionAsUploaded(String roomId, String sessionId);
 
   Future updateInboundGroupSessionAllowedAtIndex(
     String allowedAtIndex,
@@ -194,9 +189,7 @@ abstract class DatabaseApi {
     int creationTime,
   );
 
-  Future updateClientKeys(
-    String olmAccount,
-  );
+  Future updateClientKeys(String olmAccount);
 
   Future storeOlmSession(
     String identityKey,
@@ -228,16 +221,11 @@ abstract class DatabaseApi {
 
   Future markInboundGroupSessionsAsNeedingUpload();
 
-  Future storePrevBatch(
-    String prevBatch,
-  );
+  Future storePrevBatch(String prevBatch);
 
   Future deleteOldFiles(int savedAt);
 
-  Future storeUserDeviceKeysInfo(
-    String userId,
-    bool outdated,
-  );
+  Future storeUserDeviceKeysInfo(String userId, bool outdated);
 
   Future storeUserDeviceKey(
     String userId,
@@ -248,15 +236,9 @@ abstract class DatabaseApi {
     int lastActive,
   );
 
-  Future removeUserDeviceKey(
-    String userId,
-    String deviceId,
-  );
+  Future removeUserDeviceKey(String userId, String deviceId);
 
-  Future removeUserCrossSigningKey(
-    String userId,
-    String publicKey,
-  );
+  Future removeUserCrossSigningKey(String userId, String publicKey);
 
   Future storeUserCrossSigningKey(
     String userId,
@@ -270,11 +252,7 @@ abstract class DatabaseApi {
 
   Future removeEvent(String eventId, String roomId);
 
-  Future setRoomPrevBatch(
-    String? prevBatch,
-    String roomId,
-    Client client,
-  );
+  Future setRoomPrevBatch(String? prevBatch, String roomId, Client client);
 
   Future setVerifiedUserCrossSigningKey(
     bool verified,
@@ -294,21 +272,14 @@ abstract class DatabaseApi {
     String deviceId,
   );
 
-  Future setBlockedUserDeviceKey(
-    bool blocked,
-    String userId,
-    String deviceId,
-  );
+  Future setBlockedUserDeviceKey(bool blocked, String userId, String deviceId);
 
   Future<List<Event>> getUnimportantRoomEventStatesForRoom(
     List<String> events,
     Room room,
   );
 
-  Future<List<OlmSession>> getOlmSessions(
-    String identityKey,
-    String userId,
-  );
+  Future<List<OlmSession>> getOlmSessions(String identityKey, String userId);
 
   Future<Map<String, Map>> getAllOlmSessions();
 
@@ -321,11 +292,7 @@ abstract class DatabaseApi {
 
   /// Please do `jsonEncode(content)` in your code to stay compatible with
   /// auto generated methods here.
-  Future insertIntoToDeviceQueue(
-    String type,
-    String txnId,
-    String content,
-  );
+  Future insertIntoToDeviceQueue(String type, String txnId, String content);
 
   Future<List<String>> getLastSentMessageUserDeviceKey(
     String userId,

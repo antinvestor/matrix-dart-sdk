@@ -39,13 +39,14 @@ class OlmSession {
   });
 
   OlmSession.fromJson(Map<String, dynamic> dbEntry, this.key)
-      : identityKey = dbEntry['identity_key'] ?? '' {
+    : identityKey = dbEntry['identity_key'] ?? '' {
     session = olm.Session();
     try {
       session!.unpickle(key, dbEntry['pickle']);
       sessionId = dbEntry['session_id'];
-      lastReceived =
-          DateTime.fromMillisecondsSinceEpoch(dbEntry['last_received'] ?? 0);
+      lastReceived = DateTime.fromMillisecondsSinceEpoch(
+        dbEntry['last_received'] ?? 0,
+      );
       assert(sessionId == session!.session_id());
     } catch (e, s) {
       Logs().e('[LibOlm] Could not unpickle olm session', e, s);

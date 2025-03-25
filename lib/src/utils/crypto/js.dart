@@ -61,8 +61,9 @@ Future<Uint8List> pbkdf2(
   int iterations,
   int bits,
 ) async {
-  final raw =
-      await importKey('raw', passphrase, 'PBKDF2', false, ['deriveBits']);
+  final raw = await importKey('raw', passphrase, 'PBKDF2', false, [
+    'deriveBits',
+  ]);
   final res = await deriveBits(
     Pbkdf2Params(
       name: 'PBKDF2',

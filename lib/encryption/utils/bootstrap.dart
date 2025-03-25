@@ -106,8 +106,9 @@ class Bootstrap {
     for (final entry in client.accountData.entries) {
       final type = entry.key;
       final event = entry.value;
-      final encryptedContent =
-          event.content.tryGetMap<String, Object?>('encrypted');
+      final encryptedContent = event.content.tryGetMap<String, Object?>(
+        'encrypted',
+      );
       if (encryptedContent == null) {
         continue;
       }
@@ -271,10 +272,11 @@ class Bootstrap {
         // alright, we have to re-encrypt old secrets with the new key
         final secrets = analyzeSecrets();
         Set<String> removeKey(String key) {
-          final s = secrets.entries
-              .where((e) => e.value.contains(key))
-              .map((e) => e.key)
-              .toSet();
+          final s =
+              secrets.entries
+                  .where((e) => e.value.contains(key))
+                  .map((e) => e.key)
+                  .toSet();
           secrets.removeWhere((k, v) => v.contains(key));
           return s;
         }
@@ -385,13 +387,12 @@ class Bootstrap {
           final json = <String, dynamic>{
             'user_id': userID,
             'usage': ['master'],
-            'keys': <String, dynamic>{
-              'ed25519:$masterPub': masterPub,
-            },
+            'keys': <String, dynamic>{'ed25519:$masterPub': masterPub},
           };
           masterKey = MatrixCrossSigningKey.fromJson(json);
-          secretsToStore[EventTypes.CrossSigningMasterKey] =
-              base64.encode(masterSigningKey);
+          secretsToStore[EventTypes.CrossSigningMasterKey] = base64.encode(
+            masterSigningKey,
+          );
         } finally {
           master.free();
         }
@@ -415,8 +416,9 @@ class Bootstrap {
         final keyObj = olm.PkSigning();
         try {
           keyObj.init_with_seed(masterSigningKey);
-          return keyObj
-              .sign(String.fromCharCodes(canonicalJson.encode(object)));
+          return keyObj.sign(
+            String.fromCharCodes(canonicalJson.encode(object)),
+          );
         } finally {
           keyObj.free();
         }
@@ -436,13 +438,12 @@ class Bootstrap {
           };
           final signature = sign(json);
           json['signatures'] = <String, dynamic>{
-            userID: <String, dynamic>{
-              'ed25519:$masterPub': signature,
-            },
+            userID: <String, dynamic>{'ed25519:$masterPub': signature},
           };
           selfSigningKey = MatrixCrossSigningKey.fromJson(json);
-          secretsToStore[EventTypes.CrossSigningSelfSigning] =
-              base64.encode(selfSigningPriv);
+          secretsToStore[EventTypes.CrossSigningSelfSigning] = base64.encode(
+            selfSigningPriv,
+          );
         } finally {
           selfSigning.free();
         }
@@ -461,13 +462,12 @@ class Bootstrap {
           };
           final signature = sign(json);
           json['signatures'] = <String, dynamic>{
-            userID: <String, dynamic>{
-              'ed25519:$masterPub': signature,
-            },
+            userID: <String, dynamic>{'ed25519:$masterPub': signature},
           };
           userSigningKey = MatrixCrossSigningKey.fromJson(json);
-          secretsToStore[EventTypes.CrossSigningUserSigning] =
-              base64.encode(userSigningPriv);
+          secretsToStore[EventTypes.CrossSigningUserSigning] = base64.encode(
+            userSigningPriv,
+          );
         } finally {
           userSigning.free();
         }
@@ -511,8 +511,10 @@ class Bootstrap {
           );
         }
         Logs().v('Set own master key to verified...');
-        await client.userDeviceKeys[client.userID]!.masterKey!
-            .setVerified(true, false);
+        await client.userDeviceKeys[client.userID]!.masterKey!.setVerified(
+          true,
+          false,
+        );
         keysToSign.add(client.userDeviceKeys[client.userID]!.masterKey!);
       }
       if (selfSigningKey != null) {
@@ -573,9 +575,7 @@ class Bootstrap {
       Logs().v('Create the new backup version...');
       await client.postRoomKeysVersion(
         BackupAlgorithm.mMegolmBackupV1Curve25519AesSha2,
-        <String, dynamic>{
-          'public_key': pubKey,
-        },
+        <String, dynamic>{'public_key': pubKey},
       );
       Logs().v('Store the secret...');
       await newSsssKey?.store(megolmKey, base64.encode(privKey));

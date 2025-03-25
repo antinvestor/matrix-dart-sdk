@@ -88,8 +88,9 @@ class _PatternCondition {
     if (tempPat == null) {
       throw 'PushCondition is missing pattern';
     }
-    tempPat =
-        RegExp.escape(tempPat).replaceAll('\\*', '.*').replaceAll('\\?', '.');
+    tempPat = RegExp.escape(
+      tempPat,
+    ).replaceAll('\\*', '.*').replaceAll('\\?', '.');
 
     if (field == 'content.body') {
       pattern = RegExp('(^|\\W)$tempPat(\$|\\W)', caseSensitive: false);
@@ -152,13 +153,7 @@ class _EventPropertyCondition {
   }
 }
 
-enum _CountComparisonOp {
-  eq,
-  lt,
-  le,
-  ge,
-  gt,
-}
+enum _CountComparisonOp { eq, lt, le, ge, gt }
 
 class _MemberCountCondition {
   _CountComparisonOp op = _CountComparisonOp.eq;
@@ -236,8 +231,9 @@ class _OptimizedRules {
           break;
         case PushRuleConditions.eventPropertyIs:
         case PushRuleConditions.eventPropertyContains:
-          eventProperties
-              .add(_EventPropertyCondition.fromEventMatch(condition));
+          eventProperties.add(
+            _EventPropertyCondition.fromEventMatch(condition),
+          );
           break;
         case PushRuleConditions.containsDisplayName:
           matchDisplayname = true;
@@ -292,10 +288,11 @@ class _OptimizedRules {
       final sender = flattenedEventJson.tryGet<String>('sender');
       if (sender == null ||
           notificationPermissions.any(
-            (notificationType) => !room.canSendNotification(
-              sender,
-              notificationType: notificationType,
-            ),
+            (notificationType) =>
+                !room.canSendNotification(
+                  sender,
+                  notificationType: notificationType,
+                ),
           )) {
         return null;
       }
@@ -357,8 +354,9 @@ class PushruleEvaluator {
     }
     for (final r in ruleset.sender ?? <PushRule>[]) {
       if (r.enabled) {
-        _sender_rules[r.ruleId] =
-            EvaluatedPushRuleAction.fromActions(r.actions);
+        _sender_rules[r.ruleId] = EvaluatedPushRuleAction.fromActions(
+          r.actions,
+        );
       }
     }
   }
@@ -383,16 +381,21 @@ class PushruleEvaluator {
 
   EvaluatedPushRuleAction match(Event event) {
     final memberCount = event.room.getParticipants([Membership.join]).length;
-    final displayName = event.room
-        .unsafeGetUserFromMemoryOrFallback(event.room.client.userID!)
-        .displayName;
+    final displayName =
+        event.room
+            .unsafeGetUserFromMemoryOrFallback(event.room.client.userID!)
+            .displayName;
     final flattenedEventJson = _flattenJson(event.toJson(), {}, '');
     // ensure roomid is present
     flattenedEventJson['room_id'] = event.room.id;
 
     for (final o in _override) {
-      final actions =
-          o.match(flattenedEventJson, displayName, memberCount, event.room);
+      final actions = o.match(
+        flattenedEventJson,
+        displayName,
+        memberCount,
+        event.room,
+      );
       if (actions != null) {
         return actions;
       }
@@ -409,16 +412,24 @@ class PushruleEvaluator {
     }
 
     for (final o in _content_rules) {
-      final actions =
-          o.match(flattenedEventJson, displayName, memberCount, event.room);
+      final actions = o.match(
+        flattenedEventJson,
+        displayName,
+        memberCount,
+        event.room,
+      );
       if (actions != null) {
         return actions;
       }
     }
 
     for (final o in _underride) {
-      final actions =
-          o.match(flattenedEventJson, displayName, memberCount, event.room);
+      final actions = o.match(
+        flattenedEventJson,
+        displayName,
+        memberCount,
+        event.room,
+      );
       if (actions != null) {
         return actions;
       }

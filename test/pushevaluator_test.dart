@@ -334,18 +334,15 @@ void main() {
 
     test('match_display_name rule', () async {
       final event = Event.fromJson(jsonObj, room);
-      (event.room.states[EventTypes.RoomMember] ??= {})[client.userID!] =
-          Event.fromJson(
-        {
-          'type': EventTypes.RoomMember,
-          'sender': senderID,
-          'state_key': 'client.senderID',
-          'content': {'displayname': 'Nico', 'membership': 'join'},
-          'room_id': room.id,
-          'origin_server_ts': 5,
-        },
-        room,
-      );
+      (event.room.states[EventTypes.RoomMember] ??= {})[client
+          .userID!] = Event.fromJson({
+        'type': EventTypes.RoomMember,
+        'sender': senderID,
+        'state_key': 'client.senderID',
+        'content': {'displayname': 'Nico', 'membership': 'join'},
+        'room_id': room.id,
+        'origin_server_ts': 5,
+      }, room,);
 
       final ruleset = PushRuleSet(
         override: [
@@ -358,9 +355,7 @@ void main() {
               {'set_tweak': 'highlight', 'value': true},
               {'set_tweak': 'sound', 'value': 'goose.wav'},
             ],
-            conditions: [
-              PushCondition(kind: 'contains_display_name'),
-            ],
+            conditions: [PushCondition(kind: 'contains_display_name')],
           ),
         ],
       );
@@ -374,18 +369,15 @@ void main() {
 
     test('member_count rule', () async {
       final event = Event.fromJson(jsonObj, room);
-      (event.room.states[EventTypes.RoomMember] ??= {})[client.userID!] =
-          Event.fromJson(
-        {
-          'type': EventTypes.RoomMember,
-          'sender': senderID,
-          'state_key': 'client.senderID',
-          'content': {'displayname': 'Nico', 'membership': 'join'},
-          'room_id': room.id,
-          'origin_server_ts': 5,
-        },
-        room,
-      );
+      (event.room.states[EventTypes.RoomMember] ??= {})[client
+          .userID!] = Event.fromJson({
+        'type': EventTypes.RoomMember,
+        'sender': senderID,
+        'state_key': 'client.senderID',
+        'content': {'displayname': 'Nico', 'membership': 'join'},
+        'room_id': room.id,
+        'origin_server_ts': 5,
+      }, room,);
 
       final ruleset = PushRuleSet(
         override: [
@@ -398,9 +390,7 @@ void main() {
               {'set_tweak': 'highlight', 'value': true},
               {'set_tweak': 'sound', 'value': 'goose.wav'},
             ],
-            conditions: [
-              PushCondition(kind: 'room_member_count', is$: '<5'),
-            ],
+            conditions: [PushCondition(kind: 'room_member_count', is$: '<5')],
           ),
         ],
       );
@@ -428,21 +418,18 @@ void main() {
 
     test('notification permissions rule', () async {
       final event = Event.fromJson(jsonObj, room);
-      (event.room.states[EventTypes.RoomPowerLevels] ??= {})[''] =
-          Event.fromJson(
-        {
-          'type': EventTypes.RoomMember,
-          'sender': senderID,
-          'state_key': 'client.senderID',
-          'content': {
-            'notifications': {'broom': 20},
-            'users': {senderID: 20},
-          },
-          'room_id': room.id,
-          'origin_server_ts': 5,
+      (event.room.states[EventTypes.RoomPowerLevels] ??=
+          {})[''] = Event.fromJson({
+        'type': EventTypes.RoomMember,
+        'sender': senderID,
+        'state_key': 'client.senderID',
+        'content': {
+          'notifications': {'broom': 20},
+          'users': {senderID: 20},
         },
-        room,
-      );
+        'room_id': room.id,
+        'origin_server_ts': 5,
+      }, room,);
 
       final ruleset = PushRuleSet(
         override: [

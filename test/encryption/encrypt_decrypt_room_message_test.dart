@@ -60,8 +60,9 @@ void main() {
         eventId: '\$event',
         senderId: client.userID!,
       );
-      final decryptedEvent =
-          await client.encryption!.decryptRoomEvent(encryptedEvent);
+      final decryptedEvent = await client.encryption!.decryptRoomEvent(
+        encryptedEvent,
+      );
       expect(decryptedEvent.type, 'm.room.message');
       expect(decryptedEvent.content['msgtype'], 'm.text');
       expect(decryptedEvent.content['text'], 'Hello foxies!');
@@ -79,8 +80,9 @@ void main() {
         eventId: '\$event',
         senderId: client.userID!,
       );
-      final decryptedEvent =
-          await client.encryption!.decryptRoomEvent(encryptedEvent);
+      final decryptedEvent = await client.encryption!.decryptRoomEvent(
+        encryptedEvent,
+      );
       expect(decryptedEvent.type, 'm.room.message');
       expect(decryptedEvent.content['msgtype'], 'm.text');
       expect(decryptedEvent.content['text'], 'Hello foxies!');
@@ -97,8 +99,9 @@ void main() {
         eventId: '\$event',
         senderId: '@alice:example.com',
       );
-      final decryptedEvent =
-          await client.encryption!.decryptRoomEvent(encryptedEvent);
+      final decryptedEvent = await client.encryption!.decryptRoomEvent(
+        encryptedEvent,
+      );
       expect(decryptedEvent.type, 'm.room.message');
       expect(decryptedEvent.content['msgtype'], 'm.text');
       expect(decryptedEvent.content['text'], 'Hello foxies!');

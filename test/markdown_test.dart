@@ -23,10 +23,7 @@ import 'package:matrix/src/utils/markdown.dart';
 void main() {
   group('markdown', () {
     final emotePacks = {
-      'room': {
-        'fox': 'mxc://roomfox',
-        'bunny': 'mxc://roombunny',
-      },
+      'room': {'fox': 'mxc://roomfox', 'bunny': 'mxc://roombunny'},
       'user': {
         'fox': 'mxc://userfox',
         'bunny': 'mxc://userbunny',

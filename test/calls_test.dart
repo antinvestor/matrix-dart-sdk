@@ -217,7 +217,7 @@ void main() {
                                 'candidate:31TCP2105524479uwu9typhosttcptypeactive',
                             'sdpMid': '0',
                             'sdpMLineIndex': 0,
-                          }
+                          },
                         ],
                       },
                       senderId: '@alice:testing.com',
@@ -245,29 +245,24 @@ void main() {
       expect(call.state, CallState.kRinging);
       await call.answer(txid: '1234');
 
-      call.pc!.onIceGatheringState!
-          .call(RTCIceGatheringState.RTCIceGatheringStateComplete);
+      call.pc!.onIceGatheringState!.call(
+        RTCIceGatheringState.RTCIceGatheringStateComplete,
+      );
       // we send them manually anyway because our stub sends empty list of
       // candidates
-      await call.sendCallCandidates(
-        room,
-        'originTsValidCall',
-        'GHTYAJCE',
-        [
-          {
-            'candidate': 'candidate:0 1 UDP 2122252543 uwu 50184 typ host',
-            'sdpMid': '0',
-            'sdpMLineIndex': 0,
-          },
-          {
-            'candidate':
-                'candidate:3 1 TCP 2105524479 uwu 9 typ host tcptype active',
-            'sdpMid': '0',
-            'sdpMLineIndex': 0,
-          }
-        ],
-        txid: '1234',
-      );
+      await call.sendCallCandidates(room, 'originTsValidCall', 'GHTYAJCE', [
+        {
+          'candidate': 'candidate:0 1 UDP 2122252543 uwu 50184 typ host',
+          'sdpMid': '0',
+          'sdpMLineIndex': 0,
+        },
+        {
+          'candidate':
+              'candidate:3 1 TCP 2105524479 uwu 9 typ host tcptype active',
+          'sdpMid': '0',
+          'sdpMLineIndex': 0,
+        },
+      ], txid: '1234',);
 
       expect(call.state, CallState.kConnecting);
 
@@ -301,10 +296,12 @@ void main() {
         ),
       );
 
-      call.pc!.onIceConnectionState!
-          .call(RTCIceConnectionState.RTCIceConnectionStateChecking);
-      call.pc!.onIceConnectionState!
-          .call(RTCIceConnectionState.RTCIceConnectionStateConnected);
+      call.pc!.onIceConnectionState!.call(
+        RTCIceConnectionState.RTCIceConnectionStateChecking,
+      );
+      call.pc!.onIceConnectionState!.call(
+        RTCIceConnectionState.RTCIceConnectionStateConnected,
+      );
       // just to make sure there are no errors after running functions
       // that are supposed to run once iceConnectionState is connected
       await Future.delayed(Duration(seconds: 2));
@@ -372,7 +369,7 @@ void main() {
                                 'candidate:31TCP2105524479uwu9typhosttcptypeactive',
                             'sdpMid': '0',
                             'sdpMLineIndex': 0,
-                          }
+                          },
                         ],
                       },
                       senderId: '@alice:testing.com',
@@ -492,7 +489,7 @@ void main() {
                                 'candidate:31TCP2105524479uwu9typhosttcptypeactive',
                             'sdpMid': '0',
                             'sdpMLineIndex': 0,
-                          }
+                          },
                         ],
                       },
                       senderId: '@alice:testing.com',
@@ -506,8 +503,8 @@ void main() {
           ),
         ),
       );
-      while (
-          voip.currentCID != VoipId(roomId: room.id, callId: 'reject_call')) {
+      while (voip.currentCID !=
+          VoipId(roomId: room.id, callId: 'reject_call')) {
         // call invite looks valid, call should be created now :D
         await Future.delayed(Duration(milliseconds: 50));
         Logs().d('Waiting for currentCID to update');
@@ -625,9 +622,10 @@ void main() {
                 callId: '1111',
                 backend: MeshBackend(),
                 deviceId: '1111',
-                expiresTs: DateTime.now()
-                    .add(Duration(hours: 12))
-                    .millisecondsSinceEpoch,
+                expiresTs:
+                    DateTime.now()
+                        .add(Duration(hours: 12))
+                        .millisecondsSinceEpoch,
                 roomId: room.id,
                 membershipId: voip.currentSessionId,
               ).toJson(),
@@ -696,9 +694,10 @@ void main() {
                 callId: '1111',
                 backend: MeshBackend(),
                 deviceId: '1111',
-                expiresTs: DateTime.now()
-                    .subtract(Duration(hours: 1))
-                    .millisecondsSinceEpoch,
+                expiresTs:
+                    DateTime.now()
+                        .subtract(Duration(hours: 1))
+                        .millisecondsSinceEpoch,
                 roomId: room.id,
                 membershipId: voip.currentSessionId,
               ).toJson(),
@@ -861,9 +860,10 @@ void main() {
                 callId: 'participants_count',
                 backend: MeshBackend(),
                 deviceId: '1111',
-                expiresTs: DateTime.now()
-                    .subtract(Duration(hours: 1))
-                    .millisecondsSinceEpoch,
+                expiresTs:
+                    DateTime.now()
+                        .subtract(Duration(hours: 1))
+                        .millisecondsSinceEpoch,
                 roomId: room.id,
                 membershipId: voip.currentSessionId,
               ).toJson(),
@@ -890,9 +890,10 @@ void main() {
                 callId: 'participants_count',
                 backend: MeshBackend(),
                 deviceId: '1111',
-                expiresTs: DateTime.now()
-                    .add(Duration(hours: 1))
-                    .millisecondsSinceEpoch,
+                expiresTs:
+                    DateTime.now()
+                        .add(Duration(hours: 1))
+                        .millisecondsSinceEpoch,
                 roomId: room.id,
                 membershipId: voip.currentSessionId,
               ).toJson(),

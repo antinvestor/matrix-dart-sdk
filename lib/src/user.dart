@@ -54,9 +54,7 @@ class User extends StrippedStateEvent {
     required this.room,
     this.originServerTs,
     this.prevContent,
-  }) : super(
-          type: typeKey,
-        );
+  }) : super(type: typeKey);
 
   /// The full qualified Matrix ID in the format @username:server.abc.
   String get id => stateKey ?? '@unknown:unknown';
@@ -76,19 +74,17 @@ class User extends StrippedStateEvent {
   /// invite
   /// leave
   /// ban
-  Membership get membership => Membership.values.firstWhere(
-        (e) {
-          if (content['membership'] != null) {
-            return e.toString() == 'Membership.${content['membership']}';
-          }
-          return false;
-        },
-        orElse: () => Membership.join,
-      );
+  Membership get membership => Membership.values.firstWhere((e) {
+    if (content['membership'] != null) {
+      return e.toString() == 'Membership.${content['membership']}';
+    }
+    return false;
+  }, orElse: () => Membership.join,);
 
   /// The avatar if the user has one.
   Uri? get avatarUrl {
-    final uri = content.tryGet<String>('avatar_url') ??
+    final uri =
+        content.tryGet<String>('avatar_url') ??
         (membership == Membership.join
             ? null
             : prevContent?.tryGet<String>('avatar_url'));
@@ -146,13 +142,12 @@ class User extends StrippedStateEvent {
     bool? enableEncryption,
     List<StateEvent>? initialState,
     bool waitForSync = true,
-  }) async =>
-      room.client.startDirectChat(
-        id,
-        enableEncryption: enableEncryption,
-        initialState: initialState,
-        waitForSync: waitForSync,
-      );
+  }) async => room.client.startDirectChat(
+    id,
+    enableEncryption: enableEncryption,
+    initialState: initialState,
+    waitForSync: waitForSync,
+  );
 
   /// The newest presence of this user if there is any and null if not.
   @Deprecated('Deprecated in favour of currentPresence.')
@@ -185,10 +180,11 @@ class User extends StrippedStateEvent {
       (powerLevel < room.ownPowerLevel || id == room.client.userID);
 
   @override
-  bool operator ==(Object other) => (other is User &&
-      other.id == id &&
-      other.room == room &&
-      other.membership == membership);
+  bool operator ==(Object other) =>
+      (other is User &&
+          other.id == id &&
+          other.room == room &&
+          other.membership == membership);
 
   @override
   int get hashCode => Object.hash(id, room, membership);
@@ -252,12 +248,12 @@ String _hash(String s) =>
 
 extension FromStrippedStateEventExtension on StrippedStateEvent {
   User asUser(Room room) => User.fromState(
-        // state key should always be set for member events
-        stateKey: stateKey!,
-        content: content,
-        typeKey: type,
-        senderId: senderId,
-        room: room,
-        originServerTs: null,
-      );
+    // state key should always be set for member events
+    stateKey: stateKey!,
+    content: content,
+    typeKey: type,
+    senderId: senderId,
+    room: room,
+    originServerTs: null,
+  );
 }

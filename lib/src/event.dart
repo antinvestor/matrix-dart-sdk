@@ -37,10 +37,8 @@ abstract class RelationshipTypes {
 /// All data exchanged over Matrix is expressed as an "event". Typically each client action (e.g. sending a message) correlates with exactly one event.
 class Event extends MatrixEvent {
   /// Requests the user object of the sender of this event.
-  Future<User?> fetchSenderUser() => room.requestUser(
-        senderId,
-        ignoreErrors: true,
-      );
+  Future<User?> fetchSenderUser() =>
+      room.requestUser(senderId, ignoreErrors: true);
 
   @Deprecated(
     'Use eventSender instead or senderFromMemoryOrFallback for a synchronous alternative',
@@ -69,9 +67,10 @@ class Event extends MatrixEvent {
 
   bool get redacted => redactedBecause != null;
 
-  User? get stateKeyUser => stateKey != null
-      ? room.unsafeGetUserFromMemoryOrFallback(stateKey!)
-      : null;
+  User? get stateKeyUser =>
+      stateKey != null
+          ? room.unsafeGetUserFromMemoryOrFallback(stateKey!)
+          : null;
 
   MatrixEvent? _originalSource;
 
@@ -92,12 +91,12 @@ class Event extends MatrixEvent {
     super.redacts,
     required this.room,
     MatrixEvent? originalSource,
-  })  : _originalSource = originalSource,
-        super(
-          eventId: eventId,
-          originServerTs: originServerTs,
-          roomId: room.id,
-        ) {
+  }) : _originalSource = originalSource,
+       super(
+         eventId: eventId,
+         originServerTs: originServerTs,
+         roomId: room.id,
+       ) {
     this.eventId = eventId;
     this.unsigned = unsigned;
     // synapse unfortunately isn't following the spec and tosses the prev_content
@@ -105,9 +104,10 @@ class Event extends MatrixEvent {
     // Currently we are facing a very strange bug in web which is impossible to debug.
     // It may be because of this line so we put this in try-catch until we can fix it.
     try {
-      this.prevContent = (prevContent != null && prevContent.isNotEmpty)
-          ? prevContent
-          : (unsigned != null &&
+      this.prevContent =
+          (prevContent != null && prevContent.isNotEmpty)
+              ? prevContent
+              : (unsigned != null &&
                   unsigned.containsKey('prev_content') &&
                   unsigned['prev_content'] is Map)
               ? unsigned['prev_content']
@@ -122,7 +122,8 @@ class Event extends MatrixEvent {
     // database!
     if (status.isSending && room.client.database != null) {
       // Age of this event in milliseconds
-      final age = DateTime.now().millisecondsSinceEpoch -
+      final age =
+          DateTime.now().millisecondsSinceEpoch -
           originServerTs.millisecondsSinceEpoch;
 
       final room = this.room;
@@ -170,34 +171,32 @@ class Event extends MatrixEvent {
       matrixEvent is Event
           ? matrixEvent
           : Event(
-              status: status ??
-                  eventStatusFromInt(
-                    matrixEvent.unsigned
-                            ?.tryGet<int>(messageSendingStatusKey) ??
-                        defaultStatus.intValue,
-                  ),
-              content: matrixEvent.content,
-              type: matrixEvent.type,
-              eventId: matrixEvent.eventId,
-              senderId: matrixEvent.senderId,
-              originServerTs: matrixEvent.originServerTs,
-              unsigned: matrixEvent.unsigned,
-              prevContent: matrixEvent.prevContent,
-              stateKey: matrixEvent.stateKey,
-              redacts: matrixEvent.redacts,
-              room: room,
-            );
+            status:
+                status ??
+                eventStatusFromInt(
+                  matrixEvent.unsigned?.tryGet<int>(messageSendingStatusKey) ??
+                      defaultStatus.intValue,
+                ),
+            content: matrixEvent.content,
+            type: matrixEvent.type,
+            eventId: matrixEvent.eventId,
+            senderId: matrixEvent.senderId,
+            originServerTs: matrixEvent.originServerTs,
+            unsigned: matrixEvent.unsigned,
+            prevContent: matrixEvent.prevContent,
+            stateKey: matrixEvent.stateKey,
+            redacts: matrixEvent.redacts,
+            room: room,
+          );
 
   /// Get a State event from a table row or from the event stream.
-  factory Event.fromJson(
-    Map<String, dynamic> jsonPayload,
-    Room room,
-  ) {
+  factory Event.fromJson(Map<String, dynamic> jsonPayload, Room room) {
     final content = Event.getMapFromPayload(jsonPayload['content']);
     final unsigned = Event.getMapFromPayload(jsonPayload['unsigned']);
     final prevContent = Event.getMapFromPayload(jsonPayload['prev_content']);
-    final originalSource =
-        Event.getMapFromPayload(jsonPayload['original_source']);
+    final originalSource = Event.getMapFromPayload(
+      jsonPayload['original_source'],
+    );
     return Event(
       status: eventStatusFromInt(
         jsonPayload['status'] ??
@@ -248,24 +247,23 @@ class Event extends MatrixEvent {
   }
 
   User get asUser => User.fromState(
-        // state key should always be set for member events
-        stateKey: stateKey!,
-        prevContent: prevContent,
-        content: content,
-        typeKey: type,
-        senderId: senderId,
-        room: room,
-        originServerTs: originServerTs,
-      );
+    // state key should always be set for member events
+    stateKey: stateKey!,
+    prevContent: prevContent,
+    content: content,
+    typeKey: type,
+    senderId: senderId,
+    room: room,
+    originServerTs: originServerTs,
+  );
 
-  String get messageType => type == EventTypes.Sticker
-      ? MessageTypes.Sticker
-      : (content.tryGet<String>('msgtype') ?? MessageTypes.Text);
+  String get messageType =>
+      type == EventTypes.Sticker
+          ? MessageTypes.Sticker
+          : (content.tryGet<String>('msgtype') ?? MessageTypes.Text);
 
   void setRedactionEvent(Event redactedBecause) {
-    unsigned = {
-      'redacted_because': redactedBecause.toJson(),
-    };
+    unsigned = {'redacted_because': redactedBecause.toJson()};
     prevContent = null;
     _originalSource = null;
     final contentKeyWhiteList = <String>[];
@@ -317,29 +315,31 @@ class Event extends MatrixEvent {
   /// Use this to get a plain-text representation of the event, stripping things
   /// like spoilers and thelike. Useful for plain text notifications.
   String get plaintextBody => switch (formattedText) {
-        // if the formattedText is empty, fallback to body
-        '' => body,
-        final String s when content['format'] == 'org.matrix.custom.html' =>
-          HtmlToText.convert(s),
-        _ => body,
-      };
+    // if the formattedText is empty, fallback to body
+    '' => body,
+    final String s when content['format'] == 'org.matrix.custom.html' =>
+      HtmlToText.convert(s),
+    _ => body,
+  };
 
   /// Returns a list of [Receipt] instances for this event.
   List<Receipt> get receipts {
     final room = this.room;
     final receipts = room.receiptState;
-    final receiptsList = receipts.global.otherUsers.entries
-        .where((entry) => entry.value.eventId == eventId)
-        .map(
-          (entry) => Receipt(
-            room.unsafeGetUserFromMemoryOrFallback(entry.key),
-            entry.value.timestamp,
-          ),
-        )
-        .toList();
+    final receiptsList =
+        receipts.global.otherUsers.entries
+            .where((entry) => entry.value.eventId == eventId)
+            .map(
+              (entry) => Receipt(
+                room.unsafeGetUserFromMemoryOrFallback(entry.key),
+                entry.value.timestamp,
+              ),
+            )
+            .toList();
 
     // add your own only once
-    final own = receipts.global.latestOwnReceipt ??
+    final own =
+        receipts.global.latestOwnReceipt ??
         receipts.mainThread?.latestOwnReceipt;
     if (own != null && own.eventId == eventId) {
       receiptsList.add(
@@ -357,8 +357,9 @@ class Event extends MatrixEvent {
               .where(
                 (entry) =>
                     entry.value.eventId == eventId &&
-                    receiptsList
-                        .every((element) => element.user.id != entry.key),
+                    receiptsList.every(
+                      (element) => element.user.id != entry.key,
+                    ),
               )
               .map(
                 (entry) => Receipt(
@@ -412,9 +413,7 @@ class Event extends MatrixEvent {
           rooms: RoomsUpdate(
             join: {
               room.id: JoinedRoomUpdate(
-                timeline: TimelineUpdate(
-                  events: [redactedBecause],
-                ),
+                timeline: TimelineUpdate(events: [redactedBecause]),
               ),
             },
           ),
@@ -442,9 +441,10 @@ class Event extends MatrixEvent {
       }
       final thumbnail = room.sendingFileThumbnails[eventId];
       final credentials = FileSendRequestCredentials.fromJson(unsigned ?? {});
-      final inReplyTo = credentials.inReplyTo == null
-          ? null
-          : await room.getEventById(credentials.inReplyTo!);
+      final inReplyTo =
+          credentials.inReplyTo == null
+              ? null
+              : await room.getEventById(credentials.inReplyTo!);
       return await room.sendFileEvent(
         file,
         txid: txid ?? transactionId,
@@ -505,9 +505,10 @@ class Event extends MatrixEvent {
       content.tryGetMap<String, Object?>('info') ?? <String, Object?>{};
 
   /// Gets the thumbnail info map of file events, or a blank map if nonepresent
-  Map get thumbnailInfoMap => infoMap['thumbnail_info'] is Map
-      ? infoMap['thumbnail_info']
-      : <String, dynamic>{};
+  Map get thumbnailInfoMap =>
+      infoMap['thumbnail_info'] is Map
+          ? infoMap['thumbnail_info']
+          : <String, dynamic>{};
 
   /// Returns if a file event has an attachment
   bool get hasAttachment => content['url'] is String || content['file'] is Map;
@@ -523,34 +524,38 @@ class Event extends MatrixEvent {
   bool get isThumbnailEncrypted => infoMap['thumbnail_file'] is Map;
 
   /// Gets the mimetype of the attachment of a file event, or a blank string if not present
-  String get attachmentMimetype => infoMap['mimetype'] is String
-      ? infoMap['mimetype'].toLowerCase()
-      : (content
-              .tryGetMap<String, Object?>('file')
-              ?.tryGet<String>('mimetype') ??
-          '');
+  String get attachmentMimetype =>
+      infoMap['mimetype'] is String
+          ? infoMap['mimetype'].toLowerCase()
+          : (content
+                  .tryGetMap<String, Object?>('file')
+                  ?.tryGet<String>('mimetype') ??
+              '');
 
   /// Gets the mimetype of the thumbnail of a file event, or a blank string if not present
-  String get thumbnailMimetype => thumbnailInfoMap['mimetype'] is String
-      ? thumbnailInfoMap['mimetype'].toLowerCase()
-      : (infoMap['thumbnail_file'] is Map &&
-              infoMap['thumbnail_file']['mimetype'] is String
-          ? infoMap['thumbnail_file']['mimetype']
-          : '');
+  String get thumbnailMimetype =>
+      thumbnailInfoMap['mimetype'] is String
+          ? thumbnailInfoMap['mimetype'].toLowerCase()
+          : (infoMap['thumbnail_file'] is Map &&
+                  infoMap['thumbnail_file']['mimetype'] is String
+              ? infoMap['thumbnail_file']['mimetype']
+              : '');
 
   /// Gets the underlying mxc url of an attachment of a file event, or null if not present
   Uri? get attachmentMxcUrl {
-    final url = isAttachmentEncrypted
-        ? (content.tryGetMap<String, Object?>('file')?['url'])
-        : content['url'];
+    final url =
+        isAttachmentEncrypted
+            ? (content.tryGetMap<String, Object?>('file')?['url'])
+            : content['url'];
     return url is String ? Uri.tryParse(url) : null;
   }
 
   /// Gets the underlying mxc url of a thumbnail of a file event, or null if not present
   Uri? get thumbnailMxcUrl {
-    final url = isThumbnailEncrypted
-        ? infoMap['thumbnail_file']['url']
-        : infoMap['thumbnail_url'];
+    final url =
+        isThumbnailEncrypted
+            ? infoMap['thumbnail_file']['url']
+            : infoMap['thumbnail_url'];
     return url is String ? Uri.tryParse(url) : null;
   }
 
@@ -697,7 +702,8 @@ class Event extends MatrixEvent {
       return false;
     }
 
-    final storeable = thisInfoMap['size'] is int &&
+    final storeable =
+        thisInfoMap['size'] is int &&
         thisInfoMap['size'] <= database.maxFileSize;
 
     Uint8List? uint8list;
@@ -739,7 +745,8 @@ class Event extends MatrixEvent {
 
     // Is this file storeable?
     final thisInfoMap = getThumbnail ? thumbnailInfoMap : infoMap;
-    var storeable = database != null &&
+    var storeable =
+        database != null &&
         thisInfoMap['size'] is int &&
         thisInfoMap['size'] <= database.maxFileSize;
 
@@ -752,14 +759,17 @@ class Event extends MatrixEvent {
     final canDownloadFileFromServer = uint8list == null && !fromLocalStoreOnly;
     if (canDownloadFileFromServer) {
       final httpClient = room.client.httpClient;
-      downloadCallback ??= (Uri url) async => (await httpClient.get(
-            url,
-            headers: {'authorization': 'Bearer ${room.client.accessToken}'},
-          ))
-              .bodyBytes;
-      uint8list =
-          await downloadCallback(await mxcUrl.getDownloadUri(room.client));
-      storeable = database != null &&
+      downloadCallback ??=
+          (Uri url) async =>
+              (await httpClient.get(
+                url,
+                headers: {'authorization': 'Bearer ${room.client.accessToken}'},
+              )).bodyBytes;
+      uint8list = await downloadCallback(
+        await mxcUrl.getDownloadUri(room.client),
+      );
+      storeable =
+          database != null &&
           storeable &&
           uint8list.lengthInBytes < database.maxFileSize;
       if (storeable) {
@@ -786,8 +796,9 @@ class Event extends MatrixEvent {
         k: fileMap['key']['k'],
         sha256: fileMap['hashes']['sha256'],
       );
-      uint8list =
-          await room.client.nativeImplementations.decryptFile(encryptedFile);
+      uint8list = await room.client.nativeImplementations.decryptFile(
+        encryptedFile,
+      );
       if (uint8list == null) {
         throw ('Unable to decrypt file');
       }
@@ -851,15 +862,14 @@ class Event extends MatrixEvent {
     bool hideEdit = false,
     bool plaintextBody = false,
     bool removeMarkdown = false,
-  }) =>
-      calcLocalizedBodyFallback(
-        i18n,
-        withSenderNamePrefix: withSenderNamePrefix,
-        hideReply: hideReply,
-        hideEdit: hideEdit,
-        plaintextBody: plaintextBody,
-        removeMarkdown: removeMarkdown,
-      );
+  }) => calcLocalizedBodyFallback(
+    i18n,
+    withSenderNamePrefix: withSenderNamePrefix,
+    hideReply: hideReply,
+    hideEdit: hideEdit,
+    plaintextBody: plaintextBody,
+    removeMarkdown: removeMarkdown,
+  );
 
   /// Works similar to `calcLocalizedBody()` but does not wait for the sender
   /// user to be fetched. If it is not in the cache it will just use the
@@ -898,9 +908,10 @@ class Event extends MatrixEvent {
     if (withSenderNamePrefix &&
         type == EventTypes.Message &&
         textOnlyMessageTypes.contains(messageType)) {
-      final senderNameOrYou = senderId == room.client.userID
-          ? i18n.you
-          : senderFromMemoryOrFallback.calcDisplayname(i18n: i18n);
+      final senderNameOrYou =
+          senderId == room.client.userID
+              ? i18n.you
+              : senderFromMemoryOrFallback.calcDisplayname(i18n: i18n);
       localizedBody = '$senderNameOrYou: $localizedBody';
     }
 
@@ -920,7 +931,8 @@ class Event extends MatrixEvent {
     var body = plaintextBody ? this.plaintextBody : this.body;
 
     // Html messages will already have their reply fallback removed during the Html to Text conversion.
-    var mayHaveReplyFallback = !plaintextBody ||
+    var mayHaveReplyFallback =
+        !plaintextBody ||
         (content['format'] != 'org.matrix.custom.html' ||
             formattedText.isEmpty);
 
@@ -929,8 +941,10 @@ class Event extends MatrixEvent {
     if (hideEdit &&
         relationshipType == RelationshipTypes.edit &&
         newContent != null) {
-      final newBody =
-          newContent.tryGet<String>('formatted_body', TryGet.silent);
+      final newBody = newContent.tryGet<String>(
+        'formatted_body',
+        TryGet.silent,
+      );
       if (plaintextBody &&
           newContent['format'] == 'org.matrix.custom.html' &&
           newBody != null &&
@@ -955,9 +969,7 @@ class Event extends MatrixEvent {
     // return the html tags free body
     if (removeMarkdown == true) {
       final html = markdown(body, convertLinebreaks: false);
-      final document = parse(
-        html,
-      );
+      final document = parse(html);
       body = document.documentElement?.text ?? body;
     }
     return body;
@@ -1025,19 +1037,23 @@ class Event extends MatrixEvent {
     }
     if (hasAggregatedEvents(timeline, RelationshipTypes.edit)) {
       // alright, we have an edit
-      final allEditEvents = aggregatedEvents(timeline, RelationshipTypes.edit)
-          // we only allow edits made by the original author themself
-          .where((e) => e.senderId == senderId && e.type == EventTypes.Message)
-          .toList();
+      final allEditEvents =
+          aggregatedEvents(timeline, RelationshipTypes.edit)
+              // we only allow edits made by the original author themself
+              .where(
+                (e) => e.senderId == senderId && e.type == EventTypes.Message,
+              )
+              .toList();
       // we need to check again if it isn't empty, as we potentially removed all
       // aggregated edits
       if (allEditEvents.isNotEmpty) {
         allEditEvents.sort(
-          (a, b) => a.originServerTs.millisecondsSinceEpoch -
-                      b.originServerTs.millisecondsSinceEpoch >
-                  0
-              ? 1
-              : -1,
+          (a, b) =>
+              a.originServerTs.millisecondsSinceEpoch -
+                          b.originServerTs.millisecondsSinceEpoch >
+                      0
+                  ? 1
+                  : -1,
         );
         final rawEvent = allEditEvents.last.toJson();
         // update the content of the new event to render
@@ -1153,8 +1169,4 @@ class Event extends MatrixEvent {
   }
 }
 
-enum FileSendingStatus {
-  generatingThumbnail,
-  encrypting,
-  uploading,
-}
+enum FileSendingStatus { generatingThumbnail, encrypting, uploading }

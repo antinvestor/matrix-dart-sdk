@@ -2,11 +2,7 @@ import 'dart:typed_data';
 
 import 'package:matrix/matrix.dart';
 
-enum E2EEKeyMode {
-  kNone,
-  kSharedKey,
-  kPerParticipant,
-}
+enum E2EEKeyMode { kNone, kSharedKey, kPerParticipant }
 
 abstract class EncryptionKeyProvider {
   Future<void> onSetEncryptionKey(
@@ -26,15 +22,9 @@ class EncryptionKeyEntry {
   EncryptionKeyEntry(this.index, this.key);
 
   factory EncryptionKeyEntry.fromJson(Map<String, dynamic> json) =>
-      EncryptionKeyEntry(
-        json['index'] as int,
-        json['key'] as String,
-      );
+      EncryptionKeyEntry(json['index'] as int, json['key'] as String);
 
-  Map<String, dynamic> toJson() => {
-        'index': index,
-        'key': key,
-      };
+  Map<String, dynamic> toJson() => {'index': index, 'key': key};
 }
 
 class EncryptionKeysEventContent {
@@ -46,15 +36,13 @@ class EncryptionKeysEventContent {
   factory EncryptionKeysEventContent.fromJson(Map<String, dynamic> json) =>
       EncryptionKeysEventContent(
         (json['keys'] as List<dynamic>)
-            .map(
-              (e) => EncryptionKeyEntry.fromJson(e as Map<String, dynamic>),
-            )
+            .map((e) => EncryptionKeyEntry.fromJson(e as Map<String, dynamic>))
             .toList(),
         json['call_id'] as String,
       );
 
   Map<String, dynamic> toJson() => {
-        'keys': keys.map((e) => e.toJson()).toList(),
-        'call_id': callId,
-      };
+    'keys': keys.map((e) => e.toJson()).toList(),
+    'call_id': callId,
+  };
 }

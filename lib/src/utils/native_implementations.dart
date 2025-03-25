@@ -193,11 +193,10 @@ class NativeImplementationsIsolate extends NativeImplementations {
     MatrixImageFileResizeArguments args, {
     bool retryInDummy = false,
   }) {
-    return runInBackground<MatrixImageFileResizedResponse?,
-        MatrixImageFileResizeArguments>(
-      NativeImplementations.dummy.shrinkImage,
-      args,
-    );
+    return runInBackground<
+      MatrixImageFileResizedResponse?,
+      MatrixImageFileResizeArguments
+    >(NativeImplementations.dummy.shrinkImage, args);
   }
 
   @override

@@ -6,16 +6,12 @@ import 'package:matrix/src/voip/models/call_membership.dart';
 abstract class CallBackend {
   String type;
 
-  CallBackend({
-    required this.type,
-  });
+  CallBackend({required this.type});
 
   factory CallBackend.fromJson(Map<String, Object?> json) {
     final String type = json['type'] as String;
     if (type == 'mesh') {
-      return MeshBackend(
-        type: type,
-      );
+      return MeshBackend(type: type);
     } else if (type == 'livekit') {
       return LiveKitBackend(
         livekitAlias: json['livekit_alias'] as String,

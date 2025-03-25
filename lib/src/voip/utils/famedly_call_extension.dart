@@ -8,16 +8,19 @@ extension FamedlyCallMemberEventsExtension on Room {
   /// returns sorted according to originTs (oldest to newest)
   Map<String, FamedlyCallMemberEvent> getFamedlyCallEvents() {
     final Map<String, FamedlyCallMemberEvent> mappedEvents = {};
-    final famedlyCallMemberStates =
-        states.tryGetMap<String, Event>(EventTypes.GroupCallMember);
+    final famedlyCallMemberStates = states.tryGetMap<String, Event>(
+      EventTypes.GroupCallMember,
+    );
 
     if (famedlyCallMemberStates == null) return {};
-    final sortedEvents = famedlyCallMemberStates.values
-        .sorted((a, b) => a.originServerTs.compareTo(b.originServerTs));
+    final sortedEvents = famedlyCallMemberStates.values.sorted(
+      (a, b) => a.originServerTs.compareTo(b.originServerTs),
+    );
 
     for (final element in sortedEvents) {
-      mappedEvents
-          .addAll({element.senderId: FamedlyCallMemberEvent.fromJson(element)});
+      mappedEvents.addAll({
+        element.senderId: FamedlyCallMemberEvent.fromJson(element),
+      });
     }
     return mappedEvents;
   }
@@ -86,8 +89,9 @@ extension FamedlyCallMemberEventsExtension on Room {
 
     // do not bother removing other deviceId expired events because we have no
     // ownership over them
-    ownMemberships
-        .removeWhere((element) => client.deviceID! == element.deviceId);
+    ownMemberships.removeWhere(
+      (element) => client.deviceID! == element.deviceId,
+    );
 
     ownMemberships.removeWhere((e) => e == callMembership);
 
@@ -131,16 +135,14 @@ extension FamedlyCallMemberEventsExtension on Room {
         newContent,
       );
     } else {
-      throw MatrixSDKVoipException(
-        '''
+      throw MatrixSDKVoipException('''
         User ${client.userID}:${client.deviceID} is not allowed to join famedly calls in room $id, 
         canJoinGroupCall: $canJoinGroupCall, 
         groupCallsEnabledForEveryone: $groupCallsEnabledForEveryone, 
         needed: ${powerForChangingStateEvent(EventTypes.GroupCallMember)}, 
         own: $ownPowerLevel}
         plMap: ${getState(EventTypes.RoomPowerLevels)?.content}
-        ''',
-      );
+        ''');
     }
   }
 
@@ -177,8 +179,9 @@ bool isValidMemEvent(Map<String, Object?> event) {
       event['foci_active'] is List) {
     return true;
   } else {
-    Logs()
-        .v('[VOIP] FamedlyCallMemberEvent ignoring unclean membership $event');
+    Logs().v(
+      '[VOIP] FamedlyCallMemberEvent ignoring unclean membership $event',
+    );
     return false;
   }
 }

@@ -83,7 +83,7 @@ class MatrixException implements Exception {
   http.Response? response;
 
   MatrixException(http.Response this.response)
-      : raw = json.decode(response.body) as Map<String, Object?>;
+    : raw = json.decode(response.body) as Map<String, Object?>;
 
   MatrixException.fromJson(Map<String, Object?> content) : raw = content;
 
@@ -92,9 +92,9 @@ class MatrixException implements Exception {
 
   /// Returns the errcode as an [MatrixError].
   MatrixError get error => MatrixError.values.firstWhere(
-        (e) => e.name == errcode,
-        orElse: () => MatrixError.M_UNKNOWN,
-      );
+    (e) => e.name == errcode,
+    orElse: () => MatrixError.M_UNKNOWN,
+  );
 
   int? get retryAfterMs => raw.tryGet<int>('retry_after_ms');
 
@@ -103,23 +103,26 @@ class MatrixException implements Exception {
   String? get session => raw.tryGet<String>('session');
 
   /// Returns true if the server requires additional authentication.
-  bool get requireAdditionalAuthentication => response != null
-      ? response!.statusCode == 401
-      : authenticationFlows != null;
+  bool get requireAdditionalAuthentication =>
+      response != null
+          ? response!.statusCode == 401
+          : authenticationFlows != null;
 
   /// For each endpoint, a server offers one or more 'flows' that the client can use
   /// to authenticate itself. Each flow comprises a series of stages. If this request
   /// doesn't need additional authentication, then this is null.
-  List<AuthenticationFlow>? get authenticationFlows => raw
-      .tryGet<List<Object?>>('flows')
-      ?.whereType<Map<String, Object?>>()
-      .map((flow) => flow['stages'])
-      .whereType<List<Object?>>()
-      .map(
-        (stages) =>
-            AuthenticationFlow(List<String>.from(stages.whereType<String>())),
-      )
-      .toList();
+  List<AuthenticationFlow>? get authenticationFlows =>
+      raw
+          .tryGet<List<Object?>>('flows')
+          ?.whereType<Map<String, Object?>>()
+          .map((flow) => flow['stages'])
+          .whereType<List<Object?>>()
+          .map(
+            (stages) => AuthenticationFlow(
+              List<String>.from(stages.whereType<String>()),
+            ),
+          )
+          .toList();
 
   /// This section contains any information that the client will need to know in order to use a given type
   /// of authentication. For each authentication type presented, that type may be present as a key in this

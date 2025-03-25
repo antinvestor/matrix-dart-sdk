@@ -21,7 +21,7 @@ void main() {
           'pushkey': 'V2h5IG9uIGVhcnRoIGRpZCB5b3UgZGVjb2RlIHRoaXM/',
           'pushkey_ts': 12345678,
           'tweaks': {'sound': 'bing'},
-        }
+        },
       ],
       'event_id': '\$3957tyerfgewrf384',
       'prio': 'high',
@@ -37,8 +37,9 @@ void main() {
       expect(PushNotification.fromJson(json).toJson(), json);
     });
     test('fromJson and toJson with String keys only', () async {
-      final strJson =
-          json.map((k, v) => MapEntry(k, v is String ? v : jsonEncode(v)));
+      final strJson = json.map(
+        (k, v) => MapEntry(k, v is String ? v : jsonEncode(v)),
+      );
 
       expect(PushNotification.fromJson(strJson).toJson(), json);
     });

@@ -174,7 +174,7 @@ enum GroupCallStateChange {
   localScreenshareStateChanged,
   localMuteStateChanged,
   participantsChanged,
-  error
+  error,
 }
 
 enum GroupCallState {
@@ -183,5 +183,5 @@ enum GroupCallState {
   localCallFeedInitialized,
   entering,
   entered,
-  ended
+  ended,
 }

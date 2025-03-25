@@ -19,7 +19,7 @@ class Api {
   Uri? baseUri;
   String? bearerToken;
   Api({Client? httpClient, this.baseUri, this.bearerToken})
-      : httpClient = httpClient ?? Client();
+    : httpClient = httpClient ?? Client();
   Never unexpectedResponse(BaseResponse response, Uint8List body) {
     throw Exception('http error response');
   }
@@ -100,9 +100,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (transactionId != null) 'transaction_id': transactionId,
-      }),
+      jsonEncode({if (transactionId != null) 'transaction_id': transactionId}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -151,9 +149,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (auth != null) 'auth': auth.toJson(),
-      }),
+      jsonEncode({if (auth != null) 'auth': auth.toJson()}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -414,9 +410,7 @@ class Api {
   Future<bool> registrationTokenValidity(String token) async {
     final requestUri = Uri(
       path: '_matrix/client/v1/register/m.login.registration_token/validity',
-      queryParameters: {
-        'token': token,
-      },
+      queryParameters: {'token': token},
     );
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     final response = await httpClient.send(request);
@@ -702,7 +696,7 @@ class Api {
   ///
   /// The default value is `false`.
   Future<GetRelatingEventsWithRelTypeAndEventTypeResponse>
-      getRelatingEventsWithRelTypeAndEventType(
+  getRelatingEventsWithRelTypeAndEventType(
     String roomId,
     String eventId,
     String relType,
@@ -817,10 +811,7 @@ class Api {
     final requestUri = Uri(
       path:
           '_matrix/client/v1/rooms/${Uri.encodeComponent(roomId)}/timestamp_to_event',
-      queryParameters: {
-        'ts': ts.toString(),
-        'dir': dir.name,
-      },
+      queryParameters: {'ts': ts.toString(), 'dir': dir.name},
     );
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -852,13 +843,15 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return ((v) => v != null
-        ? (v as List)
-            .map(
-              (v) => ThirdPartyIdentifier.fromJson(v as Map<String, Object?>),
-            )
-            .toList()
-        : null)(json['threepids']);
+    return ((v) =>
+        v != null
+            ? (v as List)
+                .map(
+                  (v) =>
+                      ThirdPartyIdentifier.fromJson(v as Map<String, Object?>),
+                )
+                .toList()
+            : null)(json['threepids']);
   }
 
   /// Adds contact information to the user's account.
@@ -894,17 +887,16 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        'three_pid_creds': threePidCreds.toJson(),
-      }),
+      jsonEncode({'three_pid_creds': threePidCreds.toJson()}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return ((v) =>
-        v != null ? Uri.parse(v as String) : null)(json['submit_url']);
+    return ((v) => v != null ? Uri.parse(v as String) : null)(
+      json['submit_url'],
+    );
   }
 
   /// This API endpoint uses the [User-Interactive Authentication API](https://spec.matrix.org/unstable/client-server-api/#user-interactive-authentication-api).
@@ -1030,8 +1022,9 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return IdServerUnbindResult.values
-        .fromString(json['id_server_unbind_result'] as String)!;
+    return IdServerUnbindResult.values.fromString(
+      json['id_server_unbind_result'] as String,
+    )!;
   }
 
   /// The homeserver must check that the given email address is **not**
@@ -1084,8 +1077,9 @@ class Api {
     String? idAccessToken,
     String? idServer,
   }) async {
-    final requestUri =
-        Uri(path: '_matrix/client/v3/account/3pid/email/requestToken');
+    final requestUri = Uri(
+      path: '_matrix/client/v3/account/3pid/email/requestToken',
+    );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
@@ -1159,8 +1153,9 @@ class Api {
     String? idAccessToken,
     String? idServer,
   }) async {
-    final requestUri =
-        Uri(path: '_matrix/client/v3/account/3pid/msisdn/requestToken');
+    final requestUri = Uri(
+      path: '_matrix/client/v3/account/3pid/msisdn/requestToken',
+    );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
@@ -1225,8 +1220,9 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return IdServerUnbindResult.values
-        .fromString(json['id_server_unbind_result'] as String)!;
+    return IdServerUnbindResult.values.fromString(
+      json['id_server_unbind_result'] as String,
+    )!;
   }
 
   /// Deactivate the user's account, removing all ability for the user to
@@ -1302,8 +1298,9 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return IdServerUnbindResult.values
-        .fromString(json['id_server_unbind_result'] as String)!;
+    return IdServerUnbindResult.values.fromString(
+      json['id_server_unbind_result'] as String,
+    )!;
   }
 
   /// Changes the password for an account on this homeserver.
@@ -1412,8 +1409,9 @@ class Api {
     String? idAccessToken,
     String? idServer,
   }) async {
-    final requestUri =
-        Uri(path: '_matrix/client/v3/account/password/email/requestToken');
+    final requestUri = Uri(
+      path: '_matrix/client/v3/account/password/email/requestToken',
+    );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
@@ -1494,8 +1492,9 @@ class Api {
     String? idAccessToken,
     String? idServer,
   }) async {
-    final requestUri =
-        Uri(path: '_matrix/client/v3/account/password/msisdn/requestToken');
+    final requestUri = Uri(
+      path: '_matrix/client/v3/account/password/msisdn/requestToken',
+    );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
@@ -1776,11 +1775,12 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return ((v) => v != null
-        ? (v as List)
-            .map((v) => Device.fromJson(v as Map<String, Object?>))
-            .toList()
-        : null)(json['devices']);
+    return ((v) =>
+        v != null
+            ? (v as List)
+                .map((v) => Device.fromJson(v as Map<String, Object?>))
+                .toList()
+            : null)(json['devices']);
   }
 
   /// This API endpoint uses the [User-Interactive Authentication API](https://spec.matrix.org/unstable/client-server-api/#user-interactive-authentication-api).
@@ -1792,15 +1792,14 @@ class Api {
   /// [auth] Additional authentication information for the
   /// user-interactive authentication API.
   Future<void> deleteDevice(String deviceId, {AuthenticationData? auth}) async {
-    final requestUri =
-        Uri(path: '_matrix/client/v3/devices/${Uri.encodeComponent(deviceId)}');
+    final requestUri = Uri(
+      path: '_matrix/client/v3/devices/${Uri.encodeComponent(deviceId)}',
+    );
     final request = Request('DELETE', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (auth != null) 'auth': auth.toJson(),
-      }),
+      jsonEncode({if (auth != null) 'auth': auth.toJson()}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -1814,8 +1813,9 @@ class Api {
   ///
   /// [deviceId] The device to retrieve.
   Future<Device> getDevice(String deviceId) async {
-    final requestUri =
-        Uri(path: '_matrix/client/v3/devices/${Uri.encodeComponent(deviceId)}');
+    final requestUri = Uri(
+      path: '_matrix/client/v3/devices/${Uri.encodeComponent(deviceId)}',
+    );
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     final response = await httpClient.send(request);
@@ -1833,15 +1833,14 @@ class Api {
   /// [displayName] The new display name for this device. If not given, the
   /// display name is unchanged.
   Future<void> updateDevice(String deviceId, {String? displayName}) async {
-    final requestUri =
-        Uri(path: '_matrix/client/v3/devices/${Uri.encodeComponent(deviceId)}');
+    final requestUri = Uri(
+      path: '_matrix/client/v3/devices/${Uri.encodeComponent(deviceId)}',
+    );
     final request = Request('PUT', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (displayName != null) 'display_name': displayName,
-      }),
+      jsonEncode({if (displayName != null) 'display_name': displayName}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -1882,9 +1881,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        'visibility': visibility.name,
-      }),
+      jsonEncode({'visibility': visibility.name}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -1911,9 +1908,10 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return ((v) => v != null
-        ? Visibility.values.fromString(v as String)!
-        : null)(json['visibility']);
+    return ((v) =>
+        v != null ? Visibility.values.fromString(v as String)! : null)(
+      json['visibility'],
+    );
   }
 
   /// Sets the visibility of a given room in the server's public room
@@ -1939,9 +1937,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (visibility != null) 'visibility': visibility.name,
-      }),
+      jsonEncode({if (visibility != null) 'visibility': visibility.name}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -2019,11 +2015,7 @@ class Api {
     final request = Request('PUT', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
-    request.bodyBytes = utf8.encode(
-      jsonEncode({
-        'room_id': roomId,
-      }),
-    );
+    request.bodyBytes = utf8.encode(jsonEncode({'room_id': roomId}));
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
@@ -2114,8 +2106,9 @@ class Api {
   /// [eventId] The event ID to get.
   @deprecated
   Future<MatrixEvent> getOneEvent(String eventId) async {
-    final requestUri =
-        Uri(path: '_matrix/client/v3/events/${Uri.encodeComponent(eventId)}');
+    final requestUri = Uri(
+      path: '_matrix/client/v3/events/${Uri.encodeComponent(eventId)}',
+    );
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     final response = await httpClient.send(request);
@@ -2225,10 +2218,7 @@ class Api {
   Future<GetKeysChangesResponse> getKeysChanges(String from, String to) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/keys/changes',
-      queryParameters: {
-        'from': from,
-        'to': to,
-      },
+      queryParameters: {'from': from, 'to': to},
     );
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -2271,8 +2261,9 @@ class Api {
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
       jsonEncode({
-        'one_time_keys': oneTimeKeys
-            .map((k, v) => MapEntry(k, v.map((k, v) => MapEntry(k, v)))),
+        'one_time_keys': oneTimeKeys.map(
+          (k, v) => MapEntry(k, v.map((k, v) => MapEntry(k, v))),
+        ),
         if (timeout != null) 'timeout': timeout,
       }),
     );
@@ -2321,8 +2312,9 @@ class Api {
     MatrixCrossSigningKey? selfSigningKey,
     MatrixCrossSigningKey? userSigningKey,
   }) async {
-    final requestUri =
-        Uri(path: '_matrix/client/v3/keys/device_signing/upload');
+    final requestUri = Uri(
+      path: '_matrix/client/v3/keys/device_signing/upload',
+    );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
@@ -2360,8 +2352,9 @@ class Api {
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
       jsonEncode({
-        'device_keys':
-            deviceKeys.map((k, v) => MapEntry(k, v.map((v) => v).toList())),
+        'device_keys': deviceKeys.map(
+          (k, v) => MapEntry(k, v.map((v) => v).toList()),
+        ),
         if (timeout != null) 'timeout': timeout,
       }),
     );
@@ -2387,7 +2380,7 @@ class Api {
   /// that failed.  If a signature was invalid, the `errcode` will
   /// be set to `M_INVALID_SIGNATURE`.
   Future<Map<String, Map<String, Map<String, Object?>>>?>
-      uploadCrossSigningSignatures(
+  uploadCrossSigningSignatures(
     Map<String, Map<String, Map<String, Object?>>> body,
   ) async {
     final requestUri = Uri(path: '_matrix/client/v3/keys/signatures/upload');
@@ -2404,15 +2397,17 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return ((v) => v != null
-        ? (v as Map<String, Object?>).map(
-            (k, v) => MapEntry(
-              k,
-              (v as Map<String, Object?>)
-                  .map((k, v) => MapEntry(k, v as Map<String, Object?>)),
-            ),
-          )
-        : null)(json['failures']);
+    return ((v) =>
+        v != null
+            ? (v as Map<String, Object?>).map(
+              (k, v) => MapEntry(
+                k,
+                (v as Map<String, Object?>).map(
+                  (k, v) => MapEntry(k, v as Map<String, Object?>),
+                ),
+              ),
+            )
+            : null)(json['failures']);
   }
 
   /// Publishes end-to-end encryption keys for the device.
@@ -2467,8 +2462,9 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return (json['one_time_key_counts'] as Map<String, Object?>)
-        .map((k, v) => MapEntry(k, v as int));
+    return (json['one_time_key_counts'] as Map<String, Object?>).map(
+      (k, v) => MapEntry(k, v as int),
+    );
   }
 
   /// *Note that this API takes either a room ID or alias, unlike other membership APIs.*
@@ -2517,9 +2513,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (reason != null) 'reason': reason,
-      }),
+      jsonEncode({if (reason != null) 'reason': reason}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -2542,11 +2536,12 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return ((v) => v != null
-        ? (v as List)
-            .map((v) => LoginFlow.fromJson(v as Map<String, Object?>))
-            .toList()
-        : null)(json['flows']);
+    return ((v) =>
+        v != null
+            ? (v as List)
+                .map((v) => LoginFlow.fromJson(v as Map<String, Object?>))
+                .toList()
+            : null)(json['flows']);
   }
 
   /// Authenticates the user, and issues an access token they can
@@ -2758,8 +2753,9 @@ class Api {
   ///
   /// [userId] The user whose profile information to get.
   Future<Profile> getUserProfile(String userId) async {
-    final requestUri =
-        Uri(path: '_matrix/client/v3/profile/${Uri.encodeComponent(userId)}');
+    final requestUri = Uri(
+      path: '_matrix/client/v3/profile/${Uri.encodeComponent(userId)}',
+    );
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     if (bearerToken != null) {
       request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -2794,8 +2790,9 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return ((v) =>
-        v != null ? Uri.parse(v as String) : null)(json['avatar_url']);
+    return ((v) => v != null ? Uri.parse(v as String) : null)(
+      json['avatar_url'],
+    );
   }
 
   /// This API sets the given user's avatar URL. You must have permission to
@@ -2813,9 +2810,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (avatarUrl != null) 'avatar_url': avatarUrl.toString(),
-      }),
+      jsonEncode({if (avatarUrl != null) 'avatar_url': avatarUrl.toString()}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -2865,9 +2860,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (displayname != null) 'displayname': displayname,
-      }),
+      jsonEncode({if (displayname != null) 'displayname': displayname}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -2945,9 +2938,7 @@ class Api {
   }) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/publicRooms',
-      queryParameters: {
-        if (server != null) 'server': server,
-      },
+      queryParameters: {if (server != null) 'server': server},
     );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -2984,11 +2975,12 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return ((v) => v != null
-        ? (v as List)
-            .map((v) => Pusher.fromJson(v as Map<String, Object?>))
-            .toList()
-        : null)(json['pushers']);
+    return ((v) =>
+        v != null
+            ? (v as List)
+                .map((v) => Pusher.fromJson(v as Map<String, Object?>))
+                .toList()
+            : null)(json['pushers']);
   }
 
   /// Retrieve all push rulesets for this user. Currently the only push ruleset
@@ -3192,9 +3184,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        'actions': actions.map((v) => v).toList(),
-      }),
+      jsonEncode({'actions': actions.map((v) => v).toList()}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -3250,11 +3240,7 @@ class Api {
     final request = Request('PUT', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
-    request.bodyBytes = utf8.encode(
-      jsonEncode({
-        'enabled': enabled,
-      }),
-    );
+    request.bodyBytes = utf8.encode(jsonEncode({'enabled': enabled}));
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
@@ -3287,9 +3273,7 @@ class Api {
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        'refresh_token': refreshToken,
-      }),
+      jsonEncode({'refresh_token': refreshToken}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -3376,9 +3360,7 @@ class Api {
   }) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/register',
-      queryParameters: {
-        if (kind != null) 'kind': kind.name,
-      },
+      queryParameters: {if (kind != null) 'kind': kind.name},
     );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['content-type'] = 'application/json';
@@ -3423,9 +3405,7 @@ class Api {
   Future<bool?> checkUsernameAvailability(String username) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/register/available',
-      queryParameters: {
-        'username': username,
-      },
+      queryParameters: {'username': username},
     );
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     final response = await httpClient.send(request);
@@ -3482,8 +3462,9 @@ class Api {
     String? idAccessToken,
     String? idServer,
   }) async {
-    final requestUri =
-        Uri(path: '_matrix/client/v3/register/email/requestToken');
+    final requestUri = Uri(
+      path: '_matrix/client/v3/register/email/requestToken',
+    );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
@@ -3553,8 +3534,9 @@ class Api {
     String? idAccessToken,
     String? idServer,
   }) async {
-    final requestUri =
-        Uri(path: '_matrix/client/v3/register/msisdn/requestToken');
+    final requestUri = Uri(
+      path: '_matrix/client/v3/register/msisdn/requestToken',
+    );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
@@ -3582,9 +3564,7 @@ class Api {
   Future<RoomKeysUpdateResponse> deleteRoomKeys(String version) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/room_keys/keys',
-      queryParameters: {
-        'version': version,
-      },
+      queryParameters: {'version': version},
     );
     final request = Request('DELETE', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -3602,9 +3582,7 @@ class Api {
   Future<RoomKeys> getRoomKeys(String version) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/room_keys/keys',
-      queryParameters: {
-        'version': version,
-      },
+      queryParameters: {'version': version},
     );
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -3627,9 +3605,7 @@ class Api {
   ) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/room_keys/keys',
-      queryParameters: {
-        'version': version,
-      },
+      queryParameters: {'version': version},
     );
     final request = Request('PUT', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -3654,9 +3630,7 @@ class Api {
   ) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/room_keys/keys/${Uri.encodeComponent(roomId)}',
-      queryParameters: {
-        'version': version,
-      },
+      queryParameters: {'version': version},
     );
     final request = Request('DELETE', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -3679,9 +3653,7 @@ class Api {
   ) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/room_keys/keys/${Uri.encodeComponent(roomId)}',
-      queryParameters: {
-        'version': version,
-      },
+      queryParameters: {'version': version},
     );
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -3707,9 +3679,7 @@ class Api {
   ) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/room_keys/keys/${Uri.encodeComponent(roomId)}',
-      queryParameters: {
-        'version': version,
-      },
+      queryParameters: {'version': version},
     );
     final request = Request('PUT', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -3738,9 +3708,7 @@ class Api {
     final requestUri = Uri(
       path:
           '_matrix/client/v3/room_keys/keys/${Uri.encodeComponent(roomId)}/${Uri.encodeComponent(sessionId)}',
-      queryParameters: {
-        'version': version,
-      },
+      queryParameters: {'version': version},
     );
     final request = Request('DELETE', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -3767,9 +3735,7 @@ class Api {
     final requestUri = Uri(
       path:
           '_matrix/client/v3/room_keys/keys/${Uri.encodeComponent(roomId)}/${Uri.encodeComponent(sessionId)}',
-      queryParameters: {
-        'version': version,
-      },
+      queryParameters: {'version': version},
     );
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -3799,9 +3765,7 @@ class Api {
     final requestUri = Uri(
       path:
           '_matrix/client/v3/room_keys/keys/${Uri.encodeComponent(roomId)}/${Uri.encodeComponent(sessionId)}',
-      queryParameters: {
-        'version': version,
-      },
+      queryParameters: {'version': version},
     );
     final request = Request('PUT', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -3849,10 +3813,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        'algorithm': algorithm.name,
-        'auth_data': authData,
-      }),
+      jsonEncode({'algorithm': algorithm.name, 'auth_data': authData}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -3931,10 +3892,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        'algorithm': algorithm.name,
-        'auth_data': authData,
-      }),
+      jsonEncode({'algorithm': algorithm.name, 'auth_data': authData}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -3991,16 +3949,14 @@ class Api {
   ///
   /// [userId] The fully qualified user ID of the user being banned.
   Future<void> ban(String roomId, String userId, {String? reason}) async {
-    final requestUri =
-        Uri(path: '_matrix/client/v3/rooms/${Uri.encodeComponent(roomId)}/ban');
+    final requestUri = Uri(
+      path: '_matrix/client/v3/rooms/${Uri.encodeComponent(roomId)}/ban',
+    );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (reason != null) 'reason': reason,
-        'user_id': userId,
-      }),
+      jsonEncode({if (reason != null) 'reason': reason, 'user_id': userId}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -4218,10 +4174,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (reason != null) 'reason': reason,
-        'user_id': userId,
-      }),
+      jsonEncode({if (reason != null) 'reason': reason, 'user_id': userId}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -4298,12 +4251,13 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return ((v) => v != null
-        ? (v as Map<String, Object?>).map(
-            (k, v) =>
-                MapEntry(k, RoomMember.fromJson(v as Map<String, Object?>)),
-          )
-        : null)(json['joined']);
+    return ((v) =>
+        v != null
+            ? (v as Map<String, Object?>).map(
+              (k, v) =>
+                  MapEntry(k, RoomMember.fromJson(v as Map<String, Object?>)),
+            )
+            : null)(json['joined']);
   }
 
   /// Kick a user from the room.
@@ -4328,10 +4282,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (reason != null) 'reason': reason,
-        'user_id': userId,
-      }),
+      jsonEncode({if (reason != null) 'reason': reason, 'user_id': userId}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -4365,9 +4316,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (reason != null) 'reason': reason,
-      }),
+      jsonEncode({if (reason != null) 'reason': reason}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -4417,11 +4366,12 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return ((v) => v != null
-        ? (v as List)
-            .map((v) => MatrixEvent.fromJson(v as Map<String, Object?>))
-            .toList()
-        : null)(json['chunk']);
+    return ((v) =>
+        v != null
+            ? (v as List)
+                .map((v) => MatrixEvent.fromJson(v as Map<String, Object?>))
+                .toList()
+            : null)(json['chunk']);
   }
 
   /// This API returns a list of message and state events for a room. It uses
@@ -4559,9 +4509,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (threadId != null) 'thread_id': threadId,
-      }),
+      jsonEncode({if (threadId != null) 'thread_id': threadId}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -4608,9 +4556,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (reason != null) 'reason': reason,
-      }),
+      jsonEncode({if (reason != null) 'reason': reason}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -4636,9 +4582,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (reason != null) 'reason': reason,
-      }),
+      jsonEncode({if (reason != null) 'reason': reason}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -4867,10 +4811,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (timeout != null) 'timeout': timeout,
-        'typing': typing,
-      }),
+      jsonEncode({if (timeout != null) 'timeout': timeout, 'typing': typing}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -4899,10 +4840,7 @@ class Api {
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        if (reason != null) 'reason': reason,
-        'user_id': userId,
-      }),
+      jsonEncode({if (reason != null) 'reason': reason, 'user_id': userId}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -4927,11 +4865,7 @@ class Api {
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
-    request.bodyBytes = utf8.encode(
-      jsonEncode({
-        'new_version': newVersion,
-      }),
-    );
+    request.bodyBytes = utf8.encode(jsonEncode({'new_version': newVersion}));
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
@@ -4952,17 +4886,13 @@ class Api {
   }) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/search',
-      queryParameters: {
-        if (nextBatch != null) 'next_batch': nextBatch,
-      },
+      queryParameters: {if (nextBatch != null) 'next_batch': nextBatch},
     );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
-      jsonEncode({
-        'search_categories': searchCategories.toJson(),
-      }),
+      jsonEncode({'search_categories': searchCategories.toJson()}),
     );
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
@@ -4998,8 +4928,9 @@ class Api {
     request.headers['content-type'] = 'application/json';
     request.bodyBytes = utf8.encode(
       jsonEncode({
-        'messages': messages
-            .map((k, v) => MapEntry(k, v.map((k, v) => MapEntry(k, v)))),
+        'messages': messages.map(
+          (k, v) => MapEntry(k, v.map((k, v) => MapEntry(k, v))),
+        ),
       }),
     );
     final response = await httpClient.send(request);
@@ -5107,9 +5038,7 @@ class Api {
   Future<List<Location>> queryLocationByAlias(String alias) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/thirdparty/location',
-      queryParameters: {
-        'alias': alias,
-      },
+      queryParameters: {'alias': alias},
     );
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -5143,9 +5072,7 @@ class Api {
     final requestUri = Uri(
       path:
           '_matrix/client/v3/thirdparty/location/${Uri.encodeComponent(protocol)}',
-      queryParameters: {
-        if (fields != null) ...fields,
-      },
+      queryParameters: {if (fields != null) ...fields},
     );
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -5200,9 +5127,7 @@ class Api {
   Future<List<ThirdPartyUser>> queryUserByID(String userid) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/thirdparty/user',
-      queryParameters: {
-        'userid': userid,
-      },
+      queryParameters: {'userid': userid},
     );
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -5229,9 +5154,7 @@ class Api {
     final requestUri = Uri(
       path:
           '_matrix/client/v3/thirdparty/user/${Uri.encodeComponent(protocol)}',
-      queryParameters: {
-        if (fields != null) ...fields,
-      },
+      queryParameters: {if (fields != null) ...fields},
     );
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -5471,10 +5394,12 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return ((v) => v != null
-        ? (v as Map<String, Object?>)
-            .map((k, v) => MapEntry(k, Tag.fromJson(v as Map<String, Object?>)))
-        : null)(json['tags']);
+    return ((v) =>
+        v != null
+            ? (v as Map<String, Object?>).map(
+              (k, v) => MapEntry(k, Tag.fromJson(v as Map<String, Object?>)),
+            )
+            : null)(json['tags']);
   }
 
   /// Remove a tag from the room.
@@ -5964,9 +5889,7 @@ class Api {
   }) async {
     final requestUri = Uri(
       path: '_matrix/media/v3/upload',
-      queryParameters: {
-        if (filename != null) 'filename': filename,
-      },
+      queryParameters: {if (filename != null) 'filename': filename},
     );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -6011,9 +5934,7 @@ class Api {
     final requestUri = Uri(
       path:
           '_matrix/media/v3/upload/${Uri.encodeComponent(serverName)}/${Uri.encodeComponent(mediaId)}',
-      queryParameters: {
-        if (filename != null) 'filename': filename,
-      },
+      queryParameters: {if (filename != null) 'filename': filename},
     );
     final request = Request('PUT', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';

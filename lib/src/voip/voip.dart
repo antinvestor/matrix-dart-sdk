@@ -55,13 +55,14 @@ class VoIP {
   final StreamController<GroupCallSession> onIncomingGroupCall =
       StreamController();
 
-  CallParticipant? get localParticipant => client.isLogged()
-      ? CallParticipant(
-          this,
-          userId: client.userID!,
-          deviceId: client.deviceID,
-        )
-      : null;
+  CallParticipant? get localParticipant =>
+      client.isLogged()
+          ? CallParticipant(
+            this,
+            userId: client.userID!,
+            deviceId: client.deviceID,
+          )
+          : null;
 
   /// map of roomIds to the invites they are currently processing or in a call with
   /// used for handling glare in p2p calls
@@ -71,11 +72,8 @@ class VoIP {
   /// the current instance of voip, changing this will drop any ongoing mesh calls
   /// with that sessionId
   late String currentSessionId;
-  VoIP(
-    this.client,
-    this.delegate, {
-    this.enableSFUE2EEKeyRatcheting = false,
-  }) : super() {
+  VoIP(this.client, this.delegate, {this.enableSFUE2EEKeyRatcheting = false})
+    : super() {
     currentSessionId = base64Encode(secureRandomBytes(16));
     Logs().v('set currentSessionId to $currentSessionId');
     // to populate groupCalls with already present calls
@@ -94,27 +92,25 @@ class VoIP {
     });
 
     // handles the com.famedly.call events.
-    client.onRoomState.stream.listen(
-      (update) async {
-        final event = update.state;
-        if (event is! Event) return;
-        if (event.room.membership != Membership.join) return;
-        if (event.type != EventTypes.GroupCallMember) return;
+    client.onRoomState.stream.listen((update) async {
+      final event = update.state;
+      if (event is! Event) return;
+      if (event.room.membership != Membership.join) return;
+      if (event.type != EventTypes.GroupCallMember) return;
 
-        Logs().v('[VOIP] onRoomState: type ${event.toJson()}');
-        final mems = event.room.getCallMembershipsFromEvent(event);
-        for (final mem in mems) {
-          unawaited(createGroupCallFromRoomStateEvent(mem));
+      Logs().v('[VOIP] onRoomState: type ${event.toJson()}');
+      final mems = event.room.getCallMembershipsFromEvent(event);
+      for (final mem in mems) {
+        unawaited(createGroupCallFromRoomStateEvent(mem));
+      }
+      for (final map in groupCalls.entries) {
+        if (map.key.roomId == event.room.id) {
+          // because we don't know which call got updated, just update all
+          // group calls we have entered for that room
+          await map.value.onMemberStateChanged();
         }
-        for (final map in groupCalls.entries) {
-          if (map.key.roomId == event.room.id) {
-            // because we don't know which call got updated, just update all
-            // group calls we have entered for that room
-            await map.value.onMemberStateChanged();
-          }
-        }
-      },
-    );
+      }
+    });
 
     delegate.mediaDevices.ondevicechange = _onDeviceChange;
   }
@@ -143,7 +139,8 @@ class VoIP {
       // checks for ended events and removes invites for that call id.
       if (callEvent is Event) {
         // removes expired invites
-        final age = callEvent.unsigned?.tryGet<int>('age') ??
+        final age =
+            callEvent.unsigned?.tryGet<int>('age') ??
             (DateTime.now().millisecondsSinceEpoch -
                 callEvent.originServerTs.millisecondsSinceEpoch);
 
@@ -236,8 +233,9 @@ class VoIP {
         'Ignoring call event ${event.type} for room ${room.id} from our own device',
       );
       return;
-    } else if (!event.type
-        .startsWith(EventTypes.GroupCallMemberEncryptionKeys)) {
+    } else if (!event.type.startsWith(
+      EventTypes.GroupCallMemberEncryptionKeys,
+    )) {
       // skip webrtc event checks on encryption_keys
       final callId = content['call_id'] as String?;
       final partyId = content['party_id'] as String?;
@@ -248,8 +246,10 @@ class VoIP {
       if (callId != null) {
         final call = calls[VoipId(roomId: room.id, callId: callId)];
         if (call == null &&
-            !{EventTypes.CallInvite, EventTypes.GroupCallMemberInvite}
-                .contains(event.type)) {
+            !{
+              EventTypes.CallInvite,
+              EventTypes.GroupCallMemberInvite,
+            }.contains(event.type)) {
           Logs().w(
             'Ignoring call event ${event.type} for room ${room.id} because we do not have the call',
           );
@@ -412,10 +412,13 @@ class VoIP {
     var callType = CallType.kVoice;
     SDPStreamMetadata? sdpStreamMetadata;
     if (content[sdpStreamMetadataKey] != null) {
-      sdpStreamMetadata =
-          SDPStreamMetadata.fromJson(content[sdpStreamMetadataKey]);
-      sdpStreamMetadata.sdpStreamMetadatas
-          .forEach((streamId, SDPStreamPurpose purpose) {
+      sdpStreamMetadata = SDPStreamMetadata.fromJson(
+        content[sdpStreamMetadataKey],
+      );
+      sdpStreamMetadata.sdpStreamMetadatas.forEach((
+        streamId,
+        SDPStreamPurpose purpose,
+      ) {
         Logs().v(
           '[VOIP] [$streamId] => purpose: ${purpose.purpose}, audioMuted: ${purpose.audio_muted}, videoMuted:  ${purpose.video_muted}',
         );
@@ -740,7 +743,7 @@ class VoIP {
         'username': _turnServerCredentials!.username,
         'credential': _turnServerCredentials!.password,
         'urls': _turnServerCredentials!.uris,
-      }
+      },
     ];
   }
 
@@ -858,16 +861,14 @@ class VoIP {
     }
 
     if (!room.canJoinGroupCall) {
-      throw MatrixSDKVoipException(
-        '''
+      throw MatrixSDKVoipException('''
         User ${client.userID}:${client.deviceID} is not allowed to join famedly calls in room ${room.id}, 
         canJoinGroupCall: ${room.canJoinGroupCall}, 
         groupCallsEnabledForEveryone: ${room.groupCallsEnabledForEveryone}, 
         needed: ${room.powerForChangingStateEvent(EventTypes.GroupCallMember)}, 
         own: ${room.ownPowerLevel}}
         plMap: ${room.getState(EventTypes.RoomPowerLevels)?.content}
-        ''',
-      );
+        ''');
     }
 
     GroupCallSession? groupCall = getGroupCallById(room.id, groupCallId);
@@ -893,9 +894,10 @@ class VoIP {
 
   void setGroupCallById(GroupCallSession groupCallSession) {
     groupCalls[VoipId(
-      roomId: groupCallSession.room.id,
-      callId: groupCallSession.groupCallId,
-    )] = groupCallSession;
+          roomId: groupCallSession.room.id,
+          callId: groupCallSession.groupCallId,
+        )] =
+        groupCallSession;
   }
 
   /// Create a new group call from a room state event.

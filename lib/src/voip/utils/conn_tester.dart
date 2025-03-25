@@ -46,14 +46,8 @@ class ConnectionTester {
     await pc1!.setRemoteDescription(answer);
 
     Future<void> dispose() async {
-      await Future.wait([
-        pc1!.close(),
-        pc2!.close(),
-      ]);
-      await Future.wait([
-        pc1!.dispose(),
-        pc2!.dispose(),
-      ]);
+      await Future.wait([pc1!.close(), pc2!.close()]);
+      await Future.wait([pc1!.dispose(), pc2!.dispose()]);
     }
 
     bool connected = false;
@@ -69,8 +63,11 @@ class ConnectionTester {
         return false;
       });
     } catch (e, s) {
-      Logs()
-          .e('[VOIP] ConnectionTester Error while testing TURN server: ', e, s);
+      Logs().e(
+        '[VOIP] ConnectionTester Error while testing TURN server: ',
+        e,
+        s,
+      );
     }
 
     // ignore: unawaited_futures
@@ -116,7 +113,7 @@ class ConnectionTester {
         'username': _turnServerCredentials!.username,
         'credential': _turnServerCredentials!.password,
         'url': _turnServerCredentials!.uris[0],
-      }
+      },
     ];
   }
 }

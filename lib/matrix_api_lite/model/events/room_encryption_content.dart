@@ -35,9 +35,9 @@ class RoomEncryptionContent {
   int? rotationPeriodMsgs;
 
   RoomEncryptionContent.fromJson(Map<String, Object?> json)
-      : algorithm = json.tryGet('algorithm', TryGet.required) ?? '',
-        rotationPeriodMs = json.tryGet('rotation_period_ms'),
-        rotationPeriodMsgs = json.tryGet('rotation_period_msgs');
+    : algorithm = json.tryGet('algorithm', TryGet.required) ?? '',
+      rotationPeriodMs = json.tryGet('rotation_period_ms'),
+      rotationPeriodMsgs = json.tryGet('rotation_period_msgs');
 
   Map<String, Object?> toJson() {
     final data = <String, Object?>{};

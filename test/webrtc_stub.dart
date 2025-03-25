@@ -12,8 +12,7 @@ class MockWebRTCDelegate implements WebRTCDelegate {
   Future<RTCPeerConnection> createPeerConnection(
     Map<String, dynamic> configuration, [
     Map<String, dynamic> constraints = const {},
-  ]) async =>
-      MockRTCPeerConnection();
+  ]) async => MockRTCPeerConnection();
 
   @override
   Future<void> registerListeners(CallSession session) async {
@@ -493,7 +492,7 @@ class MockRTCRtpSender implements RTCRtpSender {
 class MockRTCRtpReceiver implements RTCRtpReceiver {
   @override
   Function(RTCRtpReceiver rtpReceiver, RTCRtpMediaType mediaType)?
-      onFirstPacketReceived;
+  onFirstPacketReceived;
 
   @override
   Future<List<StatsReport>> getStats() {

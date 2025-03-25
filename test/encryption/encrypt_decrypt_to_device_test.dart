@@ -64,26 +64,26 @@ void main() {
       await otherClient.abortSync();
 
       await Future.delayed(Duration(milliseconds: 10));
-      device = DeviceKeys.fromJson(
-        {
-          'user_id': client.userID,
-          'device_id': client.deviceID,
-          'algorithms': [
-            AlgorithmTypes.olmV1Curve25519AesSha2,
-            AlgorithmTypes.megolmV1AesSha2,
-          ],
-          'keys': {
-            'curve25519:${client.deviceID}': client.identityKey,
-            'ed25519:${client.deviceID}': client.fingerprintKey,
-          },
+      device = DeviceKeys.fromJson({
+        'user_id': client.userID,
+        'device_id': client.deviceID,
+        'algorithms': [
+          AlgorithmTypes.olmV1Curve25519AesSha2,
+          AlgorithmTypes.megolmV1AesSha2,
+        ],
+        'keys': {
+          'curve25519:${client.deviceID}': client.identityKey,
+          'ed25519:${client.deviceID}': client.fingerprintKey,
         },
-        client,
-      );
+      }, client,);
     });
 
     test('encryptToDeviceMessage', () async {
-      payload = await otherClient.encryption!
-          .encryptToDeviceMessage([device], 'm.to_device', {'hello': 'foxies'});
+      payload = await otherClient.encryption!.encryptToDeviceMessage(
+        [device],
+        'm.to_device',
+        {'hello': 'foxies'},
+      );
     });
 
     test('decryptToDeviceEvent', () async {
@@ -92,8 +92,9 @@ void main() {
         type: EventTypes.Encrypted,
         content: payload[client.userID][client.deviceID],
       );
-      final decryptedEvent =
-          await client.encryption!.decryptToDeviceEvent(encryptedEvent);
+      final decryptedEvent = await client.encryption!.decryptToDeviceEvent(
+        encryptedEvent,
+      );
       expect(decryptedEvent.type, 'm.to_device');
       expect(decryptedEvent.content['hello'], 'foxies');
     });
@@ -110,8 +111,9 @@ void main() {
         type: EventTypes.Encrypted,
         content: payload[client.userID][client.deviceID],
       );
-      final decryptedEvent =
-          await client.encryption!.decryptToDeviceEvent(encryptedEvent);
+      final decryptedEvent = await client.encryption!.decryptToDeviceEvent(
+        encryptedEvent,
+      );
       expect(decryptedEvent.type, 'm.to_device');
       expect(decryptedEvent.content['hello'], 'superfoxies');
     });

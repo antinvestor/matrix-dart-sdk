@@ -45,36 +45,40 @@ class SyncUpdate {
   });
 
   SyncUpdate.fromJson(Map<String, Object?> json)
-      : nextBatch = json.tryGet<String>('next_batch') ?? '',
-        rooms = (() {
-          final temp = json.tryGetMap<String, Object?>('rooms');
-          return temp != null ? RoomsUpdate.fromJson(temp) : null;
-        }()),
-        presence = json
-            .tryGetMap<String, List<Object?>>('presence')?['events']
-            ?.map((i) => Presence.fromJson(i as Map<String, Object?>))
-            .toList(),
-        accountData = json
-            .tryGetMap<String, List<Object?>>('account_data')?['events']
-            ?.map((i) => BasicEvent.fromJson(i as Map<String, Object?>))
-            .toList(),
-        toDevice = json
-            .tryGetMap<String, List<Object?>>('to_device')?['events']
-            ?.map(
-              (i) => BasicEventWithSender.fromJson(i as Map<String, Object?>),
-            )
-            .toList(),
-        deviceLists = (() {
-          final temp = json.tryGetMap<String, Object?>('device_lists');
-          return temp != null ? DeviceListsUpdate.fromJson(temp) : null;
-        }()),
-        deviceOneTimeKeysCount =
-            json.tryGetMap<String, int>('device_one_time_keys_count'),
-        deviceUnusedFallbackKeyTypes =
-            json.tryGetList<String>('device_unused_fallback_key_types') ??
-                json.tryGetList<String>(
-                  'org.matrix.msc2732.device_unused_fallback_key_types',
-                );
+    : nextBatch = json.tryGet<String>('next_batch') ?? '',
+      rooms = (() {
+        final temp = json.tryGetMap<String, Object?>('rooms');
+        return temp != null ? RoomsUpdate.fromJson(temp) : null;
+      }()),
+      presence =
+          json
+              .tryGetMap<String, List<Object?>>('presence')?['events']
+              ?.map((i) => Presence.fromJson(i as Map<String, Object?>))
+              .toList(),
+      accountData =
+          json
+              .tryGetMap<String, List<Object?>>('account_data')?['events']
+              ?.map((i) => BasicEvent.fromJson(i as Map<String, Object?>))
+              .toList(),
+      toDevice =
+          json
+              .tryGetMap<String, List<Object?>>('to_device')?['events']
+              ?.map(
+                (i) => BasicEventWithSender.fromJson(i as Map<String, Object?>),
+              )
+              .toList(),
+      deviceLists = (() {
+        final temp = json.tryGetMap<String, Object?>('device_lists');
+        return temp != null ? DeviceListsUpdate.fromJson(temp) : null;
+      }()),
+      deviceOneTimeKeysCount = json.tryGetMap<String, int>(
+        'device_one_time_keys_count',
+      ),
+      deviceUnusedFallbackKeyTypes =
+          json.tryGetList<String>('device_unused_fallback_key_types') ??
+          json.tryGetList<String>(
+            'org.matrix.msc2732.device_unused_fallback_key_types',
+          );
 
   Map<String, Object?> toJson() {
     final data = <String, Object?>{};
@@ -83,9 +87,7 @@ class SyncUpdate {
       data['rooms'] = rooms!.toJson();
     }
     if (presence != null) {
-      data['presence'] = {
-        'events': presence!.map((i) => i.toJson()).toList(),
-      };
+      data['presence'] = {'events': presence!.map((i) => i.toJson()).toList()};
     }
     if (accountData != null) {
       data['account_data'] = {
@@ -93,9 +95,7 @@ class SyncUpdate {
       };
     }
     if (toDevice != null) {
-      data['to_device'] = {
-        'events': toDevice!.map((i) => i.toJson()).toList(),
-      };
+      data['to_device'] = {'events': toDevice!.map((i) => i.toJson()).toList()};
     }
     if (deviceLists != null) {
       data['device_lists'] = deviceLists!.toJson();
@@ -118,29 +118,32 @@ class RoomsUpdate {
   Map<String, LeftRoomUpdate>? leave;
   Map<String, KnockRoomUpdate>? knock;
 
-  RoomsUpdate({
-    this.join,
-    this.invite,
-    this.leave,
-    this.knock,
-  });
+  RoomsUpdate({this.join, this.invite, this.leave, this.knock});
 
   RoomsUpdate.fromJson(Map<String, Object?> json) {
-    join = json.tryGetMap<String, Object?>('join')?.catchMap(
+    join = json
+        .tryGetMap<String, Object?>('join')
+        ?.catchMap(
           (k, v) =>
               MapEntry(k, JoinedRoomUpdate.fromJson(v as Map<String, Object?>)),
         );
-    invite = json.tryGetMap<String, Object?>('invite')?.catchMap(
+    invite = json
+        .tryGetMap<String, Object?>('invite')
+        ?.catchMap(
           (k, v) => MapEntry(
             k,
             InvitedRoomUpdate.fromJson(v as Map<String, Object?>),
           ),
         );
-    leave = json.tryGetMap<String, Object?>('leave')?.catchMap(
+    leave = json
+        .tryGetMap<String, Object?>('leave')
+        ?.catchMap(
           (k, v) =>
               MapEntry(k, LeftRoomUpdate.fromJson(v as Map<String, Object?>)),
         );
-    knock = json.tryGetMap<String, Object?>('knock')?.catchMap(
+    knock = json
+        .tryGetMap<String, Object?>('knock')
+        ?.catchMap(
           (k, v) =>
               MapEntry(k, KnockRoomUpdate.fromJson(v as Map<String, Object?>)),
         );
@@ -184,24 +187,27 @@ class JoinedRoomUpdate extends SyncRoomUpdate {
   });
 
   JoinedRoomUpdate.fromJson(Map<String, Object?> json)
-      : summary = json.tryGetFromJson('summary', RoomSummary.fromJson),
-        state = json
-            .tryGetMap<String, List<Object?>>('state')?['events']
-            ?.map((i) => MatrixEvent.fromJson(i as Map<String, Object?>))
-            .toList(),
-        timeline = json.tryGetFromJson('timeline', TimelineUpdate.fromJson),
-        ephemeral = json
-            .tryGetMap<String, List<Object?>>('ephemeral')?['events']
-            ?.map((i) => BasicEvent.fromJson(i as Map<String, Object?>))
-            .toList(),
-        accountData = json
-            .tryGetMap<String, List<Object?>>('account_data')?['events']
-            ?.map((i) => BasicEvent.fromJson(i as Map<String, Object?>))
-            .toList(),
-        unreadNotifications = json.tryGetFromJson(
-          'unread_notifications',
-          UnreadNotificationCounts.fromJson,
-        );
+    : summary = json.tryGetFromJson('summary', RoomSummary.fromJson),
+      state =
+          json
+              .tryGetMap<String, List<Object?>>('state')?['events']
+              ?.map((i) => MatrixEvent.fromJson(i as Map<String, Object?>))
+              .toList(),
+      timeline = json.tryGetFromJson('timeline', TimelineUpdate.fromJson),
+      ephemeral =
+          json
+              .tryGetMap<String, List<Object?>>('ephemeral')?['events']
+              ?.map((i) => BasicEvent.fromJson(i as Map<String, Object?>))
+              .toList(),
+      accountData =
+          json
+              .tryGetMap<String, List<Object?>>('account_data')?['events']
+              ?.map((i) => BasicEvent.fromJson(i as Map<String, Object?>))
+              .toList(),
+      unreadNotifications = json.tryGetFromJson(
+        'unread_notifications',
+        UnreadNotificationCounts.fromJson,
+      );
 
   Map<String, Object?> toJson() {
     final data = <String, Object?>{};
@@ -209,9 +215,7 @@ class JoinedRoomUpdate extends SyncRoomUpdate {
       data['summary'] = summary!.toJson();
     }
     if (state != null) {
-      data['state'] = {
-        'events': state!.map((i) => i.toJson()).toList(),
-      };
+      data['state'] = {'events': state!.map((i) => i.toJson()).toList()};
     }
     if (timeline != null) {
       data['timeline'] = timeline!.toJson();
@@ -239,10 +243,13 @@ class InvitedRoomUpdate extends SyncRoomUpdate {
   InvitedRoomUpdate({this.inviteState});
 
   InvitedRoomUpdate.fromJson(Map<String, Object?> json)
-      : inviteState = json
-            .tryGetMap<String, List<Object?>>('invite_state')?['events']
-            ?.map((i) => StrippedStateEvent.fromJson(i as Map<String, Object?>))
-            .toList();
+    : inviteState =
+          json
+              .tryGetMap<String, List<Object?>>('invite_state')?['events']
+              ?.map(
+                (i) => StrippedStateEvent.fromJson(i as Map<String, Object?>),
+              )
+              .toList();
 
   Map<String, Object?> toJson() {
     final data = <String, Object?>{};
@@ -261,10 +268,13 @@ class KnockRoomUpdate extends SyncRoomUpdate {
   KnockRoomUpdate({this.knockState});
 
   KnockRoomUpdate.fromJson(Map<String, Object?> json)
-      : knockState = json
-            .tryGetMap<String, List<Object?>>('knock_state')?['events']
-            ?.map((i) => StrippedStateEvent.fromJson(i as Map<String, Object?>))
-            .toList();
+    : knockState =
+          json
+              .tryGetMap<String, List<Object?>>('knock_state')?['events']
+              ?.map(
+                (i) => StrippedStateEvent.fromJson(i as Map<String, Object?>),
+              )
+              .toList();
 
   Map<String, Object?> toJson() {
     final data = <String, Object?>{};
@@ -282,29 +292,25 @@ class LeftRoomUpdate extends SyncRoomUpdate {
   TimelineUpdate? timeline;
   List<BasicEvent>? accountData;
 
-  LeftRoomUpdate({
-    this.state,
-    this.timeline,
-    this.accountData,
-  });
+  LeftRoomUpdate({this.state, this.timeline, this.accountData});
 
   LeftRoomUpdate.fromJson(Map<String, Object?> json)
-      : state = json
-            .tryGetMap<String, List<Object?>>('state')?['events']
-            ?.map((i) => MatrixEvent.fromJson(i as Map<String, Object?>))
-            .toList(),
-        timeline = json.tryGetFromJson('timeline', TimelineUpdate.fromJson),
-        accountData = json
-            .tryGetMap<String, List<Object?>>('account_data')?['events']
-            ?.map((i) => BasicEvent.fromJson(i as Map<String, Object?>))
-            .toList();
+    : state =
+          json
+              .tryGetMap<String, List<Object?>>('state')?['events']
+              ?.map((i) => MatrixEvent.fromJson(i as Map<String, Object?>))
+              .toList(),
+      timeline = json.tryGetFromJson('timeline', TimelineUpdate.fromJson),
+      accountData =
+          json
+              .tryGetMap<String, List<Object?>>('account_data')?['events']
+              ?.map((i) => BasicEvent.fromJson(i as Map<String, Object?>))
+              .toList();
 
   Map<String, Object?> toJson() {
     final data = <String, Object?>{};
     if (state != null) {
-      data['state'] = {
-        'events': state!.map((i) => i.toJson()).toList(),
-      };
+      data['state'] = {'events': state!.map((i) => i.toJson()).toList()};
     }
     if (timeline != null) {
       data['timeline'] = timeline!.toJson();
@@ -323,19 +329,16 @@ class TimelineUpdate {
   bool? limited;
   String? prevBatch;
 
-  TimelineUpdate({
-    this.events,
-    this.limited,
-    this.prevBatch,
-  });
+  TimelineUpdate({this.events, this.limited, this.prevBatch});
 
   TimelineUpdate.fromJson(Map<String, Object?> json)
-      : events = json
-            .tryGetList<Map<String, Object?>>('events')
-            ?.map((v) => MatrixEvent.fromJson(v))
-            .toList(),
-        limited = json.tryGet<bool>('limited'),
-        prevBatch = json.tryGet<String>('prev_batch');
+    : events =
+          json
+              .tryGetList<Map<String, Object?>>('events')
+              ?.map((v) => MatrixEvent.fromJson(v))
+              .toList(),
+      limited = json.tryGet<bool>('limited'),
+      prevBatch = json.tryGet<String>('prev_batch');
 
   Map<String, Object?> toJson() {
     final data = <String, Object?>{};
@@ -356,14 +359,11 @@ class UnreadNotificationCounts {
   int? highlightCount;
   int? notificationCount;
 
-  UnreadNotificationCounts({
-    this.notificationCount,
-    this.highlightCount,
-  });
+  UnreadNotificationCounts({this.notificationCount, this.highlightCount});
 
   UnreadNotificationCounts.fromJson(Map<String, Object?> json)
-      : highlightCount = json.tryGet<int>('highlight_count'),
-        notificationCount = json.tryGet<int>('notification_count');
+    : highlightCount = json.tryGet<int>('highlight_count'),
+      notificationCount = json.tryGet<int>('notification_count');
 
   Map<String, Object?> toJson() {
     final data = <String, Object?>{};
@@ -381,14 +381,11 @@ class DeviceListsUpdate {
   List<String>? changed;
   List<String>? left;
 
-  DeviceListsUpdate({
-    this.changed,
-    this.left,
-  });
+  DeviceListsUpdate({this.changed, this.left});
 
   DeviceListsUpdate.fromJson(Map<String, Object?> json)
-      : changed = json.tryGetList<String>('changed') ?? [],
-        left = json.tryGetList<String>('left') ?? [];
+    : changed = json.tryGetList<String>('changed') ?? [],
+      left = json.tryGetList<String>('left') ?? [];
 
   Map<String, Object?> toJson() {
     final data = <String, Object?>{};

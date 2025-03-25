@@ -68,12 +68,9 @@ extension MatrixIdExtension on String {
       final pathSegments = uri.pathSegments;
       final identifiers = <String>[];
       for (var i = 0; i < pathSegments.length - 1; i += 2) {
-        final thisSigil = {
-          'u': '@',
-          'roomid': '!',
-          'r': '#',
-          'e': '\$',
-        }[pathSegments[i].toLowerCase()];
+        final thisSigil =
+            {'u': '@', 'roomid': '!', 'r': '#', 'e': '\$'}[pathSegments[i]
+                .toLowerCase()];
         if (thisSigil == null) {
           break;
         }
@@ -86,11 +83,13 @@ extension MatrixIdExtension on String {
       );
     } else {
       return Uri(
-        pathSegments: RegExp(r'/((?:[#!@+][^:]*:)?[^/?]*)(?:\?.*$)?')
-            .allMatches('/$this')
-            .map((m) => m[1]!),
-        query: RegExp(r'(?:/(?:[#!@+][^:]*:)?[^/?]*)*\?(.*$)')
-            .firstMatch('/$this')?[1],
+        pathSegments: RegExp(
+          r'/((?:[#!@+][^:]*:)?[^/?]*)(?:\?.*$)?',
+        ).allMatches('/$this').map((m) => m[1]!),
+        query:
+            RegExp(
+              r'(?:/(?:[#!@+][^:]*:)?[^/?]*)*\?(.*$)',
+            ).firstMatch('/$this')?[1],
       );
     }
   }

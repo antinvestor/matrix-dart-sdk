@@ -15,8 +15,11 @@ class FamedlyCallMemberEvent {
     if (memberships != null && memberships.isNotEmpty) {
       for (final mem in memberships) {
         if (isValidMemEvent(mem)) {
-          final callMem =
-              CallMembership.fromJson(mem, event.senderId, event.room.id);
+          final callMem = CallMembership.fromJson(
+            mem,
+            event.senderId,
+            event.room.id,
+          );
           if (callMem != null) callMemberships.add(callMem);
         }
       }
@@ -73,9 +76,10 @@ class CallMembership {
         callId: json['call_id'],
         application: json['application'],
         scope: json['scope'],
-        backend: (json['foci_active'] as List)
-            .map((e) => CallBackend.fromJson(e))
-            .first,
+        backend:
+            (json['foci_active'] as List)
+                .map((e) => CallBackend.fromJson(e))
+                .first,
         deviceId: json['device_id'],
         expiresTs: json['expires_ts'],
         membershipId:
@@ -104,15 +108,15 @@ class CallMembership {
 
   @override
   int get hashCode => Object.hash(
-        userId.hashCode,
-        roomId.hashCode,
-        callId.hashCode,
-        application.hashCode,
-        scope.hashCode,
-        backend.type.hashCode,
-        deviceId.hashCode,
-        membershipId.hashCode,
-      );
+    userId.hashCode,
+    roomId.hashCode,
+    callId.hashCode,
+    application.hashCode,
+    scope.hashCode,
+    backend.type.hashCode,
+    deviceId.hashCode,
+    membershipId.hashCode,
+  );
 
   // with a buffer of 1 minute just incase we were slow to process a
   // call event, if the device is actually dead it should

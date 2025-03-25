@@ -51,8 +51,11 @@ void main() {
 
     test('load key', () async {
       client.encryption!.keyManager.clearInboundGroupSessions();
-      await client.encryption!.keyManager
-          .request(client.getRoomById(roomId)!, sessionId, senderKey);
+      await client.encryption!.keyManager.request(
+        client.getRoomById(roomId)!,
+        sessionId,
+        senderKey,
+      );
       expect(
         client.encryption!.keyManager
             .getInboundGroupSession(roomId, sessionId)
@@ -117,19 +120,25 @@ void main() {
       await FakeMatrixApi.firstWhereValue(
         '/client/v3/room_keys/keys?version=5',
       );
-      final payload = FakeMatrixApi
-          .calledEndpoints['/client/v3/room_keys/keys?version=5']!.first;
+      final payload =
+          FakeMatrixApi
+              .calledEndpoints['/client/v3/room_keys/keys?version=5']!
+              .first;
       dbSessions = await client.database!.getInboundGroupSessionsToUpload();
       expect(dbSessions.isEmpty, true);
 
       final onlineKeys = RoomKeys.fromJson(json.decode(payload));
       client.encryption!.keyManager.clearInboundGroupSessions();
-      var ret = client.encryption!.keyManager
-          .getInboundGroupSession(roomId, sessionId);
+      var ret = client.encryption!.keyManager.getInboundGroupSession(
+        roomId,
+        sessionId,
+      );
       expect(ret, null);
       await client.encryption!.keyManager.loadFromResponse(onlineKeys);
-      ret = client.encryption!.keyManager
-          .getInboundGroupSession(roomId, sessionId);
+      ret = client.encryption!.keyManager.getInboundGroupSession(
+        roomId,
+        sessionId,
+      );
       expect(ret != null, true);
     });
 

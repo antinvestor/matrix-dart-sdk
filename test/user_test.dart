@@ -133,7 +133,7 @@ void main() {
                 'sender': '@alice:example.com',
                 'type': 'm.presence',
                 'content': {'presence': 'online'},
-              }
+              },
             ],
           },
         }),

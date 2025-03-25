@@ -113,21 +113,26 @@ abstract class EventLocalizations {
 
   // This map holds how to localize event types, and thus which event types exist.
   // If an event exists but it does not have a localized body, set its callback to null
-  static final Map<String,
-          String Function(Event event, MatrixLocalizations i18n, String body)?>
-      localizationsMap = {
-    EventTypes.Sticker: (event, i18n, body) => i18n.sentASticker(
+  static final Map<
+    String,
+    String Function(Event event, MatrixLocalizations i18n, String body)?
+  >
+  localizationsMap = {
+    EventTypes.Sticker:
+        (event, i18n, body) => i18n.sentASticker(
           event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n),
         ),
     EventTypes.Redaction: (event, i18n, body) => i18n.redactedAnEvent(event),
-    EventTypes.RoomAliases: (event, i18n, body) => i18n.changedTheRoomAliases(
+    EventTypes.RoomAliases:
+        (event, i18n, body) => i18n.changedTheRoomAliases(
           event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n),
         ),
-    EventTypes.RoomCanonicalAlias: (event, i18n, body) =>
-        i18n.changedTheRoomInvitationLink(
+    EventTypes.RoomCanonicalAlias:
+        (event, i18n, body) => i18n.changedTheRoomInvitationLink(
           event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n),
         ),
-    EventTypes.RoomCreate: (event, i18n, body) => i18n.createdTheChat(
+    EventTypes.RoomCreate:
+        (event, i18n, body) => i18n.createdTheChat(
           event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n),
         ),
     EventTypes.RoomTombstone: (event, i18n, body) => i18n.roomHasBeenUpgraded,
@@ -150,8 +155,9 @@ abstract class EventLocalizations {
     },
     EventTypes.RoomMember: (event, i18n, body) {
       final targetName = event.stateKeyUser?.calcDisplayname(i18n: i18n) ?? '';
-      final senderName =
-          event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n);
+      final senderName = event.senderFromMemoryOrFallback.calcDisplayname(
+        i18n: i18n,
+      );
       final userIsTarget = event.stateKey == event.room.client.userID;
       final userIsSender = event.senderId == event.room.client.userID;
 
@@ -190,8 +196,8 @@ abstract class EventLocalizations {
           return userIsSender
               ? i18n.youInvitedUser(targetName)
               : userIsTarget
-                  ? i18n.youInvitedBy(senderName)
-                  : i18n.invitedUser(senderName, targetName);
+              ? i18n.youInvitedBy(senderName)
+              : i18n.invitedUser(senderName, targetName);
         case RoomMemberChangeType.ban:
           return userIsSender
               ? i18n.youBannedUser(targetName)
@@ -208,20 +214,22 @@ abstract class EventLocalizations {
               : i18n.joinedTheChat(targetName);
       }
     },
-    EventTypes.RoomPowerLevels: (event, i18n, body) =>
-        i18n.changedTheChatPermissions(
+    EventTypes.RoomPowerLevels:
+        (event, i18n, body) => i18n.changedTheChatPermissions(
           event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n),
         ),
-    EventTypes.RoomName: (event, i18n, body) => i18n.changedTheChatNameTo(
+    EventTypes.RoomName:
+        (event, i18n, body) => i18n.changedTheChatNameTo(
           event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n),
           event.content.tryGet<String>('name') ?? '',
         ),
-    EventTypes.RoomTopic: (event, i18n, body) =>
-        i18n.changedTheChatDescriptionTo(
+    EventTypes.RoomTopic:
+        (event, i18n, body) => i18n.changedTheChatDescriptionTo(
           event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n),
           event.content.tryGet<String>('topic') ?? '',
         ),
-    EventTypes.RoomAvatar: (event, i18n, body) => i18n.changedTheChatAvatar(
+    EventTypes.RoomAvatar:
+        (event, i18n, body) => i18n.changedTheChatAvatar(
           event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n),
         ),
     EventTypes.GuestAccess: (event, i18n, body) {
@@ -267,23 +275,28 @@ abstract class EventLocalizations {
       }
       return localizedBody;
     },
-    EventTypes.CallAnswer: (event, i18n, body) => i18n.answeredTheCall(
+    EventTypes.CallAnswer:
+        (event, i18n, body) => i18n.answeredTheCall(
           event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n),
         ),
-    EventTypes.CallHangup: (event, i18n, body) => i18n.endedTheCall(
+    EventTypes.CallHangup:
+        (event, i18n, body) => i18n.endedTheCall(
           event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n),
         ),
-    EventTypes.CallInvite: (event, i18n, body) => i18n.startedACall(
+    EventTypes.CallInvite:
+        (event, i18n, body) => i18n.startedACall(
           event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n),
         ),
-    EventTypes.CallCandidates: (event, i18n, body) => i18n.sentCallInformations(
+    EventTypes.CallCandidates:
+        (event, i18n, body) => i18n.sentCallInformations(
           event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n),
         ),
-    EventTypes.Encrypted: (event, i18n, body) =>
-        _localizedBodyNormalMessage(event, i18n, body),
-    EventTypes.Message: (event, i18n, body) =>
-        _localizedBodyNormalMessage(event, i18n, body),
-    EventTypes.Reaction: (event, i18n, body) => i18n.sentReaction(
+    EventTypes.Encrypted:
+        (event, i18n, body) => _localizedBodyNormalMessage(event, i18n, body),
+    EventTypes.Message:
+        (event, i18n, body) => _localizedBodyNormalMessage(event, i18n, body),
+    EventTypes.Reaction:
+        (event, i18n, body) => i18n.sentReaction(
           event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n),
           event.content
                   .tryGetMap<String, Object?>('m.relates_to')

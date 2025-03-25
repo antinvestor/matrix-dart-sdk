@@ -29,8 +29,9 @@ class CrossSigning {
   final Encryption encryption;
   Client get client => encryption.client;
   CrossSigning(this.encryption) {
-    encryption.ssss.setValidator(EventTypes.CrossSigningSelfSigning,
-        (String secret) async {
+    encryption.ssss.setValidator(EventTypes.CrossSigningSelfSigning, (
+      String secret,
+    ) async {
       final keyObj = olm.PkSigning();
       try {
         return keyObj.init_with_seed(base64decodeUnpadded(secret)) ==
@@ -41,8 +42,9 @@ class CrossSigning {
         keyObj.free();
       }
     });
-    encryption.ssss.setValidator(EventTypes.CrossSigningUserSigning,
-        (String secret) async {
+    encryption.ssss.setValidator(EventTypes.CrossSigningUserSigning, (
+      String secret,
+    ) async {
       final keyObj = olm.PkSigning();
       try {
         return keyObj.init_with_seed(base64decodeUnpadded(secret)) ==
@@ -65,8 +67,9 @@ class CrossSigning {
     if (!enabled) {
       return false;
     }
-    return (await encryption.ssss
-                .getCached(EventTypes.CrossSigningSelfSigning)) !=
+    return (await encryption.ssss.getCached(
+              EventTypes.CrossSigningSelfSigning,
+            )) !=
             null &&
         (await encryption.ssss.getCached(EventTypes.CrossSigningUserSigning)) !=
             null;
@@ -113,19 +116,16 @@ class CrossSigning {
     // master key is valid, set it to verified
     await masterKey.setVerified(true, false);
     // and now sign both our own key and our master key
-    await sign([
-      masterKey,
-      userDeviceKeys,
-    ]);
+    await sign([masterKey, userDeviceKeys]);
   }
 
   bool signable(List<SignableKey> keys) => keys.any(
-        (key) =>
-            key is CrossSigningKey && key.usage.contains('master') ||
-            key is DeviceKeys &&
-                key.userId == client.userID &&
-                key.identifier != client.deviceID,
-      );
+    (key) =>
+        key is CrossSigningKey && key.usage.contains('master') ||
+        key is DeviceKeys &&
+            key.userId == client.userID &&
+            key.identifier != client.deviceID,
+  );
 
   Future<void> sign(List<SignableKey> keys) async {
     final signedKeys = <MatrixSignableKey>[];
@@ -142,9 +142,10 @@ class CrossSigning {
       String signature,
     ) {
       final signedKey = key.cloneForSigning();
-      ((signedKey.signatures ??=
-              <String, Map<String, String>>{})[signedWith.userId] ??=
-          <String, String>{})['ed25519:${signedWith.identifier}'] = signature;
+      ((signedKey.signatures ??= <String, Map<String, String>>{})[signedWith
+                  .userId] ??=
+              <String, String>{})['ed25519:${signedWith.identifier}'] =
+          signature;
       signedKeys.add(signedKey);
     }
 
@@ -154,16 +155,18 @@ class CrossSigning {
         if (key is CrossSigningKey) {
           if (key.usage.contains('master')) {
             // okay, we'll sign our own master key
-            final signature =
-                encryption.olmManager.signString(key.signingContent);
+            final signature = encryption.olmManager.signString(
+              key.signingContent,
+            );
             addSignature(key, userKeys.deviceKeys[client.deviceID]!, signature);
           }
           // we don't care about signing other cross-signing keys
         } else {
           // okay, we'll sign a device key with our self signing key
           selfSigningKey ??= base64decodeUnpadded(
-            await encryption.ssss
-                    .getCached(EventTypes.CrossSigningSelfSigning) ??
+            await encryption.ssss.getCached(
+                  EventTypes.CrossSigningSelfSigning,
+                ) ??
                 '',
           );
           if (selfSigningKey.isNotEmpty) {
@@ -197,8 +200,9 @@ class CrossSigning {
         }
         if (payload[key.userId]?[key.identifier]?['signatures'] != null) {
           // we need to merge signature objects
-          payload[key.userId]![key.identifier]!['signatures']
-              .addAll(key.signatures);
+          payload[key.userId]![key.identifier]!['signatures'].addAll(
+            key.signatures,
+          );
         } else {
           // we can just add signatures
           payload[key.userId]![key.identifier!] = key.toJson();

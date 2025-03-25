@@ -37,10 +37,10 @@ class RoomKeysSingleKey {
   });
 
   RoomKeysSingleKey.fromJson(Map<String, Object?> json)
-      : firstMessageIndex = json['first_message_index'] as int,
-        forwardedCount = json['forwarded_count'] as int,
-        isVerified = json['is_verified'] as bool,
-        sessionData = json['session_data'] as Map<String, Object?>;
+    : firstMessageIndex = json['first_message_index'] as int,
+      forwardedCount = json['forwarded_count'] as int,
+      isVerified = json['is_verified'] as bool,
+      sessionData = json['session_data'] as Map<String, Object?>;
 
   Map<String, Object?> toJson() {
     final data = <String, Object?>{};
@@ -58,12 +58,10 @@ class RoomKeysRoom {
   RoomKeysRoom({required this.sessions});
 
   RoomKeysRoom.fromJson(Map<String, Object?> json)
-      : sessions = (json['sessions'] as Map<String, Object?>).map(
-          (k, v) => MapEntry(
-            k,
-            RoomKeysSingleKey.fromJson(v as Map<String, Object?>),
-          ),
-        );
+    : sessions = (json['sessions'] as Map<String, Object?>).map(
+        (k, v) =>
+            MapEntry(k, RoomKeysSingleKey.fromJson(v as Map<String, Object?>)),
+      );
 
   Map<String, Object?> toJson() {
     final data = <String, Object?>{};
@@ -77,9 +75,10 @@ class RoomKeysUpdateResponse {
   int count;
 
   RoomKeysUpdateResponse.fromJson(Map<String, Object?> json)
-      : etag = json.tryGet<String>('etag') ??
-            '', // synapse replies an int but docs say string?
-        count = json.tryGet<int>('count') ?? 0;
+    : etag =
+          json.tryGet<String>('etag') ??
+          '', // synapse replies an int but docs say string?
+      count = json.tryGet<int>('count') ?? 0;
 
   Map<String, Object?> toJson() {
     final data = <String, Object?>{};

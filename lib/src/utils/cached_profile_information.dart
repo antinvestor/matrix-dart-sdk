@@ -11,12 +11,12 @@ class CachedProfileInformation extends Profile {
     required this.outdated,
     required this.updated,
   }) : super(
-          profileId: profile.profileId,
-          contacts: profile.contacts,
-          extra: profile.extra,
-          avatarUrl: profile.avatarUrl,
-          displayName: profile.displayName,
-        );
+         profileId: profile.profileId,
+         contacts: profile.contacts,
+         extra: profile.extra,
+         avatarUrl: profile.avatarUrl,
+         displayName: profile.displayName,
+       );
 
   factory CachedProfileInformation.fromJson(Map<String, Object?> json) =>
       CachedProfileInformation.fromProfile(
@@ -27,8 +27,8 @@ class CachedProfileInformation extends Profile {
 
   @override
   Map<String, Object?> toJson() => {
-        ...super.toJson(),
-        'outdated': outdated,
-        'updated': updated.millisecondsSinceEpoch,
-      };
+    ...super.toJson(),
+    'outdated': outdated,
+    'updated': updated.millisecondsSinceEpoch,
+  };
 }

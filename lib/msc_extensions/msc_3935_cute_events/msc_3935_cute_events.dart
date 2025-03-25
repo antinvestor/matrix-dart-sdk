@@ -4,18 +4,18 @@ abstract class CuteEventContent {
   const CuteEventContent._();
 
   static Map<String, dynamic> get googlyEyes => {
-        'msgtype': CuteEventContent.eventType,
-        'cute_type': 'googly_eyes',
-        'body': '👀',
-      };
+    'msgtype': CuteEventContent.eventType,
+    'cute_type': 'googly_eyes',
+    'body': '👀',
+  };
   static Map<String, dynamic> get cuddle => {
-        'msgtype': CuteEventContent.eventType,
-        'cute_type': 'cuddle',
-        'body': '😊',
-      };
+    'msgtype': CuteEventContent.eventType,
+    'cute_type': 'cuddle',
+    'body': '😊',
+  };
   static Map<String, dynamic> get hug => {
-        'msgtype': CuteEventContent.eventType,
-        'cute_type': 'hug',
-        'body': '🤗',
-      };
+    'msgtype': CuteEventContent.eventType,
+    'cute_type': 'hug',
+    'body': '🤗',
+  };
 }

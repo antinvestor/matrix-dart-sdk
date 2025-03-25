@@ -143,13 +143,14 @@ class Timeline {
 
     try {
       // Look up for events in the database first. With fragmented view, we should delete the database cache
-      final eventsFromStore = isFragmentedTimeline
-          ? null
-          : await room.client.database?.getEventList(
-              room,
-              start: events.length,
-              limit: historyCount,
-            );
+      final eventsFromStore =
+          isFragmentedTimeline
+              ? null
+              : await room.client.database?.getEventList(
+                room,
+                start: events.length,
+                limit: historyCount,
+              );
 
       if (eventsFromStore != null && eventsFromStore.isNotEmpty) {
         // Fetch all users from database we have got here.
@@ -157,8 +158,10 @@ class Timeline {
           if (room.getState(EventTypes.RoomMember, event.senderId) != null) {
             continue;
           }
-          final dbUser =
-              await room.client.database?.getUser(event.senderId, room);
+          final dbUser = await room.client.database?.getUser(
+            event.senderId,
+            room,
+          );
           if (dbUser != null) room.setState(dbUser);
         }
 
@@ -240,9 +243,10 @@ class Timeline {
     final newNextBatch = direction == Direction.b ? resp.start : resp.end;
     final newPrevBatch = direction == Direction.b ? resp.end : resp.start;
 
-    final type = direction == Direction.b
-        ? EventUpdateType.history
-        : EventUpdateType.timeline;
+    final type =
+        direction == Direction.b
+            ? EventUpdateType.history
+            : EventUpdateType.timeline;
 
     if ((resp.state?.length ?? 0) == 0 &&
         resp.start != resp.end &&
@@ -324,16 +328,10 @@ class Timeline {
     required this.chunk,
   }) {
     timelineSub = room.client.onTimelineEvent.stream.listen(
-      (event) => _handleEventUpdate(
-        event,
-        EventUpdateType.timeline,
-      ),
+      (event) => _handleEventUpdate(event, EventUpdateType.timeline),
     );
     historySub = room.client.onHistoryEvent.stream.listen(
-      (event) => _handleEventUpdate(
-        event,
-        EventUpdateType.history,
-      ),
+      (event) => _handleEventUpdate(event, EventUpdateType.history),
     );
 
     // If the timeline is limited we want to clear our events cache
@@ -341,10 +339,12 @@ class Timeline {
         .where((sync) => sync.rooms?.join?[room.id]?.timeline?.limited == true)
         .listen(_removeEventsNotInThisSync);
 
-    sessionIdReceivedSub =
-        room.onSessionKeyReceived.stream.listen(_sessionKeyReceived);
-    cancelSendEventSub =
-        room.client.onCancelSendEvent.stream.listen(_cleanUpCancelledEvent);
+    sessionIdReceivedSub = room.onSessionKeyReceived.stream.listen(
+      _sessionKeyReceived,
+    );
+    cancelSendEventSub = room.client.onCancelSendEvent.stream.listen(
+      _cleanUpCancelledEvent,
+    );
 
     // we want to populate our aggregated events
     for (final e in events) {
@@ -500,8 +500,10 @@ class Timeline {
     if (relationshipType == null || relationshipEventId == null) {
       return; // nothing to do
     }
-    final events = (aggregatedEvents[relationshipEventId] ??=
-        <String, Set<Event>>{})[relationshipType] ??= <Event>{};
+    final events =
+        (aggregatedEvents[relationshipEventId] ??=
+                <String, Set<Event>>{})[relationshipType] ??=
+            <Event>{};
     // remove a potential old event
     _removeEventFromSet(events, event);
     // add the new one
@@ -562,10 +564,7 @@ class Timeline {
         onChange?.call(i);
       } else {
         if (type == EventUpdateType.history &&
-            events.indexWhere(
-                  (e) => e.eventId == event.eventId,
-                ) !=
-                -1) {
+            events.indexWhere((e) => e.eventId == event.eventId) != -1) {
           return;
         }
         var index = events.length;
@@ -617,16 +616,15 @@ class Timeline {
     String? sinceEventId,
     int? limit,
     bool Function(Event)? searchFunc,
-  }) =>
-      startSearch(
-        searchTerm: searchTerm,
-        requestHistoryCount: requestHistoryCount,
-        maxHistoryRequests: maxHistoryRequests,
-        // ignore: deprecated_member_use_from_same_package
-        sinceEventId: sinceEventId,
-        limit: limit,
-        searchFunc: searchFunc,
-      ).map((result) => result.$1);
+  }) => startSearch(
+    searchTerm: searchTerm,
+    requestHistoryCount: requestHistoryCount,
+    maxHistoryRequests: maxHistoryRequests,
+    // ignore: deprecated_member_use_from_same_package
+    sinceEventId: sinceEventId,
+    limit: limit,
+    searchFunc: searchFunc,
+  ).map((result) => result.$1);
 
   /// Searches [searchTerm] in this timeline. It first searches in the
   /// cache, then in the database and then on the server. The search can
@@ -646,8 +644,9 @@ class Timeline {
     bool Function(Event)? searchFunc,
   }) async* {
     assert(searchTerm != null || searchFunc != null);
-    searchFunc ??= (event) =>
-        event.body.toLowerCase().contains(searchTerm?.toLowerCase() ?? '');
+    searchFunc ??=
+        (event) =>
+            event.body.toLowerCase().contains(searchTerm?.toLowerCase() ?? '');
     final found = <Event>[];
 
     if (sinceEventId == null) {
@@ -661,7 +660,8 @@ class Timeline {
       // Search in database
       var start = events.length;
       while (true) {
-        final eventsFromStore = await room.client.database?.getEventList(
+        final eventsFromStore =
+            await room.client.database?.getEventList(
               room,
               start: start,
               limit: requestHistoryCount,

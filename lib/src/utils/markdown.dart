@@ -24,11 +24,11 @@ const htmlAttrEscape = HtmlEscape(HtmlEscapeMode.attribute);
 
 class SpoilerSyntax extends DelimiterSyntax {
   SpoilerSyntax()
-      : super(
-          r'\|\|',
-          requiresDelimiterRun: true,
-          tags: [DelimiterTag('span', 2)],
-        );
+    : super(
+        r'\|\|',
+        requiresDelimiterRun: true,
+        tags: [DelimiterTag('span', 2)],
+      );
 
   @override
   Iterable<Node>? close(
@@ -63,8 +63,10 @@ class SpoilerSyntax extends DelimiterSyntax {
       }
     }
     // if we were still searching for a reason that means there was none - use the original children!
-    final element =
-        Element('span', searchingForReason ? children : newChildren);
+    final element = Element(
+      'span',
+      searchingForReason ? children : newChildren,
+    );
     element.attributes['data-mx-spoiler'] =
         searchingForReason ? '' : htmlAttrEscape.convert(reason);
     return <Node>[element];
@@ -115,8 +117,9 @@ class InlineLatexSyntax extends DelimiterSyntax {
 
   @override
   bool onMatch(InlineParser parser, Match match) {
-    final element =
-        Element('span', [Element.text('code', htmlEscape.convert(match[1]!))]);
+    final element = Element('span', [
+      Element.text('code', htmlEscape.convert(match[1]!)),
+    ]);
     element.attributes['data-mx-maths'] = htmlAttrEscape.convert(match[1]!);
     parser.addNode(element);
     return true;
@@ -164,9 +167,9 @@ class BlockLatexSyntax extends BlockSyntax {
 
 class PillSyntax extends InlineSyntax {
   PillSyntax()
-      : super(
-          r'([@#!][^\s:]*:(?:[^\s]+\.\w+|[\d\.]+|\[[a-fA-F0-9:]+\])(?::\d+)?)',
-        );
+    : super(
+        r'([@#!][^\s:]*:(?:[^\s]+\.\w+|[\d\.]+|\[[a-fA-F0-9:]+\])(?::\d+)?)',
+      );
 
   @override
   bool onMatch(InlineParser parser, Match match) {
@@ -177,8 +180,9 @@ class PillSyntax extends InlineSyntax {
     }
     final identifier = match[1]!;
     final element = Element.text('a', htmlEscape.convert(identifier));
-    element.attributes['href'] =
-        htmlAttrEscape.convert('https://matrix.to/#/$identifier');
+    element.attributes['href'] = htmlAttrEscape.convert(
+      'https://matrix.to/#/$identifier',
+    );
     parser.addNode(element);
     return true;
   }
@@ -198,8 +202,9 @@ class MentionSyntax extends InlineSyntax {
       return true;
     }
     final element = Element.text('a', htmlEscape.convert(match[1]!));
-    element.attributes['href'] =
-        htmlAttrEscape.convert('https://matrix.to/#/$mention');
+    element.attributes['href'] = htmlAttrEscape.convert(
+      'https://matrix.to/#/$mention',
+    );
     parser.addNode(element);
     return true;
   }
@@ -214,9 +219,7 @@ String markdown(
   var ret = markdownToHtml(
     text.replaceNewlines(),
     extensionSet: ExtensionSet.commonMark,
-    blockSyntaxes: [
-      BlockLatexSyntax(),
-    ],
+    blockSyntaxes: [BlockLatexSyntax()],
     inlineSyntaxes: [
       StrikethroughSyntax(),
       SpoilerSyntax(),
@@ -251,10 +254,9 @@ String markdown(
       }
     }
   }
-  ret = ret
-      .trim()
-      // Remove trailing linebreaks
-      .replaceAll(RegExp(r'(<br />)+$'), '');
+  ret = ret.trim()
+  // Remove trailing linebreaks
+  .replaceAll(RegExp(r'(<br />)+$'), '');
   if (convertLinebreaks) {
     // Only convert linebreaks which are not in <pre> blocks
     ret = ret.convertLinebreaksToBr('p');

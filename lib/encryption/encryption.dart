@@ -57,10 +57,7 @@ class Encryption {
 
   late String ourDeviceId;
 
-  Encryption({
-    required this.client,
-    this.debug = false,
-  }) {
+  Encryption({required this.client, this.debug = false}) {
     ssss = SSSS(this);
     keyManager = KeyManager(this);
     olmManager = OlmManager(this);
@@ -99,10 +96,8 @@ class Encryption {
     }
   }
 
-  Bootstrap bootstrap({void Function(Bootstrap)? onUpdate}) => Bootstrap(
-        encryption: this,
-        onUpdate: onUpdate,
-      );
+  Bootstrap bootstrap({void Function(Bootstrap)? onUpdate}) =>
+      Bootstrap(encryption: this, onUpdate: onUpdate);
 
   void handleDeviceOneTimeKeysCount(
     Map<String, int>? countJson,
@@ -127,8 +122,10 @@ class Encryption {
       // events in /sync are handled
       await keyManager.handleToDeviceEvent(event);
     }
-    if ([EventTypes.RoomKeyRequest, EventTypes.ForwardedRoomKey]
-        .contains(event.type)) {
+    if ([
+      EventTypes.RoomKeyRequest,
+      EventTypes.ForwardedRoomKey,
+    ].contains(event.type)) {
       // "just" room key request things. We don't need these asap, so we handle
       // them in the background
       runInRoot(() => keyManager.handleToDeviceEvent(event));
@@ -183,10 +180,7 @@ class Encryption {
         s,
       );
       client.onEncryptionError.add(
-        SdkError(
-          exception: e is Exception ? e : Exception(e),
-          stackTrace: s,
-        ),
+        SdkError(exception: e is Exception ? e : Exception(e), stackTrace: s),
       );
       return event;
     }
@@ -212,8 +206,10 @@ class Encryption {
         throw DecryptException(DecryptException.unknownSession);
       }
 
-      final inboundGroupSession =
-          keyManager.getInboundGroupSession(event.room.id, sessionId);
+      final inboundGroupSession = keyManager.getInboundGroupSession(
+        event.room.id,
+        sessionId,
+      );
       if (!(inboundGroupSession?.isValid ?? false)) {
         canRequestSession = true;
         throw DecryptException(DecryptException.unknownSession);
@@ -222,16 +218,18 @@ class Encryption {
       // decrypt errors here may mean we have a bad session key - others might have a better one
       canRequestSession = true;
 
-      final decryptResult = inboundGroupSession!.inboundGroupSession!
-          .decrypt(content.ciphertextMegolm!);
+      final decryptResult = inboundGroupSession!.inboundGroupSession!.decrypt(
+        content.ciphertextMegolm!,
+      );
       canRequestSession = false;
 
       // we can't have the key be an int, else json-serializing will fail, thus we need it to be a string
       final messageIndexKey = 'key-${decryptResult.message_index}';
       final messageIndexValue =
           '${event.eventId}|${event.originServerTs.millisecondsSinceEpoch}';
-      final haveIndex =
-          inboundGroupSession.indexes.containsKey(messageIndexKey);
+      final haveIndex = inboundGroupSession.indexes.containsKey(
+        messageIndexKey,
+      );
       if (haveIndex &&
           inboundGroupSession.indexes[messageIndexKey] != messageIndexValue) {
         Logs().e('[Decrypt] Could not decrypt due to a corrupted session.');
@@ -322,16 +320,10 @@ class Encryption {
       if (client.database != null &&
           sessionId != null &&
           !(keyManager
-                  .getInboundGroupSession(
-                    event.room.id,
-                    sessionId,
-                  )
+                  .getInboundGroupSession(event.room.id, sessionId)
                   ?.isValid ??
               false)) {
-        await keyManager.loadInboundGroupSession(
-          event.room.id,
-          sessionId,
-        );
+        await keyManager.loadInboundGroupSession(event.room.id, sessionId);
       }
       event = decryptRoomEventSync(event);
       if (event.type == EventTypes.Encrypted &&
@@ -404,8 +396,9 @@ class Encryption {
     };
     final encryptedPayload = <String, dynamic>{
       'algorithm': AlgorithmTypes.megolmV1AesSha2,
-      'ciphertext':
-          sess!.outboundGroupSession!.encrypt(json.encode(payloadContent)),
+      'ciphertext': sess!.outboundGroupSession!.encrypt(
+        json.encode(payloadContent),
+      ),
       // device_id + sender_key should be removed at some point in future since
       // they're deprecated. Just left here for compatibility
       'device_id': client.deviceID,

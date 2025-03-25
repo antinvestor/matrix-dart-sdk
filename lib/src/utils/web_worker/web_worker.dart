@@ -71,10 +71,7 @@ Future<void> startWebWorker() async {
 
 void sendResponse(double label, dynamic response) {
   try {
-    self.postMessage({
-      'label': label,
-      'data': response,
-    });
+    self.postMessage({'label': label, 'data': response});
   } catch (e, s) {
     print('[native implementations worker] Error responding: $e, $s');
   }
