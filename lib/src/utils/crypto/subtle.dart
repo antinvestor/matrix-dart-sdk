@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'dart:async';
-import 'dart:js_interop';
 import 'dart:typed_data';
+
+import 'package:js/js.dart';
+import 'package:js/js_util.dart';
 
 @JS()
 @anonymous
@@ -31,10 +33,6 @@ class AesCtrParams {
 
 @JS('crypto.subtle.encrypt')
 external dynamic _encrypt(dynamic algorithm, dynamic key, Uint8List data);
-
-Future<T> promiseToFuture<T extends JSAny?>(JSPromise<T> promise) {
-  return promise.toDart;
-}
 
 Future<ByteBuffer> encrypt(dynamic algorithm, dynamic key, Uint8List data) {
   return promiseToFuture(_encrypt(algorithm, key, data));
