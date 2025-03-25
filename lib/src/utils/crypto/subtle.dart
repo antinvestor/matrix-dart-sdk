@@ -2,10 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'dart:async';
-import 'dart:js_util';
+import 'dart:js_interop';
 import 'dart:typed_data';
-
-import 'package:js/js.dart';
 
 @JS()
 @anonymous
@@ -25,11 +23,7 @@ class Pbkdf2Params {
 @JS()
 @anonymous
 class AesCtrParams {
-  external factory AesCtrParams({
-    String name,
-    Uint8List counter,
-    int length,
-  });
+  external factory AesCtrParams({String name, Uint8List counter, int length});
   String? name;
   Uint8List? counter;
   int? length;
@@ -37,6 +31,10 @@ class AesCtrParams {
 
 @JS('crypto.subtle.encrypt')
 external dynamic _encrypt(dynamic algorithm, dynamic key, Uint8List data);
+
+Future<T> promiseToFuture<T extends JSAny?>(JSPromise<T> promise) {
+  return promise.toDart;
+}
 
 Future<ByteBuffer> encrypt(dynamic algorithm, dynamic key, Uint8List data) {
   return promiseToFuture(_encrypt(algorithm, key, data));
@@ -94,13 +92,7 @@ Future<ByteBuffer> deriveKey(
   List<String> keyUsages,
 ) {
   return promiseToFuture(
-    _deriveKey(
-      algorithm,
-      baseKey,
-      derivedKeyAlgorithm,
-      extractable,
-      keyUsages,
-    ),
+    _deriveKey(algorithm, baseKey, derivedKeyAlgorithm, extractable, keyUsages),
   );
 }
 

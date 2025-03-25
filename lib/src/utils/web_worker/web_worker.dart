@@ -1,16 +1,15 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
-import 'dart:html';
-import 'dart:indexed_db';
-import 'dart:js';
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 import 'dart:typed_data';
 
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
-
 import 'package:matrix/matrix.dart' hide Event;
 import 'package:matrix/src/utils/web_worker/native_implementations_web_worker.dart';
+import 'package:web/web.dart';
 
 ///
 ///
@@ -35,42 +34,37 @@ import 'package:matrix/src/utils/web_worker/native_implementations_web_worker.da
 @pragma('dart2js:tryInline')
 Future<void> startWebWorker() async {
   print('[native implementations worker]: Starting...');
-  setProperty(
-    context['self'] as Object,
-    'onmessage',
-    allowInterop(
-      (MessageEvent event) async {
-        final data = event.data;
-        try {
-          final operation = WebWorkerData.fromJson(data);
-          switch (operation.name) {
-            case WebWorkerOperations.shrinkImage:
-              final result = MatrixImageFile.resizeImplementation(
-                MatrixImageFileResizeArguments.fromJson(
-                  Map.from(operation.data as Map),
-                ),
-              );
-              sendResponse(operation.label as double, result?.toJson());
-              break;
-            case WebWorkerOperations.calcImageMetadata:
-              final result = MatrixImageFile.calcMetadataImplementation(
-                Uint8List.fromList(
-                  (operation.data as JsArray).whereType<int>().toList(),
-                ),
-              );
-              sendResponse(operation.label as double, result?.toJson());
-              break;
-            default:
-              throw TypeError();
-          }
-        } on Event catch (e, s) {
-          allowInterop(_replyError)
-              .call((e.target as Request).error, s, data['label'] as double);
-        } catch (e, s) {
-          allowInterop(_replyError).call(e, s, data['label'] as double);
+
+  globalContext.setProperty(
+    'onmessage'.toJS,
+    ((MessageEvent event) {
+      final data = event.data.dartify() as Map;
+      try {
+        final operation = WebWorkerData.fromJson(data);
+        switch (operation.name) {
+          case WebWorkerOperations.shrinkImage:
+            final result = MatrixImageFile.resizeImplementation(
+              MatrixImageFileResizeArguments.fromJson(
+                Map.from(operation.data as Map),
+              ),
+            );
+            sendResponse(operation.label as double, result?.toJson());
+            break;
+          case WebWorkerOperations.calcImageMetadata:
+            final result = MatrixImageFile.calcMetadataImplementation(
+              Uint8List.fromList(
+                (operation.data as List<int>).whereType<int>().toList(),
+              ),
+            );
+            sendResponse(operation.label as double, result?.toJson());
+            break;
+          default:
+            throw TypeError();
         }
-      },
-    ),
+      } catch (e, s) {
+        allowInterop(_replyError).call(e, s, data['label'] as double);
+      }
+    }.jsify()),
   );
 }
 

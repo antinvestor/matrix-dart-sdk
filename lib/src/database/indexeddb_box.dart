@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'dart:html';
-import 'dart:indexed_db';
 
+import 'package:idb_shim/idb_browser.dart';
 import 'package:matrix/src/database/zone_transaction_mixin.dart';
 
 /// Key-Value store abstraction over IndexedDB so that the sdk database can use
@@ -21,12 +20,12 @@ class BoxCollection with ZoneTransactionMixin {
     IdbFactory? idbFactory,
     int version = 1,
   }) async {
-    idbFactory ??= window.indexedDB!;
+    idbFactory ??= getIdbFactory()!;
     final db = await idbFactory.open(
       name,
       version: version,
       onUpgradeNeeded: (VersionChangeEvent event) {
-        final db = event.target.result;
+        final db = event.database;
         for (final name in boxNames) {
           if (db.objectStoreNames.contains(name)) continue;
 
@@ -52,7 +51,7 @@ class BoxCollection with ZoneTransactionMixin {
     bool readOnly = false,
   }) =>
       zoneTransaction(() async {
-        boxNames ??= _db.objectStoreNames!.toList();
+        boxNames ??= _db.objectStoreNames.toList();
         final txnCache = _txnCache = [];
         await action();
         final cache =
@@ -60,7 +59,7 @@ class BoxCollection with ZoneTransactionMixin {
         _txnCache = null;
         if (cache.isEmpty) return;
         final txn =
-            _db.transaction(boxNames, readOnly ? 'readonly' : 'readwrite');
+            _db.transactionList(boxNames!, readOnly ? 'readonly' : 'readwrite');
         for (final fun in cache) {
           // The IDB methods return a Future in Dart but must not be awaited in
           // order to have an actual transaction. They must only be performed and
@@ -87,13 +86,9 @@ class BoxCollection with ZoneTransactionMixin {
     return zoneTransaction(() async => _db.close());
   }
 
-  @Deprecated('use collection.deleteDatabase now')
-  static Future<void> delete(String name, [dynamic factory]) =>
-      (factory ?? window.indexedDB!).deleteDatabase(name);
-
   Future<void> deleteDatabase(String name, [dynamic factory]) async {
     await close();
-    await (factory ?? window.indexedDB).deleteDatabase(name);
+    await (factory ?? getIdbFactory()).deleteDatabase(name);
   }
 }
 
@@ -116,8 +111,12 @@ class Box<V> {
     txn ??= boxCollection._db.transaction(name, 'readonly');
     final store = txn.objectStore(name);
     final request = store.getAllKeys(null);
-    await request.onSuccess.first;
-    final keys = request.result.cast<String>();
+    final keys = await request.then((result) {
+      return result.cast<String>();
+    }).catchError((e) {
+      throw StateError('Failed to get all keys: $e');
+    });
+
     _quickAccessCachedKeys = keys.toSet();
     return keys;
   }
