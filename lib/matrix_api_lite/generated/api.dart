@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
-
 import 'package:matrix/matrix_api_lite/generated/fixed_model.dart';
 import 'package:matrix/matrix_api_lite/generated/internal.dart';
 import 'package:matrix/matrix_api_lite/generated/model.dart';
@@ -2757,7 +2756,7 @@ class Api {
   /// locally or on remote homeservers.
   ///
   /// [userId] The user whose profile information to get.
-  Future<ProfileInformation> getUserProfile(String userId) async {
+  Future<Profile> getUserProfile(String userId) async {
     final requestUri =
         Uri(path: '_matrix/client/v3/profile/${Uri.encodeComponent(userId)}');
     final request = Request('GET', baseUri!.resolveUri(requestUri));
@@ -2769,7 +2768,7 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return ProfileInformation.fromJson(json as Map<String, Object?>);
+    return Profile.fromJson(json as Map<String, Object?>);
   }
 
   /// Get the user's avatar URL. This API may be used to fetch the user's

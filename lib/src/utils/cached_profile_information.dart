@@ -1,11 +1,13 @@
 import 'package:matrix/matrix_api_lite.dart';
 
-class CachedProfileInformation extends ProfileInformation {
+const localProfileIdPrefix = 'local_id_';
+
+class CachedProfileInformation extends Profile {
   final bool outdated;
   final DateTime updated;
 
   CachedProfileInformation.fromProfile(
-    ProfileInformation profile, {
+    Profile profile, {
     required this.outdated,
     required this.updated,
   }) : super(
@@ -18,7 +20,7 @@ class CachedProfileInformation extends ProfileInformation {
 
   factory CachedProfileInformation.fromJson(Map<String, Object?> json) =>
       CachedProfileInformation.fromProfile(
-        ProfileInformation.fromJson(json),
+        Profile.fromJson(json),
         outdated: json['outdated'] as bool,
         updated: DateTime.fromMillisecondsSinceEpoch(json['updated'] as int),
       );

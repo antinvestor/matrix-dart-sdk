@@ -2555,147 +2555,6 @@ class GetPresenceResponse {
       Object.hash(currentlyActive, lastActiveAgo, presence, statusMsg);
 }
 
-///
-@_NameSource('rule override generated')
-class ProfileInformation {
-  static const localProfileIdPrefix = 'local_id_';
-
-  ProfileInformation({
-    this.profileId,
-    this.userId,
-    this.contacts,
-    this.avatarUrl,
-    this.displayName,
-    this.extra,
-  });
-
-  ProfileInformation.fromJson(Map<String, Object?> json)
-      : avatarUrl = json['avatar_url'] != null
-            ? Uri.parse(json['avatar_url'] as String)
-            : null,
-        displayName =
-            json['display_name'] as String? ?? json['displayname'] as String?,
-        userId = json['user_id'] as String?,
-        profileId = json['profile_id'] as String?,
-        contacts = (json['contacts'] as List<dynamic>?)
-            ?.map((c) => ProfileContact.fromJson(copyMap(c)))
-            .toList(),
-        extra = json['extra'] as Map<String, dynamic>?;
-
-  Map<String, Object?> toJson() {
-    final userId = this.userId;
-    final profileId = this.profileId;
-    final avatarUrl = this.avatarUrl;
-    final displayName = this.displayName;
-    final extra = this.extra;
-    final contacts = this.contacts;
-    return {
-      if (userId != null) 'user_id': userId,
-      if (profileId != null) 'profile_id': profileId,
-      if (contacts != null)
-        'contacts': contacts.map((c) => c.toJson()).toList(),
-      if (avatarUrl != null) 'avatar_url': avatarUrl.toString(),
-      if (displayName != null) 'display_name': displayName,
-      if (extra != null) 'extra': extra,
-    };
-  }
-
-  Profile? toProfile() {
-    if (userId == null) {
-      return null;
-    }
-
-    return Profile(
-      userId: userId!,
-      profileId: profileId,
-      avatarUrl: avatarUrl,
-      displayName: displayName,
-      contacts: contacts,
-      extra: extra,
-    );
-  }
-
-  String? userId;
-  String? profileId;
-
-  /// The user's avatar URL if they have set one, otherwise not present.
-  Uri? avatarUrl;
-
-  /// The user's display name if they have set one, otherwise not present.
-  String? displayName;
-
-  Map<String, Object?>? extra;
-
-  List<ProfileContact>? contacts;
-
-  @dart.override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is ProfileInformation &&
-          other.runtimeType == runtimeType &&
-          other.profileId == profileId &&
-          other.avatarUrl == avatarUrl &&
-          other.displayName == displayName &&
-          other.contacts == contacts &&
-          other.extra == extra);
-
-  @dart.override
-  int get hashCode =>
-      Object.hash(profileId, avatarUrl, displayName, contacts, extra);
-}
-
-///
-@_NameSource('rule override generated')
-class ProfileContact {
-  ProfileContact({
-    this.id,
-    this.detail,
-    this.contactType,
-  });
-
-  ProfileContact.fromJson(Map<String, Object?> json)
-      : detail = ((v) => v != null ? v as String : null)(json['detail']),
-        contactType = ((v) => v != null ? v as String : null)(json['type']),
-        id = ((v) => v != null ? v as String : null)(json['id']);
-
-  Map<String, Object?> toJson() {
-    final detail = this.detail;
-    final id = this.id;
-    final contactType = this.contactType;
-    return {
-      if (id != null) 'id': id,
-      if (detail != null) 'detail': detail,
-      if (contactType != null) 'type': contactType,
-    };
-  }
-
-  String? id;
-  String? detail;
-  String? contactType;
-
-  @dart.override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is ProfileContact &&
-          other.runtimeType == runtimeType &&
-          other.id == id &&
-          other.detail == detail &&
-          other.contactType == contactType);
-
-  @dart.override
-  int get hashCode => Object.hash(id, detail, contactType);
-
-  bool isValid() {
-    if (contactType == null || 'email' == contactType) {
-      final isEmail = isValidEmail(detail);
-      if (isEmail || contactType != null) {
-        return isEmail;
-      }
-    }
-    return isValidMsisdn(detail);
-  }
-}
-
 /// A list of the rooms on the server.
 @_NameSource('generated')
 class GetPublicRoomsResponse {
@@ -5818,14 +5677,85 @@ class Tag {
   int get hashCode => order.hashCode;
 }
 
+@_NameSource('generated')
+enum ContactType {
+  cMsisdn('msisdn'),
+  cEmail('email');
+
+  final String name;
+
+  const ContactType(this.name);
+
+  static ContactType? fromString(String val) {
+    return {
+      'msisdn': ContactType.cMsisdn,
+      'email': ContactType.cEmail,
+    }[val];
+  }
+}
+
+///
+@_NameSource('rule override generated')
+class ProfileContact {
+  ProfileContact({
+    this.id,
+    this.detail,
+    this.contactType,
+  });
+
+  ProfileContact.fromJson(Map<String, Object?> json)
+      : detail = ((v) => v != null ? v as String : null)(json['detail']),
+        contactType = ((v) => v != null
+            ? ContactType.fromString(v as String)
+            : null)(json['type']),
+        id = ((v) => v != null ? v as String : null)(json['id']);
+
+  Map<String, Object?> toJson() {
+    final detail = this.detail;
+    final id = this.id;
+    final contactType = this.contactType;
+    return {
+      if (id != null) 'id': id,
+      if (detail != null) 'detail': detail,
+      if (contactType != null) 'type': contactType.name,
+    };
+  }
+
+  String? id;
+  String? detail;
+  ContactType? contactType;
+
+  @dart.override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ProfileContact &&
+          other.runtimeType == runtimeType &&
+          other.id == id &&
+          other.detail == detail &&
+          other.contactType == contactType);
+
+  @dart.override
+  int get hashCode => Object.hash(id, detail, contactType);
+
+  bool isValid() {
+    if (contactType == null || 'email' == contactType) {
+      final isEmail = isValidEmail(detail);
+      if (isEmail || contactType != null) {
+        return isEmail;
+      }
+    }
+    return isValidMsisdn(detail);
+  }
+}
+
 ///
 @_NameSource('rule override spec')
 class Profile {
   Profile({
+    this.userId,
     this.avatarUrl,
     this.displayName,
     this.profileId,
-    required this.userId,
     this.contacts,
     this.extra,
   });
@@ -5837,7 +5767,7 @@ class Profile {
         displayName =
             json['display_name'] as String? ?? json['displayname'] as String?,
         profileId = json['profile_id'] as String?,
-        userId = json['user_id'] as String,
+        userId = json['user_id'] as String?,
         contacts = (json['contacts'] as List<dynamic>?)
             ?.map((c) => ProfileContact.fromJson(copyMap(c)))
             .toList(),
@@ -5851,7 +5781,7 @@ class Profile {
     final extra = this.extra;
     final contacts = this.contacts;
     return {
-      'user_id': userId,
+      if (userId != null) 'user_id': userId,
       if (profileId != null) 'profile_id': profileId,
       if (contacts != null)
         'contacts': contacts.map((c) => c.toJson()).toList(),
@@ -5866,7 +5796,7 @@ class Profile {
   }
 
   bool isOnboardedProfile() {
-    return userId.isValidMatrixId;
+    return userId?.isValidMatrixId ?? false;
   }
 
   /// The avatar url, as an [`mxc://` URI](https://spec.matrix.org/unstable/client-server-api/#matrix-content-mxc-uris), if one exists.
@@ -5876,7 +5806,7 @@ class Profile {
   String? displayName;
 
   /// The user's matrix user ID.
-  String userId;
+  String? userId;
 
   String? profileId;
 
@@ -5912,7 +5842,7 @@ class SearchUserDirectoryResponse {
   SearchUserDirectoryResponse.fromJson(Map<String, Object?> json)
       : limited = json['limited'] as bool,
         results = (json['results'] as List)
-            .map((v) => ProfileInformation.fromJson(v as Map<String, Object?>))
+            .map((v) => Profile.fromJson(v as Map<String, Object?>))
             .toList();
 
   Map<String, Object?> toJson() => {
@@ -5924,7 +5854,7 @@ class SearchUserDirectoryResponse {
   bool limited;
 
   /// Ordered by rank and then whether or not profile info is available.
-  List<ProfileInformation> results;
+  List<Profile> results;
 
   @dart.override
   bool operator ==(Object other) =>

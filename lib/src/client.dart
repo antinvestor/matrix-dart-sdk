@@ -25,10 +25,6 @@ import 'dart:typed_data';
 import 'package:async/async.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:http/http.dart' as http;
-import 'package:mime/mime.dart';
-import 'package:olm/olm.dart' as olm;
-import 'package:random_string/random_string.dart';
-
 import 'package:matrix/encryption.dart';
 import 'package:matrix/matrix.dart';
 import 'package:matrix/matrix_api_lite/generated/fixed_model.dart';
@@ -44,6 +40,9 @@ import 'package:matrix/src/utils/sync_update_item_count.dart';
 import 'package:matrix/src/utils/try_get_push_rule.dart';
 import 'package:matrix/src/utils/versions_comparator.dart';
 import 'package:matrix/src/voip/utils/async_cache_try_fetch.dart';
+import 'package:mime/mime.dart';
+import 'package:olm/olm.dart' as olm;
+import 'package:random_string/random_string.dart';
 
 typedef RoomSorter = int Function(Room a, Room b);
 
@@ -1010,46 +1009,6 @@ class Client extends MatrixApi {
     return id;
   }
 
-  @Deprecated('Use getUserProfile(userID) instead')
-  Future<Profile> get ownProfile => fetchOwnProfile();
-
-  /// Returns the user's own displayname and avatar url. In Matrix it is possible that
-  /// one user can have different displaynames and avatar urls in different rooms.
-  /// Tries to get the profile from homeserver first, if failed, falls back to a profile
-  /// from a room where the user exists. Set `useServerCache` to true to get any
-  /// prior value from this function
-  @Deprecated('Use fetchOwnProfile() instead')
-  Future<Profile> fetchOwnProfileFromServer({
-    bool useServerCache = false,
-  }) async {
-    try {
-      return await getProfileFromUserId(
-        userID!,
-        getFromRooms: false,
-        cache: useServerCache,
-      );
-    } catch (e) {
-      Logs().w(
-        '[Matrix] getting profile from homeserver failed, falling back to first room with required profile',
-      );
-      return await getProfileFromUserId(
-        userID!,
-        getFromRooms: true,
-        cache: true,
-      );
-    }
-  }
-
-  /// Returns the user's own displayname and avatar url. In Matrix it is possible that
-  /// one user can have different displaynames and avatar urls in different rooms.
-  /// This returns the profile from the first room by default, override `getFromRooms`
-  /// to false to fetch from homeserver.
-  Future<Profile> fetchOwnProfile({
-    @Deprecated('No longer supported') bool getFromRooms = true,
-    @Deprecated('No longer supported') bool cache = true,
-  }) =>
-      getProfileFromUserId(userID!);
-
   /// Get the combined profile information for this user. First checks for a
   /// non outdated cached profile before requesting from the server. Cached
   /// profiles are outdated if they have been cached in a time older than the
@@ -1062,7 +1021,7 @@ class Client extends MatrixApi {
   Future<CachedProfileInformation> getUserProfile(
     String userId, {
     Duration timeout = const Duration(seconds: 30),
-    Duration maxCacheAge = const Duration(days: 1),
+    Duration maxCacheAge = const Duration(days: 2),
   }) async {
     final cachedProfile = await database?.getUserProfile(userId);
     if (cachedProfile != null &&
@@ -1071,16 +1030,13 @@ class Client extends MatrixApi {
       return cachedProfile;
     }
 
-    final ProfileInformation profile;
+    final Profile profile;
     try {
-      profile = await (_userProfileRequests[userId] ??=
-          super.getUserProfile(userId).timeout(timeout));
+      profile = await super.getUserProfile(userId).timeout(timeout);
     } catch (e) {
       Logs().d('Unable to fetch profile from server', e);
       if (cachedProfile == null) rethrow;
       return cachedProfile;
-    } finally {
-      unawaited(_userProfileRequests.remove(userId));
     }
 
     final newCachedProfile = CachedProfileInformation.fromProfile(
@@ -1093,8 +1049,6 @@ class Client extends MatrixApi {
 
     return newCachedProfile;
   }
-
-  final Map<String, Future<ProfileInformation>> _userProfileRequests = {};
 
   final CachedStreamController<String> onUserProfileUpdate =
       CachedStreamController<String>();

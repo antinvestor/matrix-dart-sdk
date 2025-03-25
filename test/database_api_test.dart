@@ -20,9 +20,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:matrix/matrix.dart';
 import 'package:test/test.dart';
 
-import 'package:matrix/matrix.dart';
 import 'fake_database.dart';
 
 String createLargeString(String character, int desiredSize) {
@@ -664,7 +664,8 @@ void main() {
           await database.storeUserProfile(
             '@alice:example.com',
             CachedProfileInformation.fromProfile(
-              ProfileInformation(
+              Profile(
+                userId: '@alice:example.com',
                 profileId: '@alice:example.com',
                 contacts: {
                   ProfileContact(id: 'ct', detail: 'alice@example.com'),
