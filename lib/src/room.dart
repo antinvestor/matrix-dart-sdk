@@ -23,7 +23,6 @@ import 'dart:math';
 import 'package:async/async.dart';
 import 'package:collection/collection.dart';
 import 'package:html_unescape/html_unescape.dart';
-
 import 'package:matrix/matrix.dart';
 import 'package:matrix/src/models/timeline_chunk.dart';
 import 'package:matrix/src/utils/cached_stream_controller.dart';
@@ -1328,6 +1327,16 @@ class Room {
   /// Call the Matrix API to invite a user to this room.
   Future<void> invite(String userID, {String? reason}) =>
       client.inviteUser(id, userID, reason: reason);
+
+  /// Call the Matrix API to invite a user to this room.
+  Future<void> inviteByContact(ProfileContact contact, {String? reason}) =>
+      client.inviteBy3PID(
+        id,
+        contact.detail!,
+        client.accessToken ?? '',
+        client.baseUri.toString(),
+        contact.contactType!.name,
+      );
 
   /// Request more previous events from the server. [historyCount] defines how many events should
   /// be received maximum. When the request is answered, [onHistoryReceived] will be triggered **before**
