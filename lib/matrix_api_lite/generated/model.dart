@@ -5738,7 +5738,7 @@ class ProfileContact {
   int get hashCode => Object.hash(id, detail, contactType);
 
   bool isValid() {
-    if (contactType == null || 'email' == contactType) {
+    if (contactType == null || contactType == ContactType.cEmail) {
       final isEmail = isValidEmail(detail);
       if (isEmail || contactType != null) {
         return isEmail;
