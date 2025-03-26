@@ -91,7 +91,7 @@ void main() {
           'curve25519:BADDEVICE': 'ds6+bItpDiWyRaT/b0ofoz1R+GCy7YTbORLJI4dmYho',
           'ed25519:BADDEVICE': 'CdDKVf44LO2QlfWopP6VWmqedSrRaf9rhHKvdVyH38w',
         },
-      }, client,);
+      }, client);
       expect(key.isValid, false);
       expect(key.selfSigned, false);
       key = DeviceKeys.fromJson({
@@ -108,7 +108,7 @@ void main() {
         'signatures': {
           '@test:fakeServer.notExisting': {'ed25519:BADDEVICE': 'invalid'},
         },
-      }, client,);
+      }, client);
       expect(key.isValid, false);
       expect(key.selfSigned, false);
     });
@@ -137,7 +137,7 @@ void main() {
                 'f2p1kv6PIz+hnoFYnHEurhUKIyRsdxwR2RTKT1EnQ3aF2zlZOjmnndOCtIT24Q8vs2PovRw+/jkHKj4ge2yDDw',
           },
         },
-      }, client,);
+      }, client);
 
       client.shareKeysWith = ShareKeysWith.all;
       expect(key.encryptToDevice, true);

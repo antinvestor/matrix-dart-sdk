@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
-
 import 'package:matrix/matrix_api_lite/generated/fixed_model.dart';
 import 'package:matrix/matrix_api_lite/generated/internal.dart';
 import 'package:matrix/matrix_api_lite/generated/model.dart';
@@ -18,8 +17,10 @@ class Api {
   Client httpClient;
   Uri? baseUri;
   String? bearerToken;
+
   Api({Client? httpClient, this.baseUri, this.bearerToken})
     : httpClient = httpClient ?? Client();
+
   Never unexpectedResponse(BaseResponse response, Uint8List body) {
     throw Exception('http error response');
   }
@@ -4102,23 +4103,27 @@ class Api {
   ///
   /// [roomId] The room identifier (not alias) to which to invite the user.
   ///
-  /// [address] The invitee's third-party identifier.
+  /// [address] The invitee's third-party identifier or contact detail of invitee.
   ///
-  /// [idAccessToken] An access token previously registered with the identity server. Servers
+  /// [idAccessToken] Optional An access token previously registered with the identity server. Servers
   /// can treat this as optional to distinguish between r0.5-compatible clients
   /// and this specification version.
   ///
-  /// [idServer] The hostname+port of the identity server which should be used for third-party identifier lookups.
+  /// [idServer] Optional The hostname+port of the identity server which should be used for third-party identifier lookups.
   ///
-  /// [medium] The kind of address being passed in the address field, for example
+  /// [medium] Optional The kind of address being passed in the address field, for example
   /// `email` (see [the list of recognised values](https://spec.matrix.org/unstable/appendices/#3pid-types)).
+  ///
+  /// [reason] Optional reason to be included as the `reason` on the subsequent
+  /// membership event.
   Future<void> inviteBy3PID(
     String roomId,
-    String address,
-    String idAccessToken,
-    String idServer,
-    String medium,
-  ) async {
+    String address, {
+    String? medium,
+    String? idAccessToken,
+    String? idServer,
+    String? reason,
+  }) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/rooms/${Uri.encodeComponent(roomId)}/invite',
     );
@@ -4128,9 +4133,10 @@ class Api {
     request.bodyBytes = utf8.encode(
       jsonEncode({
         'address': address,
-        'id_access_token': idAccessToken,
-        'id_server': idServer,
-        'medium': medium,
+        if (idAccessToken != null) 'id_access_token': idAccessToken,
+        if (idServer != null) 'id_server': idServer,
+        if (medium != null) 'medium': medium,
+        if (reason != null) 'reason': reason,
       }),
     );
     final response = await httpClient.send(request);

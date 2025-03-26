@@ -193,7 +193,7 @@ void main() async {
 
       expect(client.getArchiveRoomFromCache(roomid) != null, true);
       expect(client.getRoomById(roomid)?.membership, Membership.leave);
-    }, tags: 'olm',);
+    }, tags: 'olm');
 
     test('clear archive', () async {
       await client.loadArchiveWithTimeline();

@@ -670,7 +670,7 @@ void main() => group('Integration tests', () {
     }
     return;
   });
-}, timeout: Timeout(Duration(minutes: 6)),);
+}, timeout: Timeout(Duration(minutes: 6)));
 
 Object get olmLengthMatcher {
   return

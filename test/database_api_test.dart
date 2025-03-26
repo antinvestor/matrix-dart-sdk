@@ -477,7 +477,7 @@ void main() {
       test('getOlmSessionsForDevices', () async {
         final olm = await database.getOlmSessionsForDevices([
           'identityKeys',
-        ], 'userId',);
+        ], 'userId');
         expect(olm.isEmpty, true);
       });
       test('storeOlmSession', () async {
@@ -515,7 +515,7 @@ void main() {
       test('getUnimportantRoomEventStatesForRoom', () async {
         final events = await database.getUnimportantRoomEventStatesForRoom([
           'events',
-        ], Room(id: '!mep', client: Client('testclient')),);
+        ], Room(id: '!mep', client: Client('testclient')));
         expect(events.isEmpty, true);
       });
       test('getUserDeviceKeys', () async {

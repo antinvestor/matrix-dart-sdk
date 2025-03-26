@@ -71,7 +71,7 @@ void main() {
           'event_id': 'transaction-1',
           'sender': '@blah:blubb',
           'status': EventStatus.sending.intValue,
-        }, room,),
+        }, room),
         EventUpdateType.timeline,
         client,
       );
@@ -88,7 +88,7 @@ void main() {
           'sender': '@blah:blubb',
           'unsigned': <String, dynamic>{'transaction_id': 'transaction-1'},
           'status': EventStatus.sent.intValue,
-        }, room,),
+        }, room),
         EventUpdateType.timeline,
         client,
       );
@@ -106,7 +106,7 @@ void main() {
           'event_id': '\$event-3',
           'sender': '@blah:blubb',
           'status': EventStatus.sending.intValue,
-        }, room,),
+        }, room),
         EventUpdateType.timeline,
         client,
       );
@@ -123,7 +123,7 @@ void main() {
           'sender': '@blah:blubb',
           'status': EventStatus.sent.intValue,
           'unsigned': <String, dynamic>{'transaction_id': 'transaction-2'},
-        }, room,),
+        }, room),
         EventUpdateType.timeline,
         client,
       );
@@ -143,7 +143,7 @@ void main() {
           'event_id': '\$event-4',
           'sender': '@blah:blubb',
           'status': EventStatus.synced.intValue,
-        }, room,),
+        }, room),
         EventUpdateType.timeline,
         client,
       );
@@ -160,7 +160,7 @@ void main() {
           'sender': '@blah:blubb',
           'status': EventStatus.sent.intValue,
           'unsigned': <String, dynamic>{'transaction_id': 'transaction-3'},
-        }, room,),
+        }, room),
         EventUpdateType.timeline,
         client,
       );

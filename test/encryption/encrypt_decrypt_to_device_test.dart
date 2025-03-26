@@ -75,7 +75,7 @@ void main() {
           'curve25519:${client.deviceID}': client.identityKey,
           'ed25519:${client.deviceID}': client.fingerprintKey,
         },
-      }, client,);
+      }, client);
     });
 
     test('encryptToDeviceMessage', () async {

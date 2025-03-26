@@ -321,7 +321,7 @@ void main() {
           'sender_key': 'IlRMeOPX2e0MurIyfWEucYBRVOEEUMrOHqn/8mLqMjA',
           'session_id': 'X3lUlvLELLYxeTx4yOVu6UDpasGEVO0Jbu+QFnm0cKQ',
         }),
-      }, Room(id: '!1234:example.com', client: matrix),);
+      }, Room(id: '!1234:example.com', client: matrix));
 
       await event2.requestKey();
 
@@ -374,7 +374,7 @@ void main() {
             'unsigned': {'age': 1234},
           },
         },
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Removed by Example',
@@ -416,7 +416,7 @@ void main() {
           'displayname': 1,
           'membership': 'join',
         },
-      }, room,);
+      }, room);
       expect(event.isEventTypeKnown, true);
 
       event = Event.fromJson({
@@ -443,7 +443,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.sticker',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example sent a sticker',
@@ -459,7 +459,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.room.redaction',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example redacted an event',
@@ -477,7 +477,7 @@ void main() {
         'state_key': 'example.org',
         'type': 'm.room.aliases',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example changed the room aliases',
@@ -495,7 +495,7 @@ void main() {
         'state_key': 'example.org',
         'type': 'm.room.aliases',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example changed the room aliases',
@@ -511,7 +511,7 @@ void main() {
         'state_key': '',
         'type': 'm.room.canonical_alias',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example changed the room invitation link',
@@ -535,7 +535,7 @@ void main() {
         'state_key': '',
         'type': 'm.room.create',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example created the chat',
@@ -554,7 +554,7 @@ void main() {
         'state_key': '',
         'type': 'm.room.tombstone',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Room has been upgraded',
@@ -570,7 +570,7 @@ void main() {
         'state_key': '',
         'type': 'm.room.join_rules',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example changed the join rules to Anyone can join',
@@ -590,7 +590,7 @@ void main() {
         'state_key': '@alice:example.org',
         'type': 'm.room.member',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(event.roomMemberChangeType, RoomMemberChangeType.join);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
@@ -606,7 +606,7 @@ void main() {
         'sender': '@example:example.org',
         'state_key': '@alice:example.org',
         'type': 'm.room.member',
-      }, room,);
+      }, room);
       expect(event.roomMemberChangeType, RoomMemberChangeType.invite);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
@@ -625,7 +625,7 @@ void main() {
         'unsigned': {
           'prev_content': {'membership': 'join'},
         },
-      }, room,);
+      }, room);
       expect(event.roomMemberChangeType, RoomMemberChangeType.kick);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
@@ -644,7 +644,7 @@ void main() {
         'unsigned': {
           'prev_content': {'membership': 'join'},
         },
-      }, room,);
+      }, room);
       expect(event.roomMemberChangeType, RoomMemberChangeType.ban);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
@@ -663,7 +663,7 @@ void main() {
         'unsigned': {
           'prev_content': {'membership': 'invite'},
         },
-      }, room,);
+      }, room);
       expect(event.roomMemberChangeType, RoomMemberChangeType.acceptInvite);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
@@ -682,7 +682,7 @@ void main() {
         'unsigned': {
           'prev_content': {'membership': 'join'},
         },
-      }, room,);
+      }, room);
       expect(event.roomMemberChangeType, RoomMemberChangeType.invite);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
@@ -701,7 +701,7 @@ void main() {
         'unsigned': {
           'prev_content': {'membership': 'invite'},
         },
-      }, room,);
+      }, room);
       expect(
         event.roomMemberChangeType,
         RoomMemberChangeType.withdrawInvitation,
@@ -723,7 +723,7 @@ void main() {
         'unsigned': {
           'prev_content': {'membership': 'invite'},
         },
-      }, room,);
+      }, room);
       expect(event.roomMemberChangeType, RoomMemberChangeType.rejectInvite);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
@@ -751,7 +751,7 @@ void main() {
         'state_key': '',
         'type': 'm.room.power_levels',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example changed the chat permissions',
@@ -767,7 +767,7 @@ void main() {
         'state_key': '',
         'type': 'm.room.name',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example changed the chat name to The room name',
@@ -783,7 +783,7 @@ void main() {
         'state_key': '',
         'type': 'm.room.topic',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example changed the chat description to A room topic',
@@ -802,7 +802,7 @@ void main() {
         'state_key': '',
         'type': 'm.room.avatar',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example changed the chat avatar',
@@ -818,7 +818,7 @@ void main() {
         'state_key': '',
         'type': 'm.room.history_visibility',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example changed the history visibility to Visible for all participants',
@@ -838,7 +838,7 @@ void main() {
         'state_key': '',
         'type': 'm.room.encryption',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example activated end to end encryption. Need pantalaimon',
@@ -858,7 +858,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.room.message',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'This is an example text message',
@@ -878,7 +878,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.room.message',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         '* thinks this is an example emote',
@@ -898,7 +898,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.room.message',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'This is an example notice',
@@ -918,7 +918,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.room.message',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example sent a picture',
@@ -939,7 +939,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.room.message',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example sent a file',
@@ -963,7 +963,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.room.message',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example sent an audio',
@@ -991,7 +991,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.room.message',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example shared the location',
@@ -1024,7 +1024,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.room.message',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example sent a video',
@@ -1039,7 +1039,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'unknown.event.type',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Unknown event unknown.event.type',
@@ -1065,7 +1065,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.room.message',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(
           MatrixDefaultLocalizations(),
@@ -1097,7 +1097,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.room.message',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(
           MatrixDefaultLocalizations(),
@@ -1127,7 +1127,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.room.message',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(
           MatrixDefaultLocalizations(),
@@ -1159,7 +1159,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.room.message',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(
           MatrixDefaultLocalizations(),
@@ -1208,7 +1208,7 @@ void main() {
         'sender': '@example:example.org',
         'type': 'm.room.message',
         'unsigned': {'age': 1234},
-      }, room,);
+      }, room);
       expect(
         await event.calcLocalizedBody(MatrixDefaultLocalizations()),
         'Example requested key verification',
@@ -1254,7 +1254,7 @@ void main() {
         'type': 'm.room.message',
         'sender': '@example:example.org',
         'event_id': '\$source',
-      }, room,);
+      }, room);
       final edit1 = Event.fromJson({
         'content': {
           'body': 'blah',
@@ -1267,7 +1267,7 @@ void main() {
         'type': 'm.room.message',
         'sender': '@example:example.org',
         'event_id': '\$edit1',
-      }, room,);
+      }, room);
       final edit2 = Event.fromJson({
         'content': {
           'body': 'blah',
@@ -1280,7 +1280,7 @@ void main() {
         'type': 'm.room.message',
         'sender': '@example:example.org',
         'event_id': '\$edit2',
-      }, room,);
+      }, room);
       final timeline = Timeline(
         chunk: TimelineChunk(events: <Event>[event, edit1, edit2]),
         room: room,
@@ -1324,7 +1324,7 @@ void main() {
         },
         'event_id': '\$source',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.plaintextBody, '**blah**');
     });
 
@@ -1339,7 +1339,7 @@ void main() {
         },
         'event_id': '\$source',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.body, 'blah');
 
       final event2 = Event.fromJson({
@@ -1352,7 +1352,7 @@ void main() {
         },
         'event_id': '\$source',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event2.body, 'm.room.message');
     });
 
@@ -1394,7 +1394,7 @@ void main() {
             },
             'event_id': '\$source',
             'sender': '@alice:example.org',
-          }, room,);
+          }, room);
 
           expect(
             event.calcUnlocalizedBody(
@@ -1912,7 +1912,7 @@ void main() {
         'content': {'body': 'blah', 'msgtype': 'm.text'},
         'event_id': '\$source',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       final edit1 = Event.fromJson({
         'type': EventTypes.Message,
         'content': {
@@ -1926,7 +1926,7 @@ void main() {
         },
         'event_id': '\$edit1',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       final edit2 = Event.fromJson({
         'type': EventTypes.Message,
         'content': {
@@ -1940,7 +1940,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       final edit3 = Event.fromJson({
         'type': EventTypes.Message,
         'content': {
@@ -1954,7 +1954,7 @@ void main() {
         },
         'event_id': '\$edit3',
         'sender': '@bob:example.org',
-      }, room,);
+      }, room);
       // no edits
       var displayEvent = event.getDisplayEvent(
         Timeline(chunk: TimelineChunk(events: <Event>[event]), room: room),
@@ -2004,7 +2004,7 @@ void main() {
             'type': 'm.room.redaction',
           },
         },
-      }, room,);
+      }, room);
       displayEvent = event.getDisplayEvent(
         Timeline(
           chunk: TimelineChunk(events: <Event>[event, edit1, edit2, edit3]),
@@ -2037,7 +2037,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       var buffer = await event.downloadAndDecryptAttachment(
         downloadCallback: downloadCallback,
       );
@@ -2066,7 +2066,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.hasAttachment, true);
       expect(event.hasThumbnail, true);
       expect(event.isAttachmentEncrypted, false);
@@ -2170,7 +2170,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       var buffer = await event.downloadAndDecryptAttachment(
         downloadCallback: downloadCallback,
       );
@@ -2216,7 +2216,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.hasAttachment, true);
       expect(event.hasThumbnail, true);
       expect(event.isAttachmentEncrypted, true);
@@ -2263,7 +2263,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(await event.isAttachmentInLocalStore(), false);
       var buffer = await event.downloadAndDecryptAttachment(
         downloadCallback: downloadCallback,
@@ -2311,7 +2311,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
 
       var buffer = await event.downloadAndDecryptAttachment(
         downloadCallback: downloadCallback,
@@ -2374,7 +2374,7 @@ void main() {
           },
           'event_id': '\$edit2',
           'sender': '@alice:example.org',
-        }, room,);
+        }, room);
 
         expect(
           () async => await event.downloadAndDecryptAttachment(
@@ -2396,7 +2396,7 @@ void main() {
         'content': {'msgtype': 'm.text', 'body': 'normal message'},
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.onlyEmotes, false);
       expect(event.numberEmotes, 0);
       event = Event.fromJson({
@@ -2407,7 +2407,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.onlyEmotes, false);
       expect(event.numberEmotes, 0);
       event = Event.fromJson({
@@ -2418,7 +2418,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.onlyEmotes, false);
       expect(event.numberEmotes, 1);
       event = Event.fromJson({
@@ -2426,7 +2426,7 @@ void main() {
         'content': {'msgtype': 'm.text', 'body': '🦊'},
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.onlyEmotes, true);
       expect(event.numberEmotes, 1);
       event = Event.fromJson({
@@ -2434,7 +2434,7 @@ void main() {
         'content': {'msgtype': 'm.text', 'body': '🦊🦊 🦊\n🦊🦊'},
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.onlyEmotes, true);
       expect(event.numberEmotes, 5);
       event = Event.fromJson({
@@ -2447,7 +2447,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.onlyEmotes, false);
       expect(event.numberEmotes, 0);
       event = Event.fromJson({
@@ -2460,7 +2460,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.onlyEmotes, true);
       expect(event.numberEmotes, 1);
       event = Event.fromJson({
@@ -2473,7 +2473,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.onlyEmotes, true);
       expect(event.numberEmotes, 1);
       event = Event.fromJson({
@@ -2486,7 +2486,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.onlyEmotes, true);
       expect(event.numberEmotes, 2);
       // with variant selector
@@ -2495,7 +2495,7 @@ void main() {
         'content': {'msgtype': 'm.text', 'body': '❤️'},
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.onlyEmotes, true);
       expect(event.numberEmotes, 1);
       event = Event.fromJson({
@@ -2511,7 +2511,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.onlyEmotes, true);
       expect(event.numberEmotes, 3);
       event = Event.fromJson({
@@ -2527,7 +2527,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.onlyEmotes, true);
       expect(event.numberEmotes, 2);
       event = Event.fromJson({
@@ -2543,7 +2543,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.onlyEmotes, false);
       expect(event.numberEmotes, 2);
       event = Event.fromJson({
@@ -2559,7 +2559,7 @@ void main() {
         },
         'event_id': '\$edit2',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       expect(event.onlyEmotes, false);
       expect(event.numberEmotes, 2);
     });

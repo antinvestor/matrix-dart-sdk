@@ -1333,9 +1333,10 @@ class Room {
       client.inviteBy3PID(
         id,
         contact.detail!,
-        client.accessToken ?? '',
-        client.baseUri.toString(),
-        contact.contactType!.name,
+        idAccessToken: client.accessToken,
+        idServer: client.baseUri.toString(),
+        medium: contact.getMedium(),
+        reason: reason,
       );
 
   /// Request more previous events from the server. [historyCount] defines how many events should

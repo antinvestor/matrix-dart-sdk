@@ -123,7 +123,7 @@ void main() {
           'status': EventStatus.synced.intValue,
           'event_id': '2',
           'origin_server_ts': testTimeStamp - 1000,
-        }, room,),
+        }, room),
       );
       client.onTimelineEvent.add(
         Event.fromJson({
@@ -133,7 +133,7 @@ void main() {
           'status': EventStatus.synced.intValue,
           'event_id': '\$1',
           'origin_server_ts': testTimeStamp,
-        }, room,),
+        }, room),
       );
 
       expect(timeline.timelineSub != null, true);
@@ -201,7 +201,7 @@ void main() {
           'redacts': '2',
           'event_id': '3',
           'origin_server_ts': testTimeStamp + 1000,
-        }, room,),
+        }, room),
       );
 
       await waitForCount(3);
@@ -586,7 +586,7 @@ void main() {
           'event_id': eventId,
           'unsigned': {'transaction_id': '1234'},
           'origin_server_ts': DateTime.now().millisecondsSinceEpoch,
-        }, room,),
+        }, room),
       );
 
       await waitForCount(3);
@@ -609,7 +609,7 @@ void main() {
           'status': EventStatus.sending.intValue,
           'event_id': 'abc',
           'origin_server_ts': testTimeStamp,
-        }, room,),
+        }, room),
       );
       await waitForCount(1);
 
@@ -641,7 +641,7 @@ void main() {
           'status': EventStatus.sending.intValue,
           'event_id': 'abc',
           'origin_server_ts': testTimeStamp,
-        }, room,),
+        }, room),
       );
       await waitForCount(1);
 
@@ -664,7 +664,7 @@ void main() {
           'status': EventStatus.sending.intValue,
           'event_id': 'abc',
           'origin_server_ts': testTimeStamp,
-        }, room,),
+        }, room),
       );
       await waitForCount(1);
       var event = await timeline.getEventById('abc');
@@ -692,7 +692,7 @@ void main() {
           'event_id': 'new-test-event',
           'origin_server_ts': testTimeStamp,
           'unsigned': {'transaction_id': 'newresend'},
-        }, room,),
+        }, room),
       );
       await waitForCount(1);
       expect(timeline.events[0].status, EventStatus.error);
@@ -757,7 +757,7 @@ void main() {
           'status': EventStatus.error.intValue,
           'event_id': 'abc',
           'origin_server_ts': testTimeStamp,
-        }, room,),
+        }, room),
       );
       client.onTimelineEvent.add(
         Event.fromJson({
@@ -767,7 +767,7 @@ void main() {
           'status': EventStatus.synced.intValue,
           'event_id': 'def',
           'origin_server_ts': testTimeStamp + 5,
-        }, room,),
+        }, room),
       );
       await Future.delayed(Duration(milliseconds: 50));
       expect(timeline.events[0].status, EventStatus.error);
@@ -784,7 +784,7 @@ void main() {
           'status': EventStatus.sending.intValue,
           'event_id': 'will-fail',
           'origin_server_ts': DateTime.now().millisecondsSinceEpoch,
-        }, room,),
+        }, room),
       );
       await Future.delayed(Duration(milliseconds: 50));
       expect(timeline.events[0].status, EventStatus.sending);
@@ -797,7 +797,7 @@ void main() {
           'status': EventStatus.error.intValue,
           'event_id': 'will-fail',
           'origin_server_ts': testTimeStamp,
-        }, room,),
+        }, room),
       );
       await Future.delayed(Duration(milliseconds: 50));
       expect(timeline.events[0].status, EventStatus.error);
@@ -812,7 +812,7 @@ void main() {
           'status': EventStatus.synced.intValue,
           'event_id': 'will-work',
           'origin_server_ts': DateTime.now().millisecondsSinceEpoch,
-        }, room,),
+        }, room),
       );
       await Future.delayed(Duration(milliseconds: 50));
       room.notificationCount = 1;
@@ -831,7 +831,7 @@ void main() {
             'status': EventStatus.sending.intValue,
             'event_id': 'transaction',
             'origin_server_ts': DateTime.now().millisecondsSinceEpoch,
-          }, room,),
+          }, room),
         );
         await Future.delayed(Duration(milliseconds: 50));
         expect(timeline.events[0].status, EventStatus.sending);
@@ -845,7 +845,7 @@ void main() {
             'event_id': '\$event',
             'origin_server_ts': testTimeStamp,
             'unsigned': {'transaction_id': 'transaction'},
-          }, room,),
+          }, room),
         );
         await Future.delayed(Duration(milliseconds: 50));
         expect(timeline.events[0].status, EventStatus.sent);
@@ -859,7 +859,7 @@ void main() {
             'event_id': '\$event',
             'origin_server_ts': testTimeStamp,
             'unsigned': {'transaction_id': 'transaction'},
-          }, room,),
+          }, room),
         );
         await Future.delayed(Duration(milliseconds: 50));
         expect(timeline.events[0].status, EventStatus.synced);
@@ -881,7 +881,7 @@ void main() {
               messageSendingStatusKey: EventStatus.sending.intValue,
               'transaction_id': 'transaction',
             },
-          }, room,),
+          }, room),
         );
         await Future.delayed(Duration(milliseconds: 50));
         expect(timeline.events[0].status, EventStatus.sending);
@@ -897,7 +897,7 @@ void main() {
               'transaction_id': 'transaction',
               messageSendingStatusKey: EventStatus.synced.intValue,
             },
-          }, room,),
+          }, room),
         );
         await Future.delayed(Duration(milliseconds: 50));
         expect(timeline.events[0].status, EventStatus.synced);
@@ -913,7 +913,7 @@ void main() {
               'transaction_id': 'transaction',
               messageSendingStatusKey: EventStatus.sent.intValue,
             },
-          }, room,),
+          }, room),
         );
         await Future.delayed(Duration(milliseconds: 50));
         expect(timeline.events[0].status, EventStatus.synced);
@@ -930,7 +930,7 @@ void main() {
           'status': EventStatus.sending.intValue,
           'event_id': 'transaction',
           'origin_server_ts': DateTime.now().millisecondsSinceEpoch,
-        }, room,),
+        }, room),
       );
       await Future.delayed(Duration(milliseconds: 50));
       expect(timeline.events[0].status, EventStatus.sending);
@@ -943,7 +943,7 @@ void main() {
           'status': EventStatus.error.intValue,
           'origin_server_ts': testTimeStamp,
           'unsigned': {'transaction_id': 'transaction'},
-        }, room,),
+        }, room),
       );
       await Future.delayed(Duration(milliseconds: 50));
       expect(timeline.events[0].status, EventStatus.error);
@@ -957,7 +957,7 @@ void main() {
           'event_id': '\$event',
           'origin_server_ts': testTimeStamp,
           'unsigned': {'transaction_id': 'transaction'},
-        }, room,),
+        }, room),
       );
       await Future.delayed(Duration(milliseconds: 50));
       expect(timeline.events[0].status, EventStatus.synced);
@@ -973,7 +973,7 @@ void main() {
           'status': EventStatus.sending.intValue,
           'event_id': 'transaction',
           'origin_server_ts': DateTime.now().millisecondsSinceEpoch,
-        }, room,),
+        }, room),
       );
       await Future.delayed(Duration(milliseconds: 50));
       expect(timeline.events[0].status, EventStatus.sending);
@@ -987,7 +987,7 @@ void main() {
           'event_id': '\$event',
           'origin_server_ts': testTimeStamp,
           'unsigned': {'transaction_id': 'transaction'},
-        }, room,),
+        }, room),
       );
       await Future.delayed(Duration(milliseconds: 50));
       expect(timeline.events[0].status, EventStatus.synced);
@@ -1000,7 +1000,7 @@ void main() {
           'status': EventStatus.error.intValue,
           'origin_server_ts': testTimeStamp,
           'unsigned': {'transaction_id': 'transaction'},
-        }, room,),
+        }, room),
       );
       await Future.delayed(Duration(milliseconds: 50));
       expect(timeline.events[0].status, EventStatus.synced);

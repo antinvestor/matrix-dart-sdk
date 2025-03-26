@@ -949,7 +949,7 @@ void main() {
       final dynamic resp = await room.sendEvent({
         'msgtype': 'm.text',
         'body': 'hello world',
-      }, txid: 'testtxid',);
+      }, txid: 'testtxid');
       expect(resp?.startsWith('\$event'), true);
     });
 
@@ -993,7 +993,7 @@ void main() {
         'content': {'body': 'Blah', 'msgtype': 'm.text'},
         'type': 'm.room.message',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       FakeMatrixApi.calledEndpoints.clear();
       var resp = await room.sendTextEvent(
         'Hello world',
@@ -1021,7 +1021,7 @@ void main() {
         'content': {'body': '<b>Blah</b>\nbeep', 'msgtype': 'm.text'},
         'type': 'm.room.message',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       FakeMatrixApi.calledEndpoints.clear();
       resp = await room.sendTextEvent(
         'Hello world\nfox',
@@ -1055,7 +1055,7 @@ void main() {
         },
         'type': 'm.room.message',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       FakeMatrixApi.calledEndpoints.clear();
       resp = await room.sendTextEvent(
         'Hello world',
@@ -1083,7 +1083,7 @@ void main() {
         'content': {'body': 'Hey @room', 'msgtype': 'm.text'},
         'type': 'm.room.message',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       FakeMatrixApi.calledEndpoints.clear();
       resp = await room.sendTextEvent(
         'Hello world',
@@ -1121,7 +1121,7 @@ void main() {
         },
         'type': 'm.room.message',
         'sender': '@alice:example.org',
-      }, room,);
+      }, room);
       FakeMatrixApi.calledEndpoints.clear();
       resp = await room.sendTextEvent(
         'Fox',
@@ -1290,7 +1290,7 @@ void main() {
           'state_key': '',
           'type': 'm.room.join_rules',
           'unsigned': {'age': 1234},
-        }, room,),
+        }, room),
       );
       expect(room.joinRules, JoinRules.invite);
       await room.setJoinRules(JoinRules.invite);
@@ -1309,7 +1309,7 @@ void main() {
           'state_key': '',
           'type': 'm.room.guest_access',
           'unsigned': {'age': 1234},
-        }, room,),
+        }, room),
       );
       expect(room.guestAccess, GuestAccess.canJoin);
       await room.setGuestAccess(GuestAccess.canJoin);
@@ -1328,7 +1328,7 @@ void main() {
           'state_key': '',
           'type': 'm.room.history_visibility',
           'unsigned': {'age': 1234},
-        }, room,),
+        }, room),
       );
       expect(room.historyVisibility, HistoryVisibility.shared);
       await room.setHistoryVisibility(HistoryVisibility.joined);
@@ -1346,7 +1346,7 @@ void main() {
             'sender': '@example:example.org',
             'type': 'm.custom',
             'unsigned': {'age': 1234},
-          }, room,),
+          }, room),
         );
       } catch (_) {}
       expect(room.getState('m.custom') != null, false);
@@ -1362,7 +1362,7 @@ void main() {
           'state_key': '',
           'type': 'm.custom',
           'unsigned': {'age': 1234},
-        }, room,),
+        }, room),
       );
       expect(room.getState('m.custom') != null, true);
 
@@ -1377,7 +1377,7 @@ void main() {
             'sender': '@example:example.org',
             'type': 'm.room.message',
             'unsigned': {'age': 1234},
-          }, room,),
+          }, room),
         );
       } catch (_) {}
       expect(room.getState('m.room.message') == null, true);
@@ -1402,7 +1402,7 @@ void main() {
           'state_key': 'test',
           'origin_server_ts': 1432735824653,
           'type': 'm.widget',
-        }, room,),
+        }, room),
       };
       expect(room.widgets.length, 1);
       room.states['m.widget'] = {
@@ -1421,7 +1421,7 @@ void main() {
           'state_key': 'test2',
           'origin_server_ts': 1432735824653,
           'type': 'm.widget',
-        }, room,),
+        }, room),
       };
       expect(room.widgets.length, 1);
       room.states['m.widget'] = {
@@ -1438,7 +1438,7 @@ void main() {
           'state_key': 'test3',
           'origin_server_ts': 1432735824655,
           'type': 'm.widget',
-        }, room,),
+        }, room),
       };
       expect(room.widgets.length, 0);
     });
@@ -1455,7 +1455,7 @@ void main() {
           'type': 'm.room.create',
           'unsigned': {'age': 1234},
           'state_key': '',
-        }, room,),
+        }, room),
       };
       expect(room.isSpace, true);
 
@@ -1472,7 +1472,7 @@ void main() {
           'type': EventTypes.SpaceParent,
           'unsigned': {'age': 1234},
           'state_key': '!1234:example.invalid',
-        }, room,),
+        }, room),
       };
       expect(room.spaceParents.length, 1);
 
@@ -1490,7 +1490,7 @@ void main() {
           'type': EventTypes.SpaceChild,
           'unsigned': {'age': 1234},
           'state_key': '!b:example.invalid',
-        }, room,),
+        }, room),
         '!c:example.invalid': Event.fromJson({
           'content': {
             'via': ['example.invalid'],
@@ -1503,7 +1503,7 @@ void main() {
           'type': EventTypes.SpaceChild,
           'unsigned': {'age': 1234},
           'state_key': '!c:example.invalid',
-        }, room,),
+        }, room),
         '!noorder:example.invalid': Event.fromJson({
           'content': {
             'via': ['example.invalid'],
@@ -1515,7 +1515,7 @@ void main() {
           'type': EventTypes.SpaceChild,
           'unsigned': {'age': 1234},
           'state_key': '!noorder:example.invalid',
-        }, room,),
+        }, room),
         '!a:example.invalid': Event.fromJson({
           'content': {
             'via': ['example.invalid'],
@@ -1528,7 +1528,7 @@ void main() {
           'type': EventTypes.SpaceChild,
           'unsigned': {'age': 1234},
           'state_key': '!a:example.invalid',
-        }, room,),
+        }, room),
       };
       expect(room.spaceChildren.length, 4);
 

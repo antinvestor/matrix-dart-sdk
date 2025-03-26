@@ -143,7 +143,7 @@ class MeshBackend extends CallBackend {
 
     call.onCallStateChanged.stream.listen(((event) async {
       await _onCallStateChanged(call, event);
-    }),);
+    }));
 
     call.onCallReplaced.stream.listen((CallSession newCall) async {
       await _replaceCall(groupCall, call, newCall);

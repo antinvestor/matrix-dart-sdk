@@ -236,7 +236,7 @@ class LiveKitBackend extends CallBackend {
     try {
       final keyContent = EncryptionKeysEventContent([
         EncryptionKeyEntry(keyIndex, base64Encode(myLatestKey)),
-      ], groupCall.groupCallId,);
+      ], groupCall.groupCallId);
       final Map<String, Object> data = {
         ...keyContent.toJson(),
         // used to find group call in groupCalls when ToDeviceEvent happens,

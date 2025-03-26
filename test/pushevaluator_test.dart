@@ -342,7 +342,7 @@ void main() {
         'content': {'displayname': 'Nico', 'membership': 'join'},
         'room_id': room.id,
         'origin_server_ts': 5,
-      }, room,);
+      }, room);
 
       final ruleset = PushRuleSet(
         override: [
@@ -377,7 +377,7 @@ void main() {
         'content': {'displayname': 'Nico', 'membership': 'join'},
         'room_id': room.id,
         'origin_server_ts': 5,
-      }, room,);
+      }, room);
 
       final ruleset = PushRuleSet(
         override: [
@@ -429,7 +429,7 @@ void main() {
         },
         'room_id': room.id,
         'origin_server_ts': 5,
-      }, room,);
+      }, room);
 
       final ruleset = PushRuleSet(
         override: [

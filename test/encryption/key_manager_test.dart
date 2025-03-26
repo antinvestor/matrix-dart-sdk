@@ -240,7 +240,7 @@ void main() {
                 '94GSg8N9vNB8wyWHJtKaaX3MGNWPVOjBatJM+TijY6B1RlDFJT5Cl1h/tjr17AoQz0CDdOf6uFhrYsBkH1/ABg',
           },
         },
-      }, client,);
+      }, client);
       await client.encryption!.keyManager.clearOrUseOutboundGroupSession(
         roomId,
       );

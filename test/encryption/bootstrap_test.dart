@@ -95,7 +95,7 @@ void main() {
         json.encode(client.accountData['foxes']!.content),
       );
       origKeyId = defaultKey.keyId;
-    }, timeout: Timeout(Duration(minutes: 2)),);
+    }, timeout: Timeout(Duration(minutes: 2)));
 
     test('change recovery passphrase', () async {
       Bootstrap? bootstrap;
@@ -144,7 +144,7 @@ void main() {
       }
 
       expect(await defaultKey.getStored('foxes'), 'floof');
-    }, timeout: Timeout(Duration(minutes: 2)),);
+    }, timeout: Timeout(Duration(minutes: 2)));
 
     test(
       'change passphrase with multiple keys',
@@ -227,7 +227,7 @@ void main() {
       }
       final defaultKey = client.encryption!.ssss.open();
       await defaultKey.unlock(passphrase: 'thenewestfoxies');
-    }, timeout: Timeout(Duration(minutes: 2)),);
+    }, timeout: Timeout(Duration(minutes: 2)));
 
     test('bad ssss', () async {
       client.accountData.clear();

@@ -5707,6 +5707,21 @@ class ProfileContact {
   String? detail;
   ContactType? contactType;
 
+  String getMedium() {
+    if (contactType != null) {
+      return contactType!.name;
+    }
+
+    if (isValidEmail(detail)) {
+      contactType = ContactType.cEmail;
+    } else if (isValidMsisdn(detail)) {
+      contactType = ContactType.cMsisdn;
+    } else {
+      return '';
+    }
+    return contactType!.name;
+  }
+
   @dart.override
   bool operator ==(Object other) =>
       identical(this, other) ||

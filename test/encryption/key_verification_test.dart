@@ -40,7 +40,7 @@ Event getLastSentEvent(KeyVerification req) {
     'content': content,
     'origin_server_ts': DateTime.now().millisecondsSinceEpoch,
     'sender': req.client.userID,
-  }, req.room!,);
+  }, req.room!);
 }
 
 void main() async {
@@ -636,7 +636,7 @@ void main() async {
           },
           'origin_server_ts': DateTime.now().millisecondsSinceEpoch,
           'sender': client2.userID,
-        }, req2.room!,),
+        }, req2.room!),
       );
       expect(req2.state, KeyVerificationState.error);
 

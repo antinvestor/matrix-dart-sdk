@@ -79,7 +79,7 @@ class User extends StrippedStateEvent {
       return e.toString() == 'Membership.${content['membership']}';
     }
     return false;
-  }, orElse: () => Membership.join,);
+  }, orElse: () => Membership.join);
 
   /// The avatar if the user has one.
   Uri? get avatarUrl {
@@ -148,13 +148,6 @@ class User extends StrippedStateEvent {
     initialState: initialState,
     waitForSync: waitForSync,
   );
-
-  /// The newest presence of this user if there is any and null if not.
-  @Deprecated('Deprecated in favour of currentPresence.')
-  Presence? get presence => room.client.presences[id]?.toPresence();
-
-  @Deprecated('Use fetchCurrentPresence() instead')
-  Future<CachedPresence> get currentPresence => fetchCurrentPresence();
 
   /// The newest presence of this user if there is any. Fetches it from the
   /// database first and then from the server if necessary or returns offline.
@@ -243,6 +236,7 @@ class User extends StrippedStateEvent {
 }
 
 const _maximumHashLength = 10000;
+
 String _hash(String s) =>
     (s.codeUnits.fold<int>(0, (a, b) => a + b) % _maximumHashLength).toString();
 

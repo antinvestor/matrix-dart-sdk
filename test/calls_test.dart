@@ -262,7 +262,7 @@ void main() {
           'sdpMid': '0',
           'sdpMLineIndex': 0,
         },
-      ], txid: '1234',);
+      ], txid: '1234');
 
       expect(call.state, CallState.kConnecting);
 
