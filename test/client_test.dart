@@ -1271,7 +1271,7 @@ void main() {
             {
               'content': {'algorithm': 'm.megolm.v1.aes-sha2'},
               'type': 'm.room.encryption',
-            }
+            },
           ],
           'invite': ['@alice:example.com'],
           'is_direct': true,

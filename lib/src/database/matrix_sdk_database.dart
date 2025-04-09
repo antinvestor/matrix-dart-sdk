@@ -1724,11 +1724,11 @@ class MatrixSdkDatabase extends DatabaseApi with DatabaseFileStorage {
   }
 
   @override
-  Future<void> markUserProfileAsOutdated(profileId) async {
-    final profile = await getUserProfile(profileId);
+  Future<void> markUserProfileAsOutdated(String userId) async {
+    final profile = await getUserProfile(userId);
     if (profile == null) return;
     await _userProfilesBox.put(
-      profileId,
+      userId,
       CachedProfileInformation.fromProfile(
         profile as Profile,
         outdated: true,

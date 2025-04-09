@@ -109,7 +109,8 @@ class DeviceKeysList {
           waitForSync: false,
           skipExistingChat: true, // to create a new room directly
         );
-        room = client.getRoomById(newRoomId) ??
+        room =
+            client.getRoomById(newRoomId) ??
             Room(id: newRoomId, client: client);
       }
 

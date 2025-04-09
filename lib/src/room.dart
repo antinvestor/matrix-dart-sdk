@@ -23,6 +23,7 @@ import 'dart:math';
 import 'package:async/async.dart';
 import 'package:collection/collection.dart';
 import 'package:html_unescape/html_unescape.dart';
+
 import 'package:matrix/matrix.dart';
 import 'package:matrix/src/models/timeline_chunk.dart';
 import 'package:matrix/src/utils/cached_stream_controller.dart';
@@ -1334,7 +1335,7 @@ class Room {
       address: contact.detail!,
       idAccessToken: client.accessToken ?? '',
       idServer: client.baseUri.toString(),
-      medium: contact.getMedium(),
+      medium: contact.getMedium() ?? '',
     );
 
     return client.inviteBy3PID(id, invite3pid, reason: reason);
