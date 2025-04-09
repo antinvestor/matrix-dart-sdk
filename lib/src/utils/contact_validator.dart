@@ -4,16 +4,32 @@ final _emailValidatorRegex = RegExp(
 
 final _msisdnValidatorRegex = RegExp(r'^[+][0-9\-()/.]\s?{6, 15}[0-9]$');
 
-bool isValidEmail(String? email) {
-  if (email == null) {
-    return false;
-  }
-  return _emailValidatorRegex.hasMatch(email);
-}
+final _msisdnCleanupRegex = RegExp(r'[^\d+]');
 
-bool isValidMsisdn(String? msisdn) {
-  if (msisdn == null) {
-    return false;
+class ContactUtil {
+  static bool isValidEmail(String? email) {
+    if (email == null) {
+      return false;
+    }
+    return _emailValidatorRegex.hasMatch(email);
   }
-  return _msisdnValidatorRegex.hasMatch(msisdn);
+
+  static bool isValidMsisdn(String? msisdn) {
+    if (msisdn == null) {
+      return false;
+    }
+    return _msisdnValidatorRegex.hasMatch(msisdn);
+  }
+
+  static String cleanPhoneNumber(String input) {
+    // Remove all non-digit and non-plus characters
+    final cleaned = input.replaceAll(_msisdnCleanupRegex, '');
+
+    // Remove '+' if not at the start
+    final fixed = cleaned.startsWith('+')
+        ? '+' + cleaned.substring(1).replaceAll('+', '')
+        : cleaned.replaceAll('+', '');
+
+    return fixed;
+  }
 }
