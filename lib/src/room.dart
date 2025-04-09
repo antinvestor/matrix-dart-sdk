@@ -1329,15 +1329,16 @@ class Room {
       client.inviteUser(id, userID, reason: reason);
 
   /// Call the Matrix API to invite a user to this room.
-  Future<void> inviteByContact(ProfileContact contact, {String? reason}) =>
-      client.inviteBy3PID(
-        id,
-        contact.detail!,
-        idAccessToken: client.accessToken,
-        idServer: client.baseUri.toString(),
-        medium: contact.getMedium(),
-        reason: reason,
-      );
+  Future<void> inviteByContact(ProfileContact contact, {String? reason}) {
+    final invite3pid = Invite3pid(
+      address: contact.detail!,
+      idAccessToken: client.accessToken ?? '',
+      idServer: client.baseUri.toString(),
+      medium: contact.getMedium(),
+    );
+
+    return client.inviteBy3PID(id, invite3pid, reason: reason);
+  }
 
   /// Request more previous events from the server. [historyCount] defines how many events should
   /// be received maximum. When the request is answered, [onHistoryReceived] will be triggered **before**

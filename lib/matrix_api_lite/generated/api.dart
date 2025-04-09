@@ -1074,7 +1074,7 @@ class Api {
     String clientSecret,
     String email,
     int sendAttempt, {
-    String? nextLink,
+    Uri? nextLink,
     String? idAccessToken,
     String? idServer,
   }) async {
@@ -1087,7 +1087,7 @@ class Api {
       jsonEncode({
         'client_secret': clientSecret,
         'email': email,
-        if (nextLink != null) 'next_link': nextLink,
+        if (nextLink != null) 'next_link': nextLink.toString(),
         'send_attempt': sendAttempt,
         if (idAccessToken != null) 'id_access_token': idAccessToken,
         if (idServer != null) 'id_server': idServer,
@@ -1150,7 +1150,7 @@ class Api {
     String country,
     String phoneNumber,
     int sendAttempt, {
-    String? nextLink,
+    Uri? nextLink,
     String? idAccessToken,
     String? idServer,
   }) async {
@@ -1163,7 +1163,7 @@ class Api {
       jsonEncode({
         'client_secret': clientSecret,
         'country': country,
-        if (nextLink != null) 'next_link': nextLink,
+        if (nextLink != null) 'next_link': nextLink.toString(),
         'phone_number': phoneNumber,
         'send_attempt': sendAttempt,
         if (idAccessToken != null) 'id_access_token': idAccessToken,
@@ -1406,7 +1406,7 @@ class Api {
     String clientSecret,
     String email,
     int sendAttempt, {
-    String? nextLink,
+    Uri? nextLink,
     String? idAccessToken,
     String? idServer,
   }) async {
@@ -1419,7 +1419,7 @@ class Api {
       jsonEncode({
         'client_secret': clientSecret,
         'email': email,
-        if (nextLink != null) 'next_link': nextLink,
+        if (nextLink != null) 'next_link': nextLink.toString(),
         'send_attempt': sendAttempt,
         if (idAccessToken != null) 'id_access_token': idAccessToken,
         if (idServer != null) 'id_server': idServer,
@@ -1489,7 +1489,7 @@ class Api {
     String country,
     String phoneNumber,
     int sendAttempt, {
-    String? nextLink,
+    Uri? nextLink,
     String? idAccessToken,
     String? idServer,
   }) async {
@@ -1502,7 +1502,7 @@ class Api {
       jsonEncode({
         'client_secret': clientSecret,
         'country': country,
-        if (nextLink != null) 'next_link': nextLink,
+        if (nextLink != null) 'next_link': nextLink.toString(),
         'phone_number': phoneNumber,
         'send_attempt': sendAttempt,
         if (idAccessToken != null) 'id_access_token': idAccessToken,
@@ -2122,7 +2122,7 @@ class Api {
 
   /// *Note that this API takes either a room ID or alias, unlike* `/rooms/{roomId}/join`.
   ///
-  /// This API starts a user participating in a particular room, if that user
+  /// This API starts a user's participation in a particular room, if that user
   /// is allowed to participate in that room. After this call, the client is
   /// allowed to see all current state events in the room, and all subsequent
   /// events associated with the room until the user leaves the room.
@@ -2132,9 +2132,6 @@ class Api {
   /// and [`/sync`](https://spec.matrix.org/unstable/client-server-api/#get_matrixclientv3sync) APIs.
   ///
   /// [roomIdOrAlias] The room identifier or alias to join.
-  ///
-  /// [serverName] The servers to attempt to join the room through. One of the servers
-  /// must be participating in the room.
   ///
   /// [via] The servers to attempt to join the room through. One of the servers
   /// must be participating in the room.
@@ -2150,17 +2147,13 @@ class Api {
   /// The joined room ID.
   Future<String> joinRoom(
     String roomIdOrAlias, {
-    List<String>? serverName,
     List<String>? via,
     String? reason,
     ThirdPartySigned? thirdPartySigned,
   }) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/join/${Uri.encodeComponent(roomIdOrAlias)}',
-      queryParameters: {
-        if (serverName != null) 'server_name': serverName,
-        if (via != null) 'via': via,
-      },
+      queryParameters: {if (via != null) 'via': via},
     );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -2486,9 +2479,6 @@ class Api {
   ///
   /// [roomIdOrAlias] The room identifier or alias to knock upon.
   ///
-  /// [serverName] The servers to attempt to knock on the room through. One of the servers
-  /// must be participating in the room.
-  ///
   /// [via] The servers to attempt to knock on the room through. One of the servers
   /// must be participating in the room.
   ///
@@ -2499,16 +2489,12 @@ class Api {
   /// The knocked room ID.
   Future<String> knockRoom(
     String roomIdOrAlias, {
-    List<String>? serverName,
     List<String>? via,
     String? reason,
   }) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/knock/${Uri.encodeComponent(roomIdOrAlias)}',
-      queryParameters: {
-        if (serverName != null) 'server_name': serverName,
-        if (via != null) 'via': via,
-      },
+      queryParameters: {if (via != null) 'via': via},
     );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -2929,6 +2915,9 @@ class Api {
   ///
   /// [thirdPartyInstanceId] The specific third-party network/protocol to request from the
   /// homeserver. Can only be used if `include_all_networks` is false.
+  ///
+  /// This is the `instance_id` of a `Protocol Instance` returned by
+  /// [`GET /_matrix/client/v3/thirdparty/protocols`](https://spec.matrix.org/unstable/client-server-api/#get_matrixclientv3thirdpartyprotocols).
   Future<QueryPublicRoomsResponse> queryPublicRooms({
     String? server,
     PublicRoomQueryFilter? filter,
@@ -3459,7 +3448,7 @@ class Api {
     String clientSecret,
     String email,
     int sendAttempt, {
-    String? nextLink,
+    Uri? nextLink,
     String? idAccessToken,
     String? idServer,
   }) async {
@@ -3472,7 +3461,7 @@ class Api {
       jsonEncode({
         'client_secret': clientSecret,
         'email': email,
-        if (nextLink != null) 'next_link': nextLink,
+        if (nextLink != null) 'next_link': nextLink.toString(),
         'send_attempt': sendAttempt,
         if (idAccessToken != null) 'id_access_token': idAccessToken,
         if (idServer != null) 'id_server': idServer,
@@ -3531,7 +3520,7 @@ class Api {
     String country,
     String phoneNumber,
     int sendAttempt, {
-    String? nextLink,
+    Uri? nextLink,
     String? idAccessToken,
     String? idServer,
   }) async {
@@ -3544,7 +3533,7 @@ class Api {
       jsonEncode({
         'client_secret': clientSecret,
         'country': country,
-        if (nextLink != null) 'next_link': nextLink,
+        if (nextLink != null) 'next_link': nextLink.toString(),
         'phone_number': phoneNumber,
         'send_attempt': sendAttempt,
         if (idAccessToken != null) 'id_access_token': idAccessToken,
@@ -4103,25 +4092,10 @@ class Api {
   ///
   /// [roomId] The room identifier (not alias) to which to invite the user.
   ///
-  /// [address] The invitee's third-party identifier or contact detail of invitee.
-  ///
-  /// [idAccessToken] Optional An access token previously registered with the identity server. Servers
-  /// can treat this as optional to distinguish between r0.5-compatible clients
-  /// and this specification version.
-  ///
-  /// [idServer] Optional The hostname+port of the identity server which should be used for third-party identifier lookups.
-  ///
-  /// [medium] Optional The kind of address being passed in the address field, for example
-  /// `email` (see [the list of recognised values](https://spec.matrix.org/unstable/appendices/#3pid-types)).
-  ///
-  /// [reason] Optional reason to be included as the `reason` on the subsequent
-  /// membership event.
+  /// [body]
   Future<void> inviteBy3PID(
     String roomId,
-    String address, {
-    String? medium,
-    String? idAccessToken,
-    String? idServer,
+    Invite3pid body, {
     String? reason,
   }) async {
     final requestUri = Uri(
@@ -4130,15 +4104,7 @@ class Api {
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
-    request.bodyBytes = utf8.encode(
-      jsonEncode({
-        'address': address,
-        if (idAccessToken != null) 'id_access_token': idAccessToken,
-        if (idServer != null) 'id_server': idServer,
-        if (medium != null) 'medium': medium,
-        if (reason != null) 'reason': reason,
-      }),
-    );
+    request.bodyBytes = utf8.encode(jsonEncode(body.toJson()));
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
@@ -4193,7 +4159,7 @@ class Api {
   /// *Note that this API requires a room ID, not alias.*
   /// `/join/{roomIdOrAlias}` *exists if you have a room alias.*
   ///
-  /// This API starts a user participating in a particular room, if that user
+  /// This API starts a user's participation in a particular room, if that user
   /// is allowed to participate in that room. After this call, the client is
   /// allowed to see all current state events in the room, and all subsequent
   /// events associated with the room until the user leaves the room.
@@ -4532,8 +4498,8 @@ class Api {
   ///
   /// Any user with a power level greater than or equal to the `m.room.redaction`
   /// event power level may send redaction events in the room. If the user's power
-  /// level greater is also greater than or equal to the `redact` power level
-  /// of the room, the user may redact events sent by other users.
+  /// level is also greater than or equal to the `redact` power level of the room,
+  /// the user may redact events sent by other users.
   ///
   /// Server administrators may redact events sent by users on their server.
   ///
@@ -4579,17 +4545,15 @@ class Api {
   ///
   /// [roomId] The room being reported.
   ///
-  /// [reason] The reason the room is being reported.
-  Future<void> reportRoom(String roomId, {String? reason}) async {
+  /// [reason] The reason the room is being reported. May be blank.
+  Future<void> reportRoom(String roomId, String reason) async {
     final requestUri = Uri(
       path: '_matrix/client/v3/rooms/${Uri.encodeComponent(roomId)}/report',
     );
     final request = Request('POST', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
     request.headers['content-type'] = 'application/json';
-    request.bodyBytes = utf8.encode(
-      jsonEncode({if (reason != null) 'reason': reason}),
-    );
+    request.bodyBytes = utf8.encode(jsonEncode({'reason': reason}));
     final response = await httpClient.send(request);
     final responseBody = await response.stream.toBytes();
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
@@ -4602,11 +4566,10 @@ class Api {
   /// the appropriate people. The caller must be joined to the room to report
   /// it.
   ///
-  /// It might be possible for clients to deduce whether an event exists by
-  /// timing the response, as only a report for an event that does exist
-  /// will require the homeserver to check whether a user is joined to
-  /// the room. To combat this, homeserver implementations should add
-  /// a random delay when generating a response.
+  /// Furthermore, it might be possible for clients to deduce whether a reported
+  /// event exists by timing the response. This is because only a report for an
+  /// existing event will require the homeserver to do further processing. To
+  /// combat this, homeservers MAY add a random delay when generating a response.
   ///
   /// [roomId] The room in which the event being reported is located.
   ///
@@ -5095,7 +5058,9 @@ class Api {
   /// Fetches the metadata from the homeserver about a particular third-party protocol.
   ///
   /// [protocol] The name of the protocol.
-  Future<Protocol> getProtocolMetadata(String protocol) async {
+  Future<GetProtocolMetadataResponse$2> getProtocolMetadata(
+    String protocol,
+  ) async {
     final requestUri = Uri(
       path:
           '_matrix/client/v3/thirdparty/protocol/${Uri.encodeComponent(protocol)}',
@@ -5107,13 +5072,13 @@ class Api {
     if (response.statusCode != 200) unexpectedResponse(response, responseBody);
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
-    return Protocol.fromJson(json as Map<String, Object?>);
+    return GetProtocolMetadataResponse$2.fromJson(json as Map<String, Object?>);
   }
 
   /// Fetches the overall metadata about protocols supported by the
   /// homeserver. Includes both the available protocols and all fields
   /// required for queries against each protocol.
-  Future<Map<String, Protocol>> getProtocols() async {
+  Future<Map<String, GetProtocolsResponse$2>> getProtocols() async {
     final requestUri = Uri(path: '_matrix/client/v3/thirdparty/protocols');
     final request = Request('GET', baseUri!.resolveUri(requestUri));
     request.headers['authorization'] = 'Bearer ${bearerToken!}';
@@ -5123,7 +5088,10 @@ class Api {
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
     return (json as Map<String, Object?>).map(
-      (k, v) => MapEntry(k, Protocol.fromJson(v as Map<String, Object?>)),
+      (k, v) => MapEntry(
+        k,
+        GetProtocolsResponse$2.fromJson(v as Map<String, Object?>),
+      ),
     );
   }
 
@@ -5497,6 +5465,41 @@ class Api {
     final responseString = utf8.decode(responseBody);
     final json = jsonDecode(responseString);
     return SearchUserDirectoryResponse.fromJson(json as Map<String, Object?>);
+  }
+
+  /// Reports a user as inappropriate to the server, which may then notify
+  /// the appropriate people. How such information is delivered is left up to
+  /// implementations. The caller is not required to be joined to any rooms
+  /// that the reported user is joined to.
+  ///
+  /// Clients may wish to [ignore](#ignoring-users) users after reporting them.
+  ///
+  /// Clients could infer whether a reported user exists based on the 404 response.
+  /// Homeservers that wish to conceal this information MAY return 200 responses
+  /// regardless of the existence of the reported user.
+  ///
+  /// Furthermore, it might be possible for clients to deduce whether a reported
+  /// user exists by timing the response. This is because only a report for an
+  /// existing user will require the homeserver to do further processing. To
+  /// combat this, homeservers MAY add a random delay when generating a response.
+  ///
+  /// [userId] The user being reported.
+  ///
+  /// [reason] The reason the room is being reported. May be blank.
+  Future<Map<String, Object?>> reportUser(String userId, String reason) async {
+    final requestUri = Uri(
+      path: '_matrix/client/v3/users/${Uri.encodeComponent(userId)}/report',
+    );
+    final request = Request('POST', baseUri!.resolveUri(requestUri));
+    request.headers['authorization'] = 'Bearer ${bearerToken!}';
+    request.headers['content-type'] = 'application/json';
+    request.bodyBytes = utf8.encode(jsonEncode({'reason': reason}));
+    final response = await httpClient.send(request);
+    final responseBody = await response.stream.toBytes();
+    if (response.statusCode != 200) unexpectedResponse(response, responseBody);
+    final responseString = utf8.decode(responseBody);
+    final json = jsonDecode(responseString);
+    return json as Map<String, Object?>;
   }
 
   /// This API provides credentials for the client to use when initiating

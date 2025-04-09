@@ -970,7 +970,7 @@ class Event extends MatrixEvent {
     if (removeMarkdown == true) {
       final html = markdown(body, convertLinebreaks: false);
       final document = parse(html);
-      body = document.documentElement?.text ?? body;
+      body = document.documentElement?.text.trim() ?? body;
     }
     return body;
   }

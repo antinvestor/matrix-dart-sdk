@@ -1147,10 +1147,10 @@ void main() {
       event = Event.fromJson({
         'content': {
           'body':
-              '# Title\nsome text and [link](https://example.com)\nokay and this is **important**',
+              '> Quote\n# Title\nsome text and [link](https://example.com)\nokay and this is **important**',
           'format': 'org.matrix.custom.html',
           'formatted_body':
-              '<h1>Title</h1>\n<p>some text and <a href="https://example.com">link</a><br>okay and this is <strong>important</strong></p>\n',
+              '<blockquote><p>Quote</p></blockquote><h1>Title</h1>\n<p>some text and <a href="https://example.com">link</a><br>okay and this is <strong>important</strong></p>\n',
           'msgtype': 'm.text',
         },
         'event_id': '\$143273582443PhrSn:example.org',
@@ -1165,7 +1165,7 @@ void main() {
           MatrixDefaultLocalizations(),
           removeMarkdown: true,
         ),
-        'Title\nsome text and link\nokay and this is important',
+        'Quote\n\nTitle\nsome text and link\nokay and this is important',
       );
       expect(
         await event.calcLocalizedBody(
@@ -1173,7 +1173,7 @@ void main() {
           removeMarkdown: true,
           plaintextBody: true,
         ),
-        'Title\nsome text and 🔗link\nokay and this is important',
+        'Quote\n\nTitle\nsome text and 🔗link\nokay and this is important',
       );
       expect(
         await event.calcLocalizedBody(
@@ -1181,7 +1181,7 @@ void main() {
           removeMarkdown: true,
           withSenderNamePrefix: true,
         ),
-        'Example: Title\nsome text and link\nokay and this is important',
+        'Example: Quote\n\nTitle\nsome text and link\nokay and this is important',
       );
       expect(
         await event.calcLocalizedBody(
@@ -1190,7 +1190,7 @@ void main() {
           plaintextBody: true,
           withSenderNamePrefix: true,
         ),
-        'Example: Title\nsome text and 🔗link\nokay and this is important',
+        'Example: Quote\n\nTitle\nsome text and 🔗link\nokay and this is important',
       );
 
       event = Event.fromJson({
