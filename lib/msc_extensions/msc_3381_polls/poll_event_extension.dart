@@ -46,11 +46,13 @@ extension PollEventExtension on Event {
 
     // Sort by date so only the users most recent vote is used in the end, even
     // if it is invalid.
-    aggregatedEvents
-        .sort((a, b) => a.originServerTs.compareTo(b.originServerTs));
+    aggregatedEvents.sort(
+      (a, b) => a.originServerTs.compareTo(b.originServerTs),
+    );
 
     for (final event in aggregatedEvents) {
-      final answers = event.content
+      final answers =
+          event.content
               .tryGetMap<String, Object?>(PollEventContent.responseType)
               ?.tryGetList<String>('answers') ??
           [];
@@ -64,39 +66,34 @@ extension PollEventExtension on Event {
     final aggregatedEvents = timeline.aggregatedEvents[eventId]?['m.reference'];
     if (aggregatedEvents == null || aggregatedEvents.isEmpty) return false;
 
-    final redactPowerLevel = (room
-            .getState(EventTypes.RoomPowerLevels)
-            ?.content
-            .tryGet<int>('redact') ??
-        50);
+    final redactPowerLevel =
+        (room
+                .getState(EventTypes.RoomPowerLevels)
+                ?.content
+                .tryGet<int>('redact') ??
+            50);
 
-    return aggregatedEvents.any(
-      (event) {
-        if (event.content
-                .tryGetMap<String, Object?>(PollEventContent.endType) ==
-            null) {
-          return false;
-        }
-
-        // If a m.poll.end event is received from someone other than the poll
-        //creator or user with permission to redact other's messages in the
-        //room, the event must be ignored by clients due to being invalid.
-        if (event.senderId == senderId ||
-            event.senderFromMemoryOrFallback.powerLevel >= redactPowerLevel) {
-          return true;
-        }
-        Logs().w(
-          'Ignore poll end event form user without permission ${event.senderId}',
-        );
+    return aggregatedEvents.any((event) {
+      if (event.content.tryGetMap<String, Object?>(PollEventContent.endType) ==
+          null) {
         return false;
-      },
-    );
+      }
+
+      // If a m.poll.end event is received from someone other than the poll
+      //creator or user with permission to redact other's messages in the
+      //room, the event must be ignored by clients due to being invalid.
+      if (event.senderId == senderId ||
+          event.senderFromMemoryOrFallback.powerLevel >= redactPowerLevel) {
+        return true;
+      }
+      Logs().w(
+        'Ignore poll end event form user without permission ${event.senderId}',
+      );
+      return false;
+    });
   }
 
-  Future<String?> answerPoll(
-    List<String> answerIds, {
-    String? txid,
-  }) {
+  Future<String?> answerPoll(List<String> answerIds, {String? txid}) {
     final maxSelection = parsedPollEventContent.pollStartContent.maxSelections;
     if (answerIds.length > maxSelection) {
       throw Exception(
@@ -105,10 +102,7 @@ extension PollEventExtension on Event {
     }
     return room.sendEvent(
       {
-        'm.relates_to': {
-          'rel_type': 'm.reference',
-          'event_id': eventId,
-        },
+        'm.relates_to': {'rel_type': 'm.reference', 'event_id': eventId},
         PollEventContent.responseType: {'answers': answerIds},
       },
       type: PollEventContent.responseType,
@@ -117,14 +111,11 @@ extension PollEventExtension on Event {
   }
 
   Future<String?> endPoll({String? txid}) => room.sendEvent(
-        {
-          'm.relates_to': {
-            'rel_type': 'm.reference',
-            'event_id': eventId,
-          },
-          PollEventContent.endType: {},
-        },
-        type: PollEventContent.endType,
-        txid: txid,
-      );
+    {
+      'm.relates_to': {'rel_type': 'm.reference', 'event_id': eventId},
+      PollEventContent.endType: {},
+    },
+    type: PollEventContent.endType,
+    txid: txid,
+  );
 }

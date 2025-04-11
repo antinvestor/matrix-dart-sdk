@@ -34,10 +34,6 @@ extension PollRoomExtension on Room {
       ),
     );
 
-    return sendEvent(
-      newPollEvent.toJson(),
-      type: startType,
-      txid: txid,
-    );
+    return sendEvent(newPollEvent.toJson(), type: startType, txid: txid);
   }
 }

@@ -22,14 +22,8 @@ void main() {
         kind: PollKind.undisclosed,
         maxSelections: 2,
         answers: [
-          PollAnswer(
-            id: 'pepsi',
-            mText: 'Pepsi',
-          ),
-          PollAnswer(
-            id: 'coca',
-            mText: 'Coca Cola',
-          ),
+          PollAnswer(id: 'pepsi', mText: 'Pepsi'),
+          PollAnswer(id: 'coca', mText: 'Coca Cola'),
         ],
         txid: '1234',
       );
@@ -61,9 +55,7 @@ void main() {
 
       final timeline = Timeline(
         room: room,
-        chunk: TimelineChunk(
-          events: [pollEvent],
-        ),
+        chunk: TimelineChunk(events: [pollEvent]),
       );
 
       expect(pollEvent.getPollResponses(timeline), {});
@@ -91,12 +83,9 @@ void main() {
         ),
       );
 
-      expect(
-        pollEvent.getPollResponses(timeline),
-        {
-          '@test:fakeServer.notExisting': ['pepsi'],
-        },
-      );
+      expect(pollEvent.getPollResponses(timeline), {
+        '@test:fakeServer.notExisting': ['pepsi'],
+      });
 
       timeline.aggregatedEvents['testevent']!['m.reference']!.add(
         Event(
@@ -116,10 +105,9 @@ void main() {
       );
       expect(pollEvent.getPollHasBeenEnded(timeline), true);
 
-      final respondeEventId = await pollEvent.answerPoll(
-        ['pepsi'],
-        txid: '1234',
-      );
+      final respondeEventId = await pollEvent.answerPoll([
+        'pepsi',
+      ], txid: '1234');
       expect(respondeEventId, '1234');
     });
   });

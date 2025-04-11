@@ -304,7 +304,8 @@ abstract class EventLocalizations {
                   ?.tryGet<String>('key') ??
               body,
         ),
-    PollEventContent.startType: (event, i18n, body) => i18n.startedAPoll(
+    PollEventContent.startType:
+        (event, i18n, body) => i18n.startedAPoll(
           event.senderFromMemoryOrFallback.calcDisplayname(i18n: i18n),
         ),
   };
