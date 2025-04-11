@@ -3026,9 +3026,7 @@ class Client extends MatrixApi {
 
         // Is this event redacting the last event?
         if (event.type == EventTypes.Redaction &&
-            ({
-              room.lastEvent?.eventId,
-            }.contains(
+            ({room.lastEvent?.eventId}.contains(
               event.redacts ?? event.content.tryGet<String>('redacts'),
             ))) {
           room.lastEvent?.setRedactionEvent(event);
@@ -3041,10 +3039,8 @@ class Client extends MatrixApi {
                 (event.redacts ?? event.content.tryGet<String>('redacts')) &&
             event.type == EventTypes.Redaction &&
             room.lastEvent?.relationshipType == RelationshipTypes.edit) {
-          final originalEvent = await database?.getEventById(
-                relationshipEventId,
-                room,
-              ) ??
+          final originalEvent =
+              await database?.getEventById(relationshipEventId, room) ??
               room.lastEvent;
           // Manually remove the data as it's already in cache until relogin.
           originalEvent?.setRedactionEvent(event);
